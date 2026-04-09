@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="塔羅學習">
+<title>塔羅牌學習系統</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Noto+Serif+TC:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+:root{--parchment:#f5ede0;--gold:#c9a84c;--gold-light:#e8cc80;--amethyst:#6b3fa0;--rose:#c2637a;--midnight:#0f0820;--border:rgba(201,168,76,0.32)}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{background:var(--midnight);color:var(--parchment);font-family:'Noto Serif TC',serif;min-height:100vh;overflow-x:hidden;overflow-y:scroll;-webkit-overflow-scrolling:touch;padding-bottom:calc(88px + env(safe-area-inset-bottom));font-size:17px;line-height:1.65}
+body::before{content:'';position:fixed;inset:0;background:
+  radial-gradient(1px 1px at 8% 12%,rgba(255,255,255,.5) 0%,transparent 100%),
+  radial-gradient(1px 1px at 25% 35%,rgba(255,255,255,.3) 0%,transparent 100%),
+  radial-gradient(1px 1px at 50% 8%,rgba(255,255,255,.4) 0%,transparent 100%),
+  radial-gradient(1px 1px at 72% 20%,rgba(255,255,255,.28) 0%,transparent 100%),
+  radial-gradient(1px 1px at 88% 50%,rgba(255,255,255,.45) 0%,transparent 100%),
+  radial-gradient(1px 1px at 60% 75%,rgba(255,255,255,.35) 0%,transparent 100%),
+  radial-gradient(ellipse at 50% 0%,rgba(107,63,160,.22) 0%,transparent 55%),
+  var(--midnight);pointer-events:none;z-index:0}
+.app{position:relative;z-index:1;max-width:640px;margin:0 auto}
+header{text-align:center;padding:28px 16px 20px;border-bottom:1px solid var(--border)}
+.logo-symbol{font-size:2rem;margin-bottom:6px;display:block;animation:float 4s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+h1{font-family:'Cinzel Decorative',serif;font-size:clamp(.9rem,3.5vw,1.25rem);color:var(--gold);letter-spacing:.07em;line-height:1.3}
+.subtitle{font-size:.72rem;color:rgba(245,237,224,.35);margin-top:4px;letter-spacing:.07em;font-style:italic}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;z-index:50;background:rgba(15,8,32,.96);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--border);padding:8px 0 calc(8px + env(safe-area-inset-bottom));display:flex}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:5px 2px;background:none;border:none;color:rgba(245,237,224,.35);cursor:pointer;font-family:'Noto Serif TC',serif;font-size:.65rem;letter-spacing:.02em;transition:all .2s;-webkit-appearance:none}
+.nav-item .nav-icon{font-size:1.35rem;line-height:1}
+.nav-item.active{color:var(--gold-light)}
+.nav-item.active .nav-icon{filter:drop-shadow(0 0 5px rgba(201,168,76,.45))}
+.panel{display:none;padding:16px 14px}
+.panel.active{display:block;animation:fadeIn .3s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.card-box{background:linear-gradient(145deg,#1e1232,#160e28);border:1px solid var(--border);border-radius:14px;padding:20px 18px;margin-bottom:16px;box-shadow:0 6px 24px rgba(0,0,0,.35)}
+.card-box h2{font-family:'Cinzel Decorative',serif;font-size:.78rem;color:var(--gold);letter-spacing:.1em;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.card-box h2::after{content:'';flex:1;height:1px;background:var(--border)}
+label{display:block;font-size:.8rem;color:var(--gold-light);letter-spacing:.07em;margin-bottom:6px;margin-top:15px}
+label:first-of-type{margin-top:0}
+input,textarea,select{width:100%;background:rgba(0,0,0,.32);border:1px solid rgba(201,168,76,.18);border-radius:10px;color:var(--parchment);font-family:'Noto Serif TC',serif;font-size:1rem;padding:12px 13px;transition:border-color .25s;outline:none;-webkit-appearance:none;-webkit-overflow-scrolling:touch}
+input:focus,textarea:focus,select:focus{border-color:var(--gold);box-shadow:0 0 0 2px rgba(201,168,76,.08)}
+select option{background:#1e1232}
+textarea{resize:none;line-height:1.7;overflow-y:auto;-webkit-overflow-scrolling:touch;display:block}
+.ta-sm{height:78px}.ta-md{height:108px}.ta-xl{height:145px}
+.paste-zone{background:rgba(107,63,160,.08);border:2px dashed rgba(107,63,160,.35);border-radius:14px;padding:15px;margin-top:14px;margin-bottom:15px}
+.paste-zone:focus-within{border-color:var(--gold)}
+.paste-zone-title{font-size:.78rem;color:var(--gold-light);letter-spacing:.07em;margin-bottom:9px;display:flex;align-items:center;gap:7px}
+.paste-zone-title .badge{background:linear-gradient(135deg,var(--amethyst),#9070d0);color:var(--parchment);font-size:.63rem;padding:3px 8px;border-radius:10px}
+.paste-zone textarea{background:rgba(0,0,0,.2);border:1px solid rgba(201,168,76,.12);font-size:.95rem;height:128px;color:rgba(245,237,224,.7)}
+.parse-btn{width:100%;padding:12px;background:linear-gradient(135deg,var(--amethyst),#9070d0);border:none;border-radius:10px;color:var(--parchment);font-family:'Noto Serif TC',serif;font-size:.93rem;cursor:pointer;margin-top:9px;letter-spacing:.04em;-webkit-appearance:none}
+.parse-btn:active{opacity:.85}
+.parsed-preview{display:none;margin-top:13px;background:rgba(0,0,0,.2);border-radius:12px;overflow:hidden;border:1px solid var(--border)}
+.parsed-preview.show{display:block;animation:fadeIn .28s ease}
+.preview-row{padding:11px 13px;border-bottom:1px solid rgba(201,168,76,.07);display:flex;gap:11px}
+.preview-row:last-child{border-bottom:none}
+.preview-label{font-size:.7rem;color:var(--gold-light);letter-spacing:.06em;min-width:55px;margin-top:2px;flex-shrink:0}
+.preview-val{font-size:.88rem;color:rgba(245,237,224,.75);line-height:1.62;flex:1}
+.preview-empty{color:rgba(245,237,224,.25);font-style:italic}
+.btn{display:flex;align-items:center;justify-content:center;gap:6px;padding:13px 18px;border:none;border-radius:12px;font-family:'Noto Serif TC',serif;font-size:.93rem;cursor:pointer;transition:all .2s;letter-spacing:.04em;width:100%;-webkit-appearance:none}
+.btn:active{opacity:.85;transform:scale(.98)}
+.btn-gold{background:linear-gradient(135deg,#9a7228,var(--gold));color:#0f0820;font-weight:700;box-shadow:0 4px 14px rgba(201,168,76,.28);margin-top:15px}
+.btn-primary{background:linear-gradient(135deg,var(--amethyst),#8050d0);color:var(--parchment);box-shadow:0 4px 14px rgba(107,63,160,.35);margin-top:15px}
+.btn-sm{width:auto;padding:10px 17px;font-size:.86rem;margin-top:0}
+.btn-outline{background:transparent;border:1px solid var(--border);color:var(--gold-light)}
+.btn-danger{background:rgba(194,99,122,.13);border:1px solid rgba(194,99,122,.27);color:#e09090}
+.picker-toggle{background:rgba(0,0,0,.18);border:1px dashed var(--border);border-radius:10px;padding:10px 13px;cursor:pointer;color:rgba(245,237,224,.4);font-size:.84rem;text-align:center;margin-top:9px;display:block;width:100%;font-family:'Noto Serif TC',serif;-webkit-appearance:none}
+.card-picker{display:none;margin-top:9px;background:rgba(0,0,0,.28);border:1px solid var(--border);border-radius:12px;padding:13px;max-height:210px;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.card-picker.open{display:block;animation:fadeIn .2s ease}
+.picker-section-title{font-size:.7rem;color:var(--gold);letter-spacing:.1em;margin-bottom:7px;margin-top:11px;padding-bottom:3px;border-bottom:1px solid rgba(201,168,76,.18)}
+.picker-section-title:first-child{margin-top:0}
+.card-chips{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:3px}
+.card-chip{background:rgba(107,63,160,.13);border:1px solid rgba(107,63,160,.25);border-radius:16px;padding:4px 11px;font-size:.76rem;color:rgba(245,237,224,.6);cursor:pointer;transition:all .16s}
+.card-chip.selected{background:rgba(107,63,160,.38);border-color:var(--amethyst);color:var(--parchment)}
+.ori-toggle{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px}
+.ori-btn{padding:12px;border-radius:10px;border:1px solid var(--border);background:transparent;color:rgba(245,237,224,.4);font-family:'Noto Serif TC',serif;font-size:.93rem;cursor:pointer;transition:all .2s;-webkit-appearance:none}
+.ori-btn.selected{border-color:var(--gold);background:rgba(201,168,76,.1);color:var(--gold-light)}
+.claude-tip{background:rgba(107,63,160,.1);border:1px solid rgba(107,63,160,.26);border-radius:12px;padding:12px 14px;font-size:.82rem;color:rgba(245,237,224,.58);line-height:1.75;margin-bottom:15px}
+.claude-tip strong{color:var(--gold-light);display:block;margin-bottom:3px;font-size:.77rem;letter-spacing:.06em}
+.note-card{background:linear-gradient(145deg,#1e1232,#160e28);border:1px solid var(--border);border-radius:13px;padding:14px 15px;margin-bottom:10px;cursor:pointer;transition:all .2s}
+.note-card:active{transform:scale(.98);border-color:var(--gold)}
+.note-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.note-name{font-family:'Cinzel Decorative',serif;font-size:.83rem;color:var(--gold)}
+.note-date{font-size:.7rem;color:rgba(245,237,224,.28)}
+.note-kws{display:flex;flex-wrap:wrap;gap:5px}
+.kw-pill{background:rgba(107,63,160,.16);border:1px solid rgba(107,63,160,.3);border-radius:14px;padding:3px 9px;font-size:.7rem;color:rgba(245,237,224,.6)}
+.kw-pill.neg{background:rgba(194,99,122,.1);border-color:rgba(194,99,122,.24);color:rgba(245,237,224,.6)}
+.empty-state{text-align:center;padding:50px 20px;color:rgba(245,237,224,.22);font-style:italic;font-size:.88rem;line-height:1.8}
+.empty-icon{font-size:2.3rem;margin-bottom:11px}
+.search-wrap{position:relative;margin-bottom:13px}
+.search-wrap input{padding-left:37px}
+.search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:.88rem;pointer-events:none}
+.section-label{font-size:.74rem;color:var(--gold-light);letter-spacing:.08em;margin-bottom:9px;padding:0 2px}
+.record-display{background:linear-gradient(145deg,#0c0618,#160e28);border:1px solid rgba(201,168,76,.25);border-radius:13px;padding:18px 16px;margin-top:14px;display:none}
+.record-display.visible{display:block;animation:fadeIn .35s ease}
+.record-display h3{font-family:'Cinzel Decorative',serif;font-size:.76rem;color:var(--gold);letter-spacing:.1em;margin-bottom:14px;text-align:center}
+.rd-section{margin-bottom:13px;padding-bottom:13px;border-bottom:1px solid rgba(201,168,76,.07)}
+.rd-section:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.rd-title{font-size:.74rem;color:var(--gold-light);letter-spacing:.08em;margin-bottom:5px}
+.rd-body{font-size:.95rem;color:rgba(245,237,224,.8);line-height:1.8}
+.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:15px}
+.stat-box{background:linear-gradient(145deg,#1e1232,#160e28);border:1px solid var(--border);border-radius:13px;padding:13px 7px;text-align:center}
+.stat-num{font-family:'Cinzel Decorative',serif;font-size:1.55rem;color:var(--gold)}
+.stat-label{font-size:.65rem;color:rgba(245,237,224,.32);margin-top:3px;letter-spacing:.05em}
+.prog-wrap{margin-bottom:13px}
+.prog-label-row{display:flex;justify-content:space-between;font-size:.74rem;color:rgba(245,237,224,.36);margin-bottom:5px}
+.prog-bar-bg{background:rgba(0,0,0,.3);border-radius:20px;height:8px;overflow:hidden}
+.prog-bar{height:100%;border-radius:20px;background:linear-gradient(90deg,var(--amethyst),var(--gold));transition:width .7s ease}
+.backup-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:15px}
+.backup-card{background:rgba(0,0,0,.18);border:1px solid var(--border);border-radius:13px;padding:16px 12px;text-align:center}
+.backup-icon{font-size:1.7rem;margin-bottom:6px}
+.backup-title{font-size:.83rem;color:var(--gold-light);margin-bottom:3px}
+.backup-desc{font-size:.73rem;color:rgba(245,237,224,.3);line-height:1.58;margin-bottom:11px}
+.status-pill{font-size:.7rem;padding:4px 10px;border-radius:16px;display:inline-block}
+.status-ok{background:rgba(74,124,107,.16);color:#7ec8a0;border:1px solid rgba(74,124,107,.26)}
+.status-warn{background:rgba(201,168,76,.1);color:var(--gold-light);border:1px solid rgba(201,168,76,.2)}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:200;display:none;align-items:flex-end;justify-content:center}
+.modal-overlay.open{display:flex;animation:fadeIn .22s ease}
+.modal{background:linear-gradient(165deg,#1e1232,#0f0820);border:1px solid var(--gold);border-radius:22px 22px 0 0;padding:20px 18px calc(20px + env(safe-area-inset-bottom));width:100%;max-height:88vh;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.modal-handle{width:36px;height:4px;background:rgba(201,168,76,.28);border-radius:2px;margin:0 auto 16px}
+.modal-close-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.modal h2{font-family:'Cinzel Decorative',serif;color:var(--gold);font-size:.88rem}
+.modal-close{background:none;border:none;color:rgba(245,237,224,.38);font-size:1.2rem;cursor:pointer;padding:4px;width:auto}
+.m-section{margin-bottom:12px}
+.m-label{font-size:.73rem;color:var(--gold-light);letter-spacing:.09em;margin-bottom:4px}
+.m-value{font-size:.92rem;color:rgba(245,237,224,.78);line-height:1.75}
+.m-kws{display:flex;flex-wrap:wrap;gap:5px}
+.m-divider{height:1px;background:var(--border);margin:12px 0}
+.toast{position:fixed;bottom:94px;left:50%;transform:translateX(-50%) translateY(20px);background:linear-gradient(135deg,var(--amethyst),#4a2080);color:var(--parchment);padding:11px 22px;border-radius:24px;font-size:.84rem;box-shadow:0 5px 18px rgba(0,0,0,.5);z-index:300;opacity:0;transition:all .27s;pointer-events:none;max-width:88vw;text-align:center}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+@media(max-width:380px){.backup-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+  <span class="logo-symbol">🔮</span>
+  <h1>塔羅牌學習系統</h1>
+  <div class="subtitle">Tarot Wisdom · Daily Oracle · Knowledge Archive</div>
+</header>
+
+<div id="panel-notebook" class="panel active">
+  <div class="claude-tip">
+    <strong>💡 使用方式</strong>
+    在 Claude 輸入「幫我生成《牌名》的學習卡片」→ 複製整段內容貼入智慧貼上框 → 點「自動拆分」→ 儲存
+  </div>
+  <div class="card-box">
+    <h2>🃏 建立學習卡片</h2>
+    <label>牌名</label>
+    <input type="text" id="nb-name" placeholder="例：愚者、月亮、聖杯三…">
+    <button class="picker-toggle" onclick="togglePicker('picker1','nb-name','nb-number')">📋 從 78 張牌表選牌 ▾</button>
+    <div id="picker1" class="card-picker"></div>
+    <label>牌號 / 花色</label>
+    <input type="text" id="nb-number" placeholder="例：0 號大阿爾克那 / 聖杯">
+    <div class="paste-zone">
+      <div class="paste-zone-title">✨ 智慧貼上<span class="badge">一鍵填入</span></div>
+      <textarea id="nb-paste" class="ta-xl" placeholder="把 Claude 給的完整學習卡片內容貼在這裡，系統會自動拆分到各欄位…"></textarea>
+      <button class="parse-btn" onclick="parseCardContent()">🪄 自動拆分填入各欄位</button>
+    </div>
+    <div class="parsed-preview" id="nb-preview">
+      <div class="preview-row"><span class="preview-label">🌀 原型</span><span class="preview-val" id="pv-origin">—</span></div>
+      <div class="preview-row"><span class="preview-label">▲ 正位</span><span class="preview-val" id="pv-pos">—</span></div>
+      <div class="preview-row"><span class="preview-label">▽ 逆位</span><span class="preview-val" id="pv-neg">—</span></div>
+      <div class="preview-row"><span class="preview-label">💕 感情</span><span class="preview-val" id="pv-love">—</span></div>
+      <div class="preview-row"><span class="preview-label">⚡ 事業</span><span class="preview-val" id="pv-career">—</span></div>
+      <div class="preview-row"><span class="preview-label">🌿 健康</span><span class="preview-val" id="pv-health">—</span></div>
+      <div class="preview-row"><span class="preview-label">🖼 記憶點</span><span class="preview-val" id="pv-image">—</span></div>
+      <div class="preview-row"><span class="preview-label">✨ 箴言</span><span class="preview-val" id="pv-tip">—</span></div>
+    </div>
+    <button class="btn btn-gold" onclick="saveCard()">💾 儲存到筆記庫</button>
+    <button class="btn btn-outline" style="margin-top:10px" onclick="clearNbForm()">🗑 清除表單</button>
+  </div>
+</div>
+
+<div id="panel-daily" class="panel">
+  <div class="claude-tip">
+    <strong>💡 使用方式</strong>
+    告訴 Claude 你抽到什麼牌、發生了什麼 → 把解析整段貼入智慧貼上框 → 點「自動拆分」→ 儲存
+  </div>
+  <div class="card-box">
+    <h2>🌙 今日占卜紀錄</h2>
+    <label>今天抽到的牌</label>
+    <input type="text" id="daily-card" placeholder="例：星星、權杖八…">
+    <button class="picker-toggle" onclick="togglePicker('picker2','daily-card',null)">📋 從牌表選牌 ▾</button>
+    <div id="picker2" class="card-picker"></div>
+    <label>牌面方向</label>
+    <div class="ori-toggle">
+      <button class="ori-btn selected" id="ori-pos" onclick="selectOri('正位')">▲ 正位</button>
+      <button class="ori-btn" id="ori-neg" onclick="selectOri('逆位')">▽ 逆位</button>
+    </div>
+    <label>今天發生了什麼？</label>
+    <textarea class="ta-md" id="daily-event" placeholder="用幾句話描述今天的狀況、心情、遇到的事…"></textarea>
+    <div class="paste-zone">
+      <div class="paste-zone-title">✨ 智慧貼上 Claude 解析<span class="badge">一鍵填入</span></div>
+      <textarea id="daily-paste" class="ta-xl" placeholder="把 Claude 給的完整占卜解析貼在這裡，系統會自動拆分…"></textarea>
+      <button class="parse-btn" onclick="parseDailyContent()">🪄 自動拆分填入各欄位</button>
+    </div>
+    <div class="parsed-preview" id="daily-preview">
+      <div class="preview-row"><span class="preview-label">⚡ 能量</span><span class="preview-val" id="dpv-energy">—</span></div>
+      <div class="preview-row"><span class="preview-label">🪞 映射</span><span class="preview-val" id="dpv-mapping">—</span></div>
+      <div class="preview-row"><span class="preview-label">🌊 深層</span><span class="preview-val" id="dpv-hidden">—</span></div>
+      <div class="preview-row"><span class="preview-label">🎯 建議</span><span class="preview-val" id="dpv-action">—</span></div>
+      <div class="preview-row"><span class="preview-label">✨ 箴言</span><span class="preview-val" id="dpv-mantra">—</span></div>
+    </div>
+    <button class="btn btn-primary" onclick="saveDailyRecord()">💾 儲存今日占卜紀錄</button>
+    <button class="btn btn-outline" style="margin-top:10px" onclick="clearDailyForm()">🗑 清除表單</button>
+  </div>
+  <div class="record-display" id="daily-result"></div>
+</div>
+
+<div id="panel-archive" class="panel">
+  <div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input type="text" id="search-input" placeholder="搜尋牌名或關鍵詞…" oninput="renderArchive()">
+  </div>
+  <div id="archive-list"></div>
+</div>
+
+<div id="panel-progress" class="panel">
+  <div id="progress-content"></div>
+</div>
+
+<div id="panel-backup" class="panel">
+  <div class="card-box">
+    <h2>💾 備份管理</h2>
+    <div class="backup-grid">
+      <div class="backup-card">
+        <div class="backup-icon">📤</div>
+        <div class="backup-title">匯出備份</div>
+        <div class="backup-desc">下載 JSON 到裝置永久保存</div>
+        <button class="btn btn-gold btn-sm" onclick="exportData()">下載備份</button>
+      </div>
+      <div class="backup-card">
+        <div class="backup-icon">📥</div>
+        <div class="backup-title">匯入備份</div>
+        <div class="backup-desc">從 JSON 備份恢復筆記</div>
+        <input type="file" id="import-file" accept=".json" style="display:none" onchange="importData(event)">
+        <button class="btn btn-outline btn-sm" onclick="document.getElementById('import-file').click()">選擇檔案</button>
+      </div>
+    </div>
+    <div id="backup-status-area"></div>
+    <div style="margin-top:14px;background:rgba(194,99,122,.06);border:1px solid rgba(194,99,122,.18);border-radius:12px;padding:15px">
+      <div style="font-size:.78rem;color:rgba(245,237,224,.36);margin-bottom:11px;line-height:1.65">⚠️ 清除所有筆記與占卜紀錄，不可復原</div>
+      <button class="btn btn-danger btn-sm" onclick="clearAll()">🗑 清除全部資料</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<nav class="bottom-nav">
+  <button class="nav-item active" onclick="switchTab('notebook')"><span class="nav-icon">📖</span>學習卡片</button>
+  <button class="nav-item" onclick="switchTab('daily')"><span class="nav-icon">🌙</span>每日占卜</button>
+  <button class="nav-item" onclick="switchTab('archive')"><span class="nav-icon">🗄️</span>筆記庫</button>
+  <button class="nav-item" onclick="switchTab('progress')"><span class="nav-icon">📊</span>進度</button>
+  <button class="nav-item" onclick="switchTab('backup')"><span class="nav-icon">💾</span>備份</button>
+</nav>
+
+<div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+  <div class="modal" id="modal-content"><div class="modal-handle"></div></div>
+</div>
+<div id="toast" class="toast"></div>
+
+<script>
+const TAROT_78={
+  '大阿爾克那':['愚者(0)','魔術師(1)','女祭司(2)','女皇(3)','皇帝(4)','教皇(5)','戀人(6)','戰車(7)','力量(8)','隱士(9)','命運之輪(10)','正義(11)','吊人(12)','死神(13)','節制(14)','惡魔(15)','塔(16)','星星(17)','月亮(18)','太陽(19)','審判(20)','世界(21)'],
+  '聖杯':['聖杯王牌','聖杯二','聖杯三','聖杯四','聖杯五','聖杯六','聖杯七','聖杯八','聖杯九','聖杯十','聖杯侍者','聖杯騎士','聖杯皇后','聖杯國王'],
+  '權杖':['權杖王牌','權杖二','權杖三','權杖四','權杖五','權杖六','權杖七','權杖八','權杖九','權杖十','權杖侍者','權杖騎士','權杖皇后','權杖國王'],
+  '寶劍':['寶劍王牌','寶劍二','寶劍三','寶劍四','寶劍五','寶劍六','寶劍七','寶劍八','寶劍九','寶劍十','寶劍侍者','寶劍騎士','寶劍皇后','寶劍國王'],
+  '星幣':['星幣王牌','星幣二','星幣三','星幣四','星幣五','星幣六','星幣七','星幣八','星幣九','星幣十','星幣侍者','星幣騎士','星幣皇后','星幣國王'],
+};
+
+const PRELOAD_NOTES=[
+  {id:1743609600001,name:'愚者',num:'0 號大阿爾克那',
+   origin:'數字 0，代表無限與圓滿的起點。愚者是塔羅旅程的第一步，對應神話中「英雄出發」的原型——一個無所畏懼、尚未被世界定義的靈魂，踏出懸崖邊緣的第一步。',
+   posKw:'新開始・冒險・純真',negKw:'魯莽・逃避・準備不足',
+   love:'正位：一段全新的感情正在萌芽，放下過去的包袱，用最純粹的心去相遇。逆位：因為恐懼受傷而不敢踏出第一步。',
+   career:'正位：適合創業、轉職、嘗試從未做過的事，現在跳出去是對的時機。逆位：計畫不夠周全就貿然行動，或因為逃避現實而錯失機會。',
+   health:'正位：身心狀態輕盈，適合嘗試新的運動或生活方式。逆位：忽視身體發出的警訊，過於隨性對待自己的健康。',
+   image:'想像一個背著小包袱的年輕人，站在懸崖邊，眼睛看著天空而不是腳下。記住這個畫面：眼睛看天，腳踩懸崖。',
+   tip:'不是因為準備好了才出發，而是出發之後才會準備好。',date:'2026/4/3'},
+  {id:1743609600002,name:'魔術師',num:'1 號大阿爾克那',
+   origin:'數字 1，萬物起源的第一個數字。魔術師對應「創造者」原型，一手指天接收靈感，一手指地將其落實，頭頂∞代表無限的可能性。',
+   posKw:'顯化・意志力・掌握資源',negKw:'操弄・才能浪費・欺騙',
+   love:'正位：主動出擊的時機，你有魅力有能力，勇敢表達心意。逆位：用話術吸引對方，或被花言巧語的人迷惑。',
+   career:'正位：手上的資源和能力剛好夠用，大膽去做，這是你的時機。逆位：明明有才能卻沒有發揮，或把能力用在不正當的地方。',
+   health:'正位：身心能量充沛，專注力強，適合啟動新的健康計畫。逆位：過度消耗意志力，或忽視身體訊號只靠意志硬撐。',
+   image:'桌上四樣工具一樣不缺，他不是在等更好的條件，他現在就開始了。記住：魔術師從不說「等我準備好」。',
+   tip:'你已經有了所有需要的東西，缺的只是開始。',date:'2026/4/3'},
+  {id:1743609600003,name:'女祭司',num:'2 號大阿爾克那',
+   origin:'數字 2，代表二元與平衡。女祭司對應「智慧守護者」原型——她是知識的看守人，坐在意識與潛意識的邊界，一黑一白柱子代表她能看見兩面，膝上的書代表她已知道答案，但選擇靜靜等待揭曉的時機。',
+   posKw:'直覺・靜待・內在智慧',negKw:'壓抑直覺・逃避真相・忽視內心',
+   love:'正位：感情還不到表態的時機，靜靜觀察對方，答案會自然浮現。逆位：明明感覺到關係有問題，卻假裝沒事，逃避面對真實的狀況。',
+   career:'正位：不要急著行動，先蒐集資訊、觀察局勢，時機未到時靜待是最聰明的選擇。逆位：忽視內心對某件事的不安感，或壓抑自己真正想做的事。',
+   health:'正位：身體在告訴你什麼，靜下來傾聽，不要用忙碌蓋過身體的訊號。逆位：明知道身體需要休息，卻一直硬撐，假裝沒問題。',
+   image:'她坐在那裡什麼都不做，但她什麼都知道。簾子後面的秘密屬於她，她不急著說。記住：沉默不是沒有答案，是答案還不到說出口的時候。',
+   tip:'最深的智慧，往往藏在最安靜的等待裡。',date:'2026/4/3'},
+  {id:1743609600004,name:'權杖八',num:'權杖',
+   origin:'數字 8，代表力量與動能的高峰。權杖八對應「箭在弦上、一觸即發」的原型——事情已經啟動，正在空中飛行，無法回頭也不需要回頭。',
+   posKw:'快速推進・訊息傳遞・行動力',negKw:'延誤・混亂・急躁失控',
+   love:'正位：感情快速升溫，訊息頻繁往來，關係正在加速發展。逆位：溝通出現誤解或延遲，急於求成反而讓對方感到壓力。',
+   career:'正位：事情快速推進，可能同時處理多件任務，效率極高的時期。逆位：計畫趕不上變化，事情卡關或方向混亂，需要重新整理優先順序。',
+   health:'正位：精力旺盛，適合高強度運動或密集的行程安排。逆位：過度消耗體力，身體跟不上腦袋的節奏，需要適時煞車休息。',
+   image:'八支權杖同時斜插在空中飛射，沒有人拿著它們，它們自己在飛。記住：沒有人控制，但方向一致，速度極快。',
+   tip:'在飛速之中，你從未真正錯過。',date:'2026/4/3'},
+  {id:1743609600005,name:'權杖皇后',num:'權杖',
+   origin:'宮廷牌中最有行動力的女性能量。權杖皇后對應「充滿熱情的創造者」原型——她知道自己要什麼，優雅而堅定地實現它，腳邊的黑貓代表她也有直覺與神秘的一面。',
+   posKw:'行動力・務實・熱情自信',negKw:'衝動・控制欲・燃燒殆盡',
+   love:'正位：主動、熱情、有魅力，是感情中的主導者，帶給對方活力與溫暖。逆位：佔有欲過強，或因過度付出而感到疲憊與委屈。',
+   career:'正位：在工作中展現強大執行力，多線並進也能應對自如，是天生的領導者。逆位：過度控制或強迫他人按自己方式做事，消耗人際關係。',
+   health:'正位：精力充沛，活力旺盛，適合挑戰高強度目標。逆位：燃燒過度，需要警惕身心耗竭，學會適時放手。',
+   image:'她坐在王座上，一手握著權杖，腳邊有一隻黑貓。她不需要說話，光是坐在那裡就散發能量。記住：她是把事情做完的那個人。',
+   tip:'熱情是火，智慧是讓火燒得剛剛好。',date:'2026/4/7'},
+];
+
+const PRELOAD_DAILY=[
+  {id:1743696000001,card:'權杖八',ori:'正位',
+   event:'差點來不及去演唱會現場，會後有陌生人發彩帶給我，逛了夜市，趕上火車回家，到家後下大雨',
+   energy:'權杖八是塔羅中速度最快的牌，八支權杖同時在空中飛射，代表事情快速推進、來不及思考就已經發生，一切都在動態中。',
+   mapping:'差點來不及→緊迫衝刺的核心能量；陌生人給彩帶→快速流動中意外收到的驚喜；逛夜市→人潮湧動正是八支箭齊飛的熱鬧感；趕上火車→在最後一刻抓住移動的節奏；到家下大雨→高速過後天地給了一個句點。',
+   hidden:'以為自己一直在「趕」，其實整天都在對的節奏裡。信任流動，不要跟速度對抗。',
+   action:'當你下次焦慮「來不及」，想起這個週六——趕著卻都趕上了，還多收到了一條彩帶。',
+   mantra:'在飛速之中，你從未真正錯過。',date:'2026/4/5',time:'週六'},
+  {id:1743696000002,card:'權杖皇后',ori:'逆位',
+   event:'跟朋友聚餐吃港式茶餐廳好吃，頭次找朋友練習塔羅牌簡單但有達到牌義朋友有繼續述說，下午去吃下午茶太甜，接著逛花市買花和拿到免費海芋，走了一萬五，晚上泡麵加青菜，昨天好喝的手搖今天變難喝',
+   energy:'權杖皇后逆位的核心提醒是「不要衝動」——熱情仍在，但需要收斂，避免過度、過快、過猛。今天行動力滿滿，但每一件事都恰到好處地點到為止。',
+   mapping:'港式茶餐廳好吃→滿足但沒有貪多剛剛好；練習塔羅牌點到即止→正是逆位皇后的智慧；下午茶太甜→身體直接給了「過度」的感覺；花市買花加免費海芋→意外的收穫不是衝動購買；走了一萬五但晚上泡麵收尾→自然煞車；手搖變難喝→當下就是當下不要執著重複。',
+   hidden:'今天做到了逆位皇后最難的功課——熱情行動但沒有失控。這張牌不是在警告你，是在肯定你今天的節制。',
+   action:'把練習塔羅牌這件事繼續做。下次可以試著問對方「這跟你最近的什麼事有關？」引導得更深一點。',
+   mantra:'熱情是火，智慧是讓火燒得剛剛好。',date:'2026/4/5',time:'今日'},
+  {id:1743782400001,card:'寶劍皇后',ori:'逆位',
+   event:'早上抽牌，下午看到龍龜團購，看中五隻：龍血石820、金太陽860、彩螢石520、藍磷灰1060、加勒比海昂方解石600。已喊藍磷灰和加勒比海昂方解石，其餘還在考慮。',
+   energy:'寶劍皇后逆位提醒此刻思緒可能不如表面清晰，情緒或慾望正在悄悄影響判斷力。',
+   mapping:'說「只是看看」卻喊了兩隻；說「還在考慮」卻已研究每隻礦訊；說「明天再說」卻還在聊。牌完全說中：「我已經決定了，只是假裝在考慮。」',
+   hidden:'塔羅牌不是魔法，是把已經知道但不想承認的事說出來。彩螢石對應直覺與靈性連結，是學塔羅牌最對應的選擇。',
+   action:'不用全拿，但最心動的那隻不要因為猶豫而錯過。誠實面對自己的答案，清醒地做決定。',
+   mantra:'最清醒的判斷，是對自己誠實。',date:'2026/4/7',time:'今日'},
+  {id:1743868800001,card:'權杖皇后',ori:'正位',
+   event:'處理完手機登入網路銀行密碼狀況，開始繳卡費、還債務、轉帳買龍龜（藍磷灰＋加勒比海昂方解石），工作上把薪資表更新，晚上想吃熱滷味沒開改成魚酥羹麵，滑手機一晚上。',
+   energy:'權杖皇后正位是塔羅中最有行動力、最務實的女性能量——她知道自己要什麼，然後一件一件把它完成。今天你就是她。',
+   mapping:'處理網路銀行密碼→遇到障礙不迴避直接解決；繳卡費還債務→務實面對財務不拖延；轉帳買龍龜→昨天清醒判斷今天執行；更新薪資表→把該做的工作做好；熱滷味沒開改魚酥羹麵→靈活調整不執著換個選項一樣滿足；滑手機一晚上→皇后也需要休息充電也是她的一部分。',
+   hidden:'昨天逆位提醒別衝動，今天正位說你做到了。繳費、還債、買龜——每一件都是昨天清醒判斷後的行動。逆位到正位，是你自己走過來的。',
+   action:'今天做了很多務實的事，滑手機一晚上是你應得的。不需要每一刻都有生產力，皇后也懂得享受。',
+   mantra:'把該做的做完，剩下的時間，就好好屬於自己。',date:'2026/4/8',time:'今日'},
+];
+
+let notes=[];let dailyRecords=[];let selectedOri='正位';let parsedCard={};let parsedDaily={};
+const KEYS={notes:'tarot_notes_v3',daily:'tarot_daily_v3',time:'tarot_backup_time',init:'tarot_init_v4'};
+
+function save(key,data){const s=JSON.stringify(data);try{localStorage.setItem(key,s)}catch(e){}try{sessionStorage.setItem(key,s)}catch(e){}}
+function load(key){try{const d=localStorage.getItem(key);if(d)return JSON.parse(d)}catch(e){}try{const d=sessionStorage.getItem(key);if(d)return JSON.parse(d)}catch(e){}return null}
+function saveNotes(){save(KEYS.notes,notes);save(KEYS.time,new Date().toISOString())}
+function saveDailyRecords(){save(KEYS.daily,dailyRecords);save(KEYS.time,new Date().toISOString())}
+
+function loadData(){
+  const initialized=load(KEYS.init);
+  if(!initialized){
+    notes=PRELOAD_NOTES;dailyRecords=PRELOAD_DAILY;
+    save(KEYS.notes,notes);save(KEYS.daily,dailyRecords);
+    save(KEYS.init,true);save(KEYS.time,new Date().toISOString());
+  }else{
+    notes=load(KEYS.notes)||[];dailyRecords=load(KEYS.daily)||[];
+  }
+}
+loadData();
+
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2800)}
+
+const TABS=['notebook','daily','archive','progress','backup'];
+function switchTab(tab){
+  TABS.forEach((t,i)=>document.querySelectorAll('.nav-item')[i].classList.toggle('active',t===tab));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('panel-'+tab).classList.add('active');
+  if(tab==='archive')renderArchive();
+  if(tab==='progress')renderProgress();
+  if(tab==='backup')renderBackupStatus();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function buildPicker(id){
+  const c=document.getElementById(id);let html='';
+  for(const[suit,cards]of Object.entries(TAROT_78)){
+    html+=`<div class="picker-section-title">${suit}</div><div class="card-chips">`;
+    html+=cards.map(card=>`<span class="card-chip" onclick="pickCard(event,'${card}','${id}')">${card}</span>`).join('');
+    html+='</div>';
+  }
+  c.innerHTML=html;
+}
+function togglePicker(pickerId,inputId,numInputId){
+  const p=document.getElementById(pickerId);
+  if(!p.innerHTML)buildPicker(pickerId);
+  p._inputId=inputId;p._numId=numInputId;
+  p.classList.toggle('open');
+}
+function pickCard(e,card,pickerId){
+  const p=document.getElementById(pickerId);
+  const clean=card.replace(/\(\d+\)/,'').trim();
+  document.getElementById(p._inputId).value=clean;
+  if(p._numId){
+    const m=card.match(/\((\d+)\)/);
+    if(m)document.getElementById(p._numId).value=`${m[1]} 號大阿爾克那`;
+    else for(const[suit,cards]of Object.entries(TAROT_78)){if(suit!=='大阿爾克那'&&cards.includes(card))document.getElementById(p._numId).value=suit}
+  }
+  p.querySelectorAll('.card-chip').forEach(c=>c.classList.remove('selected'));
+  e.target.classList.add('selected');
+  setTimeout(()=>p.classList.remove('open'),280);
+}
+
+function selectOri(ori){
+  selectedOri=ori;
+  document.getElementById('ori-pos').classList.toggle('selected',ori==='正位');
+  document.getElementById('ori-neg').classList.toggle('selected',ori==='逆位');
+}
+
+function parseCardContent(){
+  const raw=document.getElementById('nb-paste').value.trim();
+  if(!raw){toast('請先貼入 Claude 給的卡片內容');return}
+  const extract=(text,labels)=>{
+    for(const label of labels){
+      const pats=[new RegExp(label+'[：:]*\\s*([\\s\\S]+?)(?=\\n[\\s\\S]{1,20}[：:]|\\n[▲▽💕⚡🌿🖼✨]|$)','i'),new RegExp(label+'\\s*\\n([\\s\\S]+?)(?=\\n\\S|$)','i')];
+      for(const pat of pats){const m=text.match(pat);if(m&&m[1]&&m[1].trim().length>2)return m[1].trim().replace(/\n+/g,' ')}
+    }
+    return '';
+  };
+  parsedCard={
+    origin:extract(raw,['數字與原型','原型','數字']),posKw:extract(raw,['正位關鍵詞','正位','▲']),
+    negKw:extract(raw,['逆位關鍵詞','逆位','▽']),love:extract(raw,['感情','💕']),
+    career:extract(raw,['事業','⚡']),health:extract(raw,['健康','🌿']),
+    image:extract(raw,['圖像記憶','記憶點','🖼']),tip:extract(raw,['箴言','大師箴言','✨']),
+  };
+  const anyFound=Object.values(parsedCard).some(v=>v.length>0);
+  if(!anyFound){parsedCard.origin=raw;toast('未偵測到格式，已存入原型欄位')}
+  else toast('✓ 自動拆分完成！確認後點儲存');
+  const show=(id,val)=>{const el=document.getElementById(id);el.textContent=val||'—';el.className='preview-val'+(val?'':' preview-empty')};
+  show('pv-origin',parsedCard.origin);show('pv-pos',parsedCard.posKw);show('pv-neg',parsedCard.negKw);
+  show('pv-love',parsedCard.love);show('pv-career',parsedCard.career);show('pv-health',parsedCard.health);
+  show('pv-image',parsedCard.image);show('pv-tip',parsedCard.tip);
+  document.getElementById('nb-preview').classList.add('show');
+}
+
+function parseDailyContent(){
+  const raw=document.getElementById('daily-paste').value.trim();
+  if(!raw){toast('請先貼入 Claude 給的解析內容');return}
+  const extract=(text,labels)=>{
+    for(const label of labels){
+      const pats=[new RegExp(label+'[：:]*\\s*([\\s\\S]+?)(?=\\n[⚡🪞🌊🎯✨]|\\n\\*\\*|$)','i'),new RegExp(label+'\\s*\\n([\\s\\S]+?)(?=\\n[⚡🪞🌊🎯✨]|$)','i')];
+      for(const pat of pats){const m=text.match(pat);if(m&&m[1]&&m[1].trim().length>2)return m[1].trim()}
+    }
+    return '';
+  };
+  parsedDaily={
+    energy:extract(raw,['今日牌義能量','牌義能量','⚡ 今日']),mapping:extract(raw,['生活映射','🪞']),
+    hidden:extract(raw,['深層訊息','🌊']),action:extract(raw,['今日建議','建議行動','🎯']),
+    mantra:extract(raw,['今日箴言','箴言','✨']),
+  };
+  const anyFound=Object.values(parsedDaily).some(v=>v.length>0);
+  if(!anyFound){parsedDaily.mapping=raw;toast('未偵測到格式，已存入生活映射欄位')}
+  else toast('✓ 自動拆分完成！確認後點儲存');
+  const show=(id,val)=>{const el=document.getElementById(id);el.textContent=val||'—';el.className='preview-val'+(val?'':' preview-empty')};
+  show('dpv-energy',parsedDaily.energy);show('dpv-mapping',parsedDaily.mapping);
+  show('dpv-hidden',parsedDaily.hidden);show('dpv-action',parsedDaily.action);show('dpv-mantra',parsedDaily.mantra);
+  document.getElementById('daily-preview').classList.add('show');
+}
+
+function saveCard(){
+  const name=document.getElementById('nb-name').value.trim();
+  if(!name){toast('請輸入牌名');return}
+  if(!parsedCard.origin&&!parsedCard.posKw&&!parsedCard.love){toast('請先貼入內容並點「自動拆分」');return}
+  const num=document.getElementById('nb-number').value.trim();
+  const noteData={id:Date.now(),name,num,...parsedCard,date:new Date().toLocaleDateString('zh-TW')};
+  const exists=notes.find(n=>n.name===name);
+  if(!exists){notes.unshift(noteData);toast(`《${name}》已儲存 ✓`)}
+  else{Object.assign(exists,noteData);toast(`《${name}》已更新 ✓`)}
+  saveNotes();parsedCard={};
+}
+
+function clearNbForm(){
+  document.getElementById('nb-name').value='';document.getElementById('nb-number').value='';
+  document.getElementById('nb-paste').value='';document.getElementById('nb-preview').classList.remove('show');
+  parsedCard={};toast('表單已清除');
+}
+
+function saveDailyRecord(){
+  const card=document.getElementById('daily-card').value.trim();
+  const ev=document.getElementById('daily-event').value.trim();
+  if(!card){toast('請輸入牌名');return}
+  if(!ev){toast('請描述今天發生的事');return}
+  const record={id:Date.now(),card,ori:selectedOri,event:ev,...parsedDaily,
+    date:new Date().toLocaleDateString('zh-TW'),
+    time:new Date().toLocaleTimeString('zh-TW',{hour:'2-digit',minute:'2-digit'})};
+  dailyRecords.unshift(record);
+  if(dailyRecords.length>90)dailyRecords=dailyRecords.slice(0,90);
+  saveDailyRecords();
+  const el=document.getElementById('daily-result');
+  el.innerHTML=`
+    <h3>🌙 《${card}》${selectedOri} · ${record.date}</h3>
+    <div class="rd-section"><div class="rd-title">📝 今日事件</div><div class="rd-body">${ev}</div></div>
+    ${record.energy?`<div class="rd-section"><div class="rd-title">⚡ 牌義能量</div><div class="rd-body">${record.energy}</div></div>`:''}
+    ${record.mapping?`<div class="rd-section"><div class="rd-title">🪞 生活映射</div><div class="rd-body">${record.mapping.replace(/\n/g,'<br>')}</div></div>`:''}
+    ${record.hidden?`<div class="rd-section"><div class="rd-title">🌊 深層訊息</div><div class="rd-body" style="font-style:italic">${record.hidden}</div></div>`:''}
+    ${record.action?`<div class="rd-section"><div class="rd-title">🎯 今日建議</div><div class="rd-body">${record.action.replace(/\n/g,'<br>')}</div></div>`:''}
+    ${record.mantra?`<div class="rd-section" style="border:none;text-align:center"><div class="rd-title">✨ 今日箴言</div><div class="rd-body" style="color:var(--gold-light);font-style:italic">${record.mantra}</div></div>`:''}`;
+  el.classList.add('visible');toast('占卜紀錄已儲存 ✓');parsedDaily={};
+}
+
+function clearDailyForm(){
+  ['daily-card','daily-event','daily-paste'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('daily-preview').classList.remove('show');
+  document.getElementById('daily-result').classList.remove('visible');
+  selectedOri='正位';
+  document.getElementById('ori-pos').classList.add('selected');
+  document.getElementById('ori-neg').classList.remove('selected');
+  parsedDaily={};toast('表單已清除');
+}
+
+function renderArchive(){
+  const el=document.getElementById('archive-list');
+  const q=(document.getElementById('search-input')?.value||'').toLowerCase();
+  const noteCards=notes.filter(n=>n.name.toLowerCase().includes(q)||(n.posKw||'').toLowerCase().includes(q)||(n.negKw||'').toLowerCase().includes(q));
+  const dailyCards=dailyRecords.filter(d=>d.card.toLowerCase().includes(q)||(d.event||'').toLowerCase().includes(q));
+  if(!noteCards.length&&!dailyCards.length){el.innerHTML=`<div class="empty-state"><div class="empty-icon">🌑</div>${q?'找不到符合的紀錄':'尚未建立任何筆記'}</div>`;return}
+  let html='';
+  if(noteCards.length){
+    html+=`<div class="section-label">📖 學習卡片（${noteCards.length}）</div>`;
+    html+=noteCards.map(n=>`
+      <div class="note-card" onclick="openNote(${notes.indexOf(n)})">
+        <div class="note-header"><span class="note-name">《${n.name}》${n.num?' · '+n.num:''}</span><span class="note-date">${n.date}</span></div>
+        <div class="note-kws">
+          ${(n.posKw||'').split('・').filter(Boolean).map(k=>`<span class="kw-pill">${k.trim()}</span>`).join('')}
+          ${(n.negKw||'').split('・').filter(Boolean).map(k=>`<span class="kw-pill neg">${k.trim()}</span>`).join('')}
+        </div>
+      </div>`).join('');
+  }
+  if(dailyCards.length){
+    html+=`<div class="section-label" style="margin-top:${noteCards.length?'16px':'0'}">🌙 每日占卜（${dailyCards.length}）</div>`;
+    html+=dailyCards.map(d=>`
+      <div class="note-card" onclick="openDaily(${dailyRecords.indexOf(d)})">
+        <div class="note-header"><span class="note-name">《${d.card}》${d.ori}</span><span class="note-date">${d.date}</span></div>
+        <div style="font-size:.8rem;color:rgba(245,237,224,.4);margin-top:5px;line-height:1.5">${d.event.length>50?d.event.slice(0,50)+'…':d.event}</div>
+      </div>`).join('');
+  }
+  el.innerHTML=html;
+}
+
+function openNote(i){
+  const n=notes[i];
+  document.getElementById('modal-content').innerHTML=`
+    <div class="modal-handle"></div>
+    <div class="modal-close-row"><h2>《${n.name}》${n.num?'· '+n.num:''}</h2>
+    <button class="modal-close" onclick="document.getElementById('modal-overlay').classList.remove('open')">✕</button></div>
+    ${n.origin?`<div class="m-section"><div class="m-label">🌀 原型</div><div class="m-value">${n.origin}</div></div><div class="m-divider"></div>`:''}
+    <div class="m-section"><div class="m-label">▲ 正位</div><div class="m-kws">${(n.posKw||'').split('・').filter(Boolean).map(k=>`<span class="kw-pill">${k.trim()}</span>`).join('')||'—'}</div></div>
+    <div class="m-section"><div class="m-label">▽ 逆位</div><div class="m-kws">${(n.negKw||'').split('・').filter(Boolean).map(k=>`<span class="kw-pill neg">${k.trim()}</span>`).join('')||'—'}</div></div>
+    <div class="m-divider"></div>
+    ${n.love?`<div class="m-section"><div class="m-label">💕 感情</div><div class="m-value">${n.love}</div></div>`:''}
+    ${n.career?`<div class="m-section"><div class="m-label">⚡ 事業</div><div class="m-value">${n.career}</div></div>`:''}
+    ${n.health?`<div class="m-section"><div class="m-label">🌿 健康</div><div class="m-value">${n.health}</div></div>`:''}
+    ${n.image?`<div class="m-divider"></div><div class="m-section"><div class="m-label">🖼 圖像記憶</div><div class="m-value" style="font-style:italic;color:var(--gold-light)">${n.image}</div></div>`:''}
+    ${n.tip?`<div class="m-section"><div class="m-label">✨ 箴言</div><div class="m-value">${n.tip}</div></div>`:''}
+    <div style="margin-top:16px;display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <button class="btn btn-outline btn-sm" onclick="loadNoteToForm(${i})">✏️ 編輯</button>
+      <button class="btn btn-danger btn-sm" onclick="deleteNote(${i})">🗑 刪除</button>
+    </div>`;
+  document.getElementById('modal-overlay').classList.add('open');
+}
+
+function openDaily(i){
+  const d=dailyRecords[i];
+  document.getElementById('modal-content').innerHTML=`
+    <div class="modal-handle"></div>
+    <div class="modal-close-row"><h2>《${d.card}》${d.ori} · ${d.date}</h2>
+    <button class="modal-close" onclick="document.getElementById('modal-overlay').classList.remove('open')">✕</button></div>
+    <div class="m-section"><div class="m-label">📝 今日事件</div><div class="m-value">${d.event}</div></div>
+    <div class="m-divider"></div>
+    ${d.energy?`<div class="m-section"><div class="m-label">⚡ 牌義能量</div><div class="m-value">${d.energy}</div></div>`:''}
+    ${d.mapping?`<div class="m-section"><div class="m-label">🪞 生活映射</div><div class="m-value">${d.mapping.replace(/\n/g,'<br>')}</div></div>`:''}
+    ${d.hidden?`<div class="m-section"><div class="m-label">🌊 深層訊息</div><div class="m-value" style="font-style:italic">${d.hidden}</div></div>`:''}
+    ${d.action?`<div class="m-section"><div class="m-label">🎯 今日建議</div><div class="m-value">${d.action.replace(/\n/g,'<br>')}</div></div>`:''}
+    ${d.mantra?`<div class="m-section" style="text-align:center"><div class="m-label">✨ 今日箴言</div><div class="m-value" style="color:var(--gold-light);font-style:italic">${d.mantra}</div></div>`:''}
+    <div style="margin-top:16px"><button class="btn btn-danger btn-sm" onclick="deleteDaily(${i})">🗑 刪除紀錄</button></div>`;
+  document.getElementById('modal-overlay').classList.add('open');
+}
+
+function loadNoteToForm(i){
+  parsedCard={...notes[i]};
+  document.getElementById('nb-name').value=notes[i].name||'';
+  document.getElementById('nb-number').value=notes[i].num||'';
+  document.getElementById('modal-overlay').classList.remove('open');
+  switchTab('notebook');
+  setTimeout(()=>{
+    document.getElementById('nb-paste').value='（已從筆記庫載入）';
+    const show=(id,val)=>{const el=document.getElementById(id);el.textContent=val||'—';el.className='preview-val'+(val?'':' preview-empty')};
+    show('pv-origin',parsedCard.origin);show('pv-pos',parsedCard.posKw);show('pv-neg',parsedCard.negKw);
+    show('pv-love',parsedCard.love);show('pv-career',parsedCard.career);show('pv-health',parsedCard.health);
+    show('pv-image',parsedCard.image);show('pv-tip',parsedCard.tip);
+    document.getElementById('nb-preview').classList.add('show');
+  },300);
+  toast('已載入，可直接儲存');
+}
+
+function deleteNote(i){
+  if(!confirm(`確定刪除《${notes[i].name}》？`))return;
+  const name=notes[i].name;notes.splice(i,1);saveNotes();
+  document.getElementById('modal-overlay').classList.remove('open');
+  renderArchive();toast(`《${name}》已刪除`);
+}
+function deleteDaily(i){
+  if(!confirm('確定刪除這筆占卜紀錄？'))return;
+  dailyRecords.splice(i,1);saveDailyRecords();
+  document.getElementById('modal-overlay').classList.remove('open');
+  renderArchive();toast('已刪除');
+}
+
+function renderProgress(){
+  const total=78,learned=notes.length;
+  const allMajor=TAROT_78['大阿爾克那'].map(c=>c.replace(/\(\d+\)/,'').trim());
+  const majorLearned=Math.min(notes.filter(n=>allMajor.includes(n.name)).length,22);
+  const pct=Math.round(learned/total*100);
+  const suits=['聖杯','權杖','寶劍','星幣'];
+  const suitStats=suits.map(suit=>{
+    const done=Math.min(notes.filter(n=>TAROT_78[suit].includes(n.name)||(n.num&&n.num.includes(suit))).length,14);
+    return{suit,done,pct:Math.round(done/14*100)};
+  });
+  document.getElementById('progress-content').innerHTML=`
+    <div class="stat-grid">
+      <div class="stat-box"><div class="stat-num">${learned}</div><div class="stat-label">學習卡片</div></div>
+      <div class="stat-box"><div class="stat-num">${dailyRecords.length}</div><div class="stat-label">占卜紀錄</div></div>
+      <div class="stat-box"><div class="stat-num">${pct}%</div><div class="stat-label">完成度</div></div>
+    </div>
+    <div class="card-box">
+      <h2>📜 學習進度</h2>
+      <div class="prog-wrap">
+        <div class="prog-label-row"><span>整體（${learned}/78 張）</span><span>${pct}%</span></div>
+        <div class="prog-bar-bg"><div class="prog-bar" style="width:${pct}%"></div></div>
+      </div>
+      <div class="prog-wrap">
+        <div class="prog-label-row"><span>🌟 大阿爾克那（${majorLearned}/22）</span><span>${Math.round(majorLearned/22*100)}%</span></div>
+        <div class="prog-bar-bg"><div class="prog-bar" style="width:${Math.round(majorLearned/22*100)}%;background:linear-gradient(90deg,#c9a84c,#e8cc80)"></div></div>
+      </div>
+      <div style="font-size:.75rem;color:var(--gold-light);margin:13px 0 10px;letter-spacing:.06em">🎴 小阿爾克那各花色</div>
+      ${suitStats.map(s=>`
+        <div class="prog-wrap">
+          <div class="prog-label-row"><span>${s.suit}（${s.done}/14）</span><span>${s.pct}%</span></div>
+          <div class="prog-bar-bg"><div class="prog-bar" style="width:${s.pct}%;background:linear-gradient(90deg,var(--amethyst),var(--rose))"></div></div>
+        </div>`).join('')}
+      <div style="margin-top:15px;display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div style="background:rgba(0,0,0,.2);border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center">
+          <div style="font-size:1rem;margin-bottom:4px">📅</div>
+          <div style="font-size:.67rem;color:rgba(245,237,224,.35)">最近學習</div>
+          <div style="font-size:.85rem;margin-top:3px">${notes[0]?'《'+notes[0].name+'》':'—'}</div>
+        </div>
+        <div style="background:rgba(0,0,0,.2);border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center">
+          <div style="font-size:1rem;margin-bottom:4px">🎯</div>
+          <div style="font-size:.67rem;color:rgba(245,237,224,.35)">距完成還差</div>
+          <div style="font-size:.85rem;margin-top:3px">${total-learned} 張</div>
+        </div>
+      </div>
+    </div>`;
+}
+
+function renderBackupStatus(){
+  const bt=load(KEYS.time);
+  document.getElementById('backup-status-area').innerHTML=`
+    <div style="padding:14px 15px;background:rgba(0,0,0,.18);border-radius:12px;border:1px solid var(--border);margin-bottom:14px">
+      <div style="font-size:.78rem;color:var(--gold-light);margin-bottom:6px">📂 目前狀態</div>
+      <div style="font-size:.88rem;color:rgba(245,237,224,.65);line-height:1.9">
+        學習卡片：<strong style="color:var(--gold)">${notes.length} 張</strong><br>
+        占卜紀錄：<strong style="color:var(--gold)">${dailyRecords.length} 筆</strong><br>
+        最後更新：<strong style="color:var(--parchment)">${bt?new Date(bt).toLocaleString('zh-TW'):'—'}</strong>
+      </div>
+      <div style="margin-top:10px">
+        <span class="status-pill ${(notes.length+dailyRecords.length)>0?'status-ok':'status-warn'}">${(notes.length+dailyRecords.length)>0?'✓ 建議定期匯出備份':'⚠ 尚未建立任何資料'}</span>
+      </div>
+    </div>`;
+}
+
+function exportData(){
+  if(!notes.length&&!dailyRecords.length){toast('目前沒有資料可匯出');return}
+  const blob=new Blob([JSON.stringify({version:3,exported:new Date().toISOString(),notes,dailyRecords},null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download=`塔羅筆記備份_${new Date().toLocaleDateString('zh-TW').replace(/\//g,'-')}.json`;
+  a.click();toast('備份已下載 ✓');
+}
+
+function importData(event){
+  const file=event.target.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    try{
+      const data=JSON.parse(e.target.result);
+      const iN=data.notes||(Array.isArray(data)?data:[]);
+      const iD=data.dailyRecords||[];
+      if(!iN.length&&!iD.length){toast('找不到有效資料');return}
+      if(!confirm(`即將匯入 ${iN.length} 張卡片、${iD.length} 筆紀錄，確定嗎？`))return;
+      let added=0;
+      iN.forEach(n=>{if(!notes.find(x=>x.name===n.name)){notes.push(n);added++}});
+      iD.forEach(d=>{if(!dailyRecords.find(x=>x.id===d.id))dailyRecords.push(d)});
+      saveNotes();saveDailyRecords();renderBackupStatus();
+      toast(`成功匯入 ${added} 張卡片 ✓`);
+    }catch(e){toast('檔案格式錯誤')}
+  };
+  reader.readAsText(file);event.target.value='';
+}
+
+function clearAll(){
+  if(!confirm('確定清除所有資料？不可復原！'))return;
+  if(!confirm(`再次確認：清除 ${notes.length} 張卡片 + ${dailyRecords.length} 筆紀錄？`))return;
+  notes=[];dailyRecords=[];saveNotes();saveDailyRecords();
+  save(KEYS.init,true);renderBackupStatus();toast('所有資料已清除');
+}
+
+function closeModal(e){
+  if(e.target===document.getElementById('modal-overlay'))
+    document.getElementById('modal-overlay').classList.remove('open');
+}
+</script>
+</body>
+</html>
