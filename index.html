@@ -14,15 +14,7 @@
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{height:100%}
 body{background:var(--midnight);color:var(--parchment);font-family:'Noto Serif TC',serif;min-height:100vh;overflow-x:hidden;overflow-y:scroll;-webkit-overflow-scrolling:touch;padding-bottom:calc(88px + env(safe-area-inset-bottom));font-size:17px;line-height:1.65}
-body::before{content:'';position:fixed;inset:0;background:
-  radial-gradient(1px 1px at 8% 12%,rgba(255,255,255,.5) 0%,transparent 100%),
-  radial-gradient(1px 1px at 25% 35%,rgba(255,255,255,.3) 0%,transparent 100%),
-  radial-gradient(1px 1px at 50% 8%,rgba(255,255,255,.4) 0%,transparent 100%),
-  radial-gradient(1px 1px at 72% 20%,rgba(255,255,255,.28) 0%,transparent 100%),
-  radial-gradient(1px 1px at 88% 50%,rgba(255,255,255,.45) 0%,transparent 100%),
-  radial-gradient(1px 1px at 60% 75%,rgba(255,255,255,.35) 0%,transparent 100%),
-  radial-gradient(ellipse at 50% 0%,rgba(107,63,160,.22) 0%,transparent 55%),
-  var(--midnight);pointer-events:none;z-index:0}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(1px 1px at 8% 12%,rgba(255,255,255,.5) 0%,transparent 100%),radial-gradient(1px 1px at 25% 35%,rgba(255,255,255,.3) 0%,transparent 100%),radial-gradient(1px 1px at 50% 8%,rgba(255,255,255,.4) 0%,transparent 100%),radial-gradient(1px 1px at 72% 20%,rgba(255,255,255,.28) 0%,transparent 100%),radial-gradient(1px 1px at 88% 50%,rgba(255,255,255,.45) 0%,transparent 100%),radial-gradient(1px 1px at 60% 75%,rgba(255,255,255,.35) 0%,transparent 100%),radial-gradient(ellipse at 50% 0%,rgba(107,63,160,.22) 0%,transparent 55%),var(--midnight);pointer-events:none;z-index:0}
 .app{position:relative;z-index:1;max-width:640px;margin:0 auto}
 header{text-align:center;padding:28px 16px 20px;border-bottom:1px solid var(--border)}
 .logo-symbol{font-size:2rem;margin-bottom:6px;display:block;animation:float 4s ease-in-out infinite}
@@ -132,9 +124,7 @@ textarea{resize:none;line-height:1.7;overflow-y:auto;-webkit-overflow-scrolling:
 .m-divider{height:1px;background:var(--border);margin:12px 0}
 .toast{position:fixed;bottom:94px;left:50%;transform:translateX(-50%) translateY(20px);background:linear-gradient(135deg,var(--amethyst),#4a2080);color:var(--parchment);padding:11px 22px;border-radius:24px;font-size:.84rem;box-shadow:0 5px 18px rgba(0,0,0,.5);z-index:300;opacity:0;transition:all .27s;pointer-events:none;max-width:88vw;text-align:center}
 .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
-::-webkit-scrollbar{width:3px}
-::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
 @media(max-width:380px){.backup-grid{grid-template-columns:1fr}}
 </style>
 </head>
@@ -147,18 +137,13 @@ textarea{resize:none;line-height:1.7;overflow-y:auto;-webkit-overflow-scrolling:
 </header>
 
 <div id="panel-notebook" class="panel active">
-  <div class="claude-tip">
-    <strong>💡 使用方式</strong>
-    在 Claude 輸入「幫我生成《牌名》的學習卡片」→ 複製整段內容貼入智慧貼上框 → 點「自動拆分」→ 儲存
-  </div>
+  <div class="claude-tip"><strong>💡 使用方式</strong>在 Claude 輸入「幫我生成《牌名》的學習卡片」→ 複製整段內容貼入智慧貼上框 → 點「自動拆分」→ 儲存</div>
   <div class="card-box">
     <h2>🃏 建立學習卡片</h2>
-    <label>牌名</label>
-    <input type="text" id="nb-name" placeholder="例：愚者、月亮、聖杯三…">
+    <label>牌名</label><input type="text" id="nb-name" placeholder="例：愚者、月亮、聖杯三…">
     <button class="picker-toggle" onclick="togglePicker('picker1','nb-name','nb-number')">📋 從 78 張牌表選牌 ▾</button>
     <div id="picker1" class="card-picker"></div>
-    <label>牌號 / 花色</label>
-    <input type="text" id="nb-number" placeholder="例：0 號大阿爾克那 / 聖杯">
+    <label>牌號 / 花色</label><input type="text" id="nb-number" placeholder="例：0 號大阿爾克那 / 聖杯">
     <div class="paste-zone">
       <div class="paste-zone-title">✨ 智慧貼上<span class="badge">一鍵填入</span></div>
       <textarea id="nb-paste" class="ta-xl" placeholder="把 Claude 給的完整學習卡片內容貼在這裡…"></textarea>
@@ -180,14 +165,10 @@ textarea{resize:none;line-height:1.7;overflow-y:auto;-webkit-overflow-scrolling:
 </div>
 
 <div id="panel-daily" class="panel">
-  <div class="claude-tip">
-    <strong>💡 使用方式</strong>
-    告訴 Claude 你抽到什麼牌、發生了什麼 → 把解析整段貼入智慧貼上框 → 點「自動拆分」→ 儲存
-  </div>
+  <div class="claude-tip"><strong>💡 使用方式</strong>告訴 Claude 你抽到什麼牌、發生了什麼 → 把解析整段貼入智慧貼上框 → 點「自動拆分」→ 儲存</div>
   <div class="card-box">
     <h2>🌙 今日占卜紀錄</h2>
-    <label>今天抽到的牌</label>
-    <input type="text" id="daily-card" placeholder="例：星星、太陽…">
+    <label>今天抽到的牌</label><input type="text" id="daily-card" placeholder="例：星星、太陽…">
     <button class="picker-toggle" onclick="togglePicker('picker2','daily-card',null)">📋 從牌表選牌 ▾</button>
     <div id="picker2" class="card-picker"></div>
     <label>牌面方向</label>
@@ -216,34 +197,18 @@ textarea{resize:none;line-height:1.7;overflow-y:auto;-webkit-overflow-scrolling:
 </div>
 
 <div id="panel-archive" class="panel">
-  <div class="search-wrap">
-    <span class="search-icon">🔍</span>
-    <input type="text" id="search-input" placeholder="搜尋牌名或關鍵詞…" oninput="renderArchive()">
-  </div>
+  <div class="search-wrap"><span class="search-icon">🔍</span><input type="text" id="search-input" placeholder="搜尋牌名或關鍵詞…" oninput="renderArchive()"></div>
   <div id="archive-list"></div>
 </div>
 
-<div id="panel-progress" class="panel">
-  <div id="progress-content"></div>
-</div>
+<div id="panel-progress" class="panel"><div id="progress-content"></div></div>
 
 <div id="panel-backup" class="panel">
   <div class="card-box">
     <h2>💾 備份管理</h2>
     <div class="backup-grid">
-      <div class="backup-card">
-        <div class="backup-icon">📤</div>
-        <div class="backup-title">匯出備份</div>
-        <div class="backup-desc">下載 JSON 到裝置永久保存</div>
-        <button class="btn btn-gold btn-sm" onclick="exportData()">下載備份</button>
-      </div>
-      <div class="backup-card">
-        <div class="backup-icon">📥</div>
-        <div class="backup-title">匯入備份</div>
-        <div class="backup-desc">從 JSON 備份恢復筆記</div>
-        <input type="file" id="import-file" accept=".json" style="display:none" onchange="importData(event)">
-        <button class="btn btn-outline btn-sm" onclick="document.getElementById('import-file').click()">選擇檔案</button>
-      </div>
+      <div class="backup-card"><div class="backup-icon">📤</div><div class="backup-title">匯出備份</div><div class="backup-desc">下載 JSON 到裝置永久保存</div><button class="btn btn-gold btn-sm" onclick="exportData()">下載備份</button></div>
+      <div class="backup-card"><div class="backup-icon">📥</div><div class="backup-title">匯入備份</div><div class="backup-desc">從 JSON 備份恢復筆記</div><input type="file" id="import-file" accept=".json" style="display:none" onchange="importData(event)"><button class="btn btn-outline btn-sm" onclick="document.getElementById('import-file').click()">選擇檔案</button></div>
     </div>
     <div id="backup-status-area"></div>
     <div style="margin-top:14px;background:rgba(194,99,122,.06);border:1px solid rgba(194,99,122,.18);border-radius:12px;padding:15px">
@@ -268,19 +233,14 @@ textarea{resize:none;line-height:1.7;overflow-y:auto;-webkit-overflow-scrolling:
 <div id="toast" class="toast"></div>
 
 <script>
-const TAROT_78={
-  '大阿爾克那':['愚者(0)','魔術師(1)','女祭司(2)','女皇(3)','皇帝(4)','教皇(5)','戀人(6)','戰車(7)','力量(8)','隱士(9)','命運之輪(10)','正義(11)','吊人(12)','死神(13)','節制(14)','惡魔(15)','塔(16)','星星(17)','月亮(18)','太陽(19)','審判(20)','世界(21)'],
-  '聖杯':['聖杯王牌','聖杯二','聖杯三','聖杯四','聖杯五','聖杯六','聖杯七','聖杯八','聖杯九','聖杯十','聖杯侍者','聖杯騎士','聖杯皇后','聖杯國王'],
-  '權杖':['權杖王牌','權杖二','權杖三','權杖四','權杖五','權杖六','權杖七','權杖八','權杖九','權杖十','權杖侍者','權杖騎士','權杖皇后','權杖國王'],
-  '寶劍':['寶劍王牌','寶劍二','寶劍三','寶劍四','寶劍五','寶劍六','寶劍七','寶劍八','寶劍九','寶劍十','寶劍侍者','寶劍騎士','寶劍皇后','寶劍國王'],
-  '星幣':['星幣王牌','星幣二','星幣三','星幣四','星幣五','星幣六','星幣七','星幣八','星幣九','星幣十','星幣侍者','星幣騎士','星幣皇后','星幣國王'],
-};
+const TAROT_78={'大阿爾克那':['愚者(0)','魔術師(1)','女祭司(2)','女皇(3)','皇帝(4)','教皇(5)','戀人(6)','戰車(7)','力量(8)','隱士(9)','命運之輪(10)','正義(11)','吊人(12)','死神(13)','節制(14)','惡魔(15)','塔(16)','星星(17)','月亮(18)','太陽(19)','審判(20)','世界(21)'],'聖杯':['聖杯王牌','聖杯二','聖杯三','聖杯四','聖杯五','聖杯六','聖杯七','聖杯八','聖杯九','聖杯十','聖杯侍者','聖杯騎士','聖杯皇后','聖杯國王'],'權杖':['權杖王牌','權杖二','權杖三','權杖四','權杖五','權杖六','權杖七','權杖八','權杖九','權杖十','權杖侍者','權杖騎士','權杖皇后','權杖國王'],'寶劍':['寶劍王牌','寶劍二','寶劍三','寶劍四','寶劍五','寶劍六','寶劍七','寶劍八','寶劍九','寶劍十','寶劍侍者','寶劍騎士','寶劍皇后','寶劍國王'],'星幣':['星幣王牌','星幣二','星幣三','星幣四','星幣五','星幣六','星幣七','星幣八','星幣九','星幣十','星幣侍者','星幣騎士','星幣皇后','星幣國王']};
 
 const PRELOAD_NOTES=[
   {id:1743609600001,name:'愚者',num:'0 號大阿爾克那',origin:'數字 0，代表無限與圓滿的起點。愚者是塔羅旅程的第一步，對應神話中「英雄出發」的原型——一個無所畏懼、尚未被世界定義的靈魂，踏出懸崖邊緣的第一步。',posKw:'新開始・冒險・純真',negKw:'魯莽・逃避・準備不足',love:'正位：一段全新的感情正在萌芽，放下過去的包袱，用最純粹的心去相遇。逆位：因為恐懼受傷而不敢踏出第一步。',career:'正位：適合創業、轉職、嘗試從未做過的事，現在跳出去是對的時機。逆位：計畫不夠周全就貿然行動，或因為逃避現實而錯失機會。',health:'正位：身心狀態輕盈，適合嘗試新的運動或生活方式。逆位：忽視身體發出的警訊，過於隨性對待自己的健康。',image:'想像一個背著小包袱的年輕人，站在懸崖邊，眼睛看著天空而不是腳下。記住：眼睛看天，腳踩懸崖。',tip:'不是因為準備好了才出發，而是出發之後才會準備好。',date:'2026/4/3'},
   {id:1743609600002,name:'魔術師',num:'1 號大阿爾克那',origin:'數字 1，萬物起源的第一個數字。魔術師對應「創造者」原型，一手指天接收靈感，一手指地將其落實，頭頂∞代表無限的可能性。',posKw:'顯化・意志力・掌握資源',negKw:'操弄・才能浪費・欺騙',love:'正位：主動出擊的時機，你有魅力有能力，勇敢表達心意。逆位：用話術吸引對方，或被花言巧語的人迷惑。',career:'正位：手上的資源和能力剛好夠用，大膽去做，這是你的時機。逆位：明明有才能卻沒有發揮，或把能力用在不正當的地方。',health:'正位：身心能量充沛，專注力強，適合啟動新的健康計畫。逆位：過度消耗意志力，或忽視身體訊號只靠意志硬撐。',image:'桌上四樣工具一樣不缺，他不是在等更好的條件，他現在就開始了。記住：魔術師從不說「等我準備好」。',tip:'你已經有了所有需要的東西，缺的只是開始。',date:'2026/4/3'},
   {id:1743609600003,name:'女祭司',num:'2 號大阿爾克那',origin:'數字 2，代表二元與平衡。女祭司對應「智慧守護者」原型，坐在意識與潛意識的邊界，一黑一白柱子代表她能看見兩面，膝上的書代表她已知道答案，但選擇靜靜等待揭曉的時機。',posKw:'直覺・靜待・內在智慧',negKw:'壓抑直覺・逃避真相・忽視內心',love:'正位：感情還不到表態的時機，靜靜觀察對方，答案會自然浮現。逆位：明明感覺到關係有問題，卻假裝沒事，逃避面對真實的狀況。',career:'正位：不要急著行動，先蒐集資訊、觀察局勢，時機未到時靜待是最聰明的選擇。逆位：忽視內心對某件事的不安感，或壓抑自己真正想做的事。',health:'正位：身體在告訴你什麼，靜下來傾聽，不要用忙碌蓋過身體的訊號。逆位：明知道身體需要休息，卻一直硬撐，假裝沒問題。',image:'她坐在那裡什麼都不做，但她什麼都知道。記住：沉默不是沒有答案，是答案還不到說出口的時候。',tip:'最深的智慧，往往藏在最安靜的等待裡。',date:'2026/4/3'},
   {id:1743609600004,name:'女皇',num:'3 號大阿爾克那',origin:'數字 3，代表創造與豐盛的具現。女皇對應「大地之母」原型——她坐在豐盛的自然裡，身旁有麥田、森林、流水，腳邊的金星符號代表她掌管愛與美，她不努力創造豐盛，因為她本身就是豐盛。',posKw:'豐盛・創造・滋養',negKw:'匱乏感・過度付出・創造力受阻',love:'正位：感情滋潤豐盛，給予與接受都很自然，是充滿愛的狀態。逆位：給予太多卻忘了滋養自己，或感情上有匱乏感與不安全感。',career:'正位：創造力旺盛，資源豐沛，適合開展新計畫或藝術創作。逆位：創造力受阻，感覺資源不夠，或過度依賴他人的肯定。',health:'正位：身心狀態豐盈，好好享受感官的喜悅，滋養自己是現在最重要的事。逆位：忽視自己的需求，只顧付出而忘記補充能量。',image:'她坐在大自然裡，周圍一切都在生長。她不需要做什麼，豐盛自然而來。記住：她是豐盛本身，不是努力得來的豐盛。',tip:'資源源源不絕而來，前提是你願意接受它。',date:'2026/4/9'},
+  {id:1743609600009,name:'皇帝',num:'4 號大阿爾克那',origin:'數字 4，代表穩固與結構。皇帝對應「父親」原型——他用秩序和規則建立安全的世界，石頭王座代表不可動搖的意志，盔甲代表隨時準備好保護一切。他是女皇豐盛世界的守護者。',posKw:'秩序・權威・穩固',negKw:'失控・過度威權・缺乏紀律',love:'正位：穩定可靠的伴侶，用行動保護對方，給關係帶來安全感。逆位：過度控制伴侶，或完全相反——無法承擔責任，讓對方沒有安全感。',career:'正位：建立清晰的結構和計畫，用紀律推進目標，是領導者的能量。逆位：獨斷專行不聽建議，或紀律崩潰、計畫失控。',health:'正位：有規律的作息和運動計畫，用紀律維持健康。逆位：作息混亂，或用過度嚴苛的方式對待自己的身體。',image:'女皇坐在花園裡，皇帝坐在光禿禿的山上。她身邊有生命，他身邊只有岩石。記住：岩石不是荒涼，是最堅固的基礎。',tip:'自由需要邊界，豐盛需要結構。',date:'2026/4/10'},
   {id:1743609600005,name:'太陽',num:'19 號大阿爾克那',origin:'數字 19，接近塔羅旅程的終點。太陽對應「純粹喜悅」的原型——一個赤裸的孩子騎著白馬，在燦爛的太陽下奔跑，頭上戴著花冠，背後是向日葵。他不需要盔甲，因為光本身就是保護。',posKw:'喜悅・清晰・活力充沛',negKw:'過度樂觀・自我膨脹・光芒被遮蔽',love:'正位：關係明朗、溫暖、充滿活力，是感情最好的狀態之一。逆位：過度理想化對方，或把快樂建立在不切實際的期待上。',career:'正位：能力被看見，計畫順利推進，是展現自己的好時機。逆位：過度自信導致忽略細節，或光芒太強而壓過團隊。',health:'正位：活力旺盛，身心狀態明亮，適合戶外活動。逆位：過度消耗精力，或眼睛、皮膚等與光有關的部位需要注意。',image:'赤裸的孩子騎白馬在陽光下奔跑，什麼都不怕，什麼都不藏。記住：孩子不是因為無知才無畏，是因為完全活在當下才無畏。',tip:'陽光下沒有秘密，也不需要秘密。',date:'2026/4/9'},
   {id:1743609600006,name:'權杖八',num:'權杖',origin:'數字 8，代表力量與動能的高峰。權杖八對應「箭在弦上、一觸即發」的原型——事情已經啟動，正在空中飛行，無法回頭也不需要回頭。',posKw:'快速推進・訊息傳遞・行動力',negKw:'延誤・混亂・急躁失控',love:'正位：感情快速升溫，訊息頻繁往來，關係正在加速發展。逆位：溝通出現誤解或延遲，急於求成反而讓對方感到壓力。',career:'正位：事情快速推進，可能同時處理多件任務，效率極高的時期。逆位：計畫趕不上變化，事情卡關或方向混亂，需要重新整理優先順序。',health:'正位：精力旺盛，適合高強度運動或密集的行程安排。逆位：過度消耗體力，身體跟不上腦袋的節奏，需要適時煞車休息。',image:'八支權杖同時斜插在空中飛射，沒有人拿著它們，它們自己在飛。記住：沒有人控制，但方向一致，速度極快。',tip:'在飛速之中，你從未真正錯過。',date:'2026/4/3'},
   {id:1743609600007,name:'權杖皇后',num:'權杖',origin:'宮廷牌中最有行動力的女性能量。權杖皇后對應「充滿熱情的創造者」原型——她知道自己要什麼，優雅而堅定地實現它，腳邊的黑貓代表她也有直覺與神秘的一面。',posKw:'行動力・務實・熱情自信',negKw:'衝動・控制欲・燃燒殆盡',love:'正位：主動、熱情、有魅力，是感情中的主導者，帶給對方活力與溫暖。逆位：佔有欲過強，或因過度付出而感到疲憊與委屈。',career:'正位：在工作中展現強大執行力，多線並進也能應對自如，是天生的領導者。逆位：過度控制或強迫他人按自己方式做事，消耗人際關係。',health:'正位：精力充沛，活力旺盛，適合挑戰高強度目標。逆位：燃燒過度，需要警惕身心耗竭，學會適時放手。',image:'她坐在王座上，一手握著權杖，腳邊有一隻黑貓。她不需要說話，光是坐在那裡就散發能量。記住：她是把事情做完的那個人。',tip:'熱情是火，智慧是讓火燒得剛剛好。',date:'2026/4/7'},
@@ -297,7 +257,7 @@ const PRELOAD_DAILY=[
 ];
 
 let notes=[],dailyRecords=[],selectedOri='正位',parsedCard={},parsedDaily={};
-const KEYS={notes:'tarot_notes_v3',daily:'tarot_daily_v3',time:'tarot_backup_time',init:'tarot_init_v6'};
+const KEYS={notes:'tarot_notes_v3',daily:'tarot_daily_v3',time:'tarot_backup_time',init:'tarot_init_v7'};
 
 function save(key,data){const s=JSON.stringify(data);try{localStorage.setItem(key,s)}catch(e){}try{sessionStorage.setItem(key,s)}catch(e){}}
 function load(key){try{const d=localStorage.getItem(key);if(d)return JSON.parse(d)}catch(e){}try{const d=sessionStorage.getItem(key);if(d)return JSON.parse(d)}catch(e){}return null}
@@ -312,24 +272,10 @@ loadData();
 
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2800)}
 const TABS=['notebook','daily','archive','progress','backup'];
-function switchTab(tab){
-  TABS.forEach((t,i)=>document.querySelectorAll('.nav-item')[i].classList.toggle('active',t===tab));
-  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
-  document.getElementById('panel-'+tab).classList.add('active');
-  if(tab==='archive')renderArchive();if(tab==='progress')renderProgress();if(tab==='backup')renderBackupStatus();
-  window.scrollTo({top:0,behavior:'smooth'});
-}
-function buildPicker(id){
-  const c=document.getElementById(id);let html='';
-  for(const[suit,cards]of Object.entries(TAROT_78)){html+=`<div class="picker-section-title">${suit}</div><div class="card-chips">`;html+=cards.map(card=>`<span class="card-chip" onclick="pickCard(event,'${card}','${id}')">${card}</span>`).join('');html+='</div>'}
-  c.innerHTML=html;
-}
+function switchTab(tab){TABS.forEach((t,i)=>document.querySelectorAll('.nav-item')[i].classList.toggle('active',t===tab));document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));document.getElementById('panel-'+tab).classList.add('active');if(tab==='archive')renderArchive();if(tab==='progress')renderProgress();if(tab==='backup')renderBackupStatus();window.scrollTo({top:0,behavior:'smooth'})}
+function buildPicker(id){const c=document.getElementById(id);let html='';for(const[suit,cards]of Object.entries(TAROT_78)){html+=`<div class="picker-section-title">${suit}</div><div class="card-chips">`;html+=cards.map(card=>`<span class="card-chip" onclick="pickCard(event,'${card}','${id}')">${card}</span>`).join('');html+='</div>'}c.innerHTML=html}
 function togglePicker(pickerId,inputId,numInputId){const p=document.getElementById(pickerId);if(!p.innerHTML)buildPicker(pickerId);p._inputId=inputId;p._numId=numInputId;p.classList.toggle('open')}
-function pickCard(e,card,pickerId){
-  const p=document.getElementById(pickerId);const clean=card.replace(/\(\d+\)/,'').trim();document.getElementById(p._inputId).value=clean;
-  if(p._numId){const m=card.match(/\((\d+)\)/);if(m)document.getElementById(p._numId).value=`${m[1]} 號大阿爾克那`;else for(const[suit,cards]of Object.entries(TAROT_78)){if(suit!=='大阿爾克那'&&cards.includes(card))document.getElementById(p._numId).value=suit}}
-  p.querySelectorAll('.card-chip').forEach(c=>c.classList.remove('selected'));e.target.classList.add('selected');setTimeout(()=>p.classList.remove('open'),280);
-}
+function pickCard(e,card,pickerId){const p=document.getElementById(pickerId);const clean=card.replace(/\(\d+\)/,'').trim();document.getElementById(p._inputId).value=clean;if(p._numId){const m=card.match(/\((\d+)\)/);if(m)document.getElementById(p._numId).value=`${m[1]} 號大阿爾克那`;else for(const[suit,cards]of Object.entries(TAROT_78)){if(suit!=='大阿爾克那'&&cards.includes(card))document.getElementById(p._numId).value=suit}}p.querySelectorAll('.card-chip').forEach(c=>c.classList.remove('selected'));e.target.classList.add('selected');setTimeout(()=>p.classList.remove('open'),280)}
 function selectOri(ori){selectedOri=ori;document.getElementById('ori-pos').classList.toggle('selected',ori==='正位');document.getElementById('ori-neg').classList.toggle('selected',ori==='逆位')}
 function parseCardContent(){
   const raw=document.getElementById('nb-paste').value.trim();if(!raw){toast('請先貼入 Claude 給的卡片內容');return}
@@ -389,12 +335,7 @@ function openDaily(i){
   document.getElementById('modal-content').innerHTML=`<div class="modal-handle"></div><div class="modal-close-row"><h2>《${d.card}》${d.ori} · ${d.date}</h2><button class="modal-close" onclick="document.getElementById('modal-overlay').classList.remove('open')">✕</button></div><div class="m-section"><div class="m-label">📝 今日事件</div><div class="m-value">${d.event}</div></div><div class="m-divider"></div>${d.energy?`<div class="m-section"><div class="m-label">⚡ 牌義能量</div><div class="m-value">${d.energy}</div></div>`:''}${d.mapping?`<div class="m-section"><div class="m-label">🪞 生活映射</div><div class="m-value">${d.mapping.replace(/\n/g,'<br>')}</div></div>`:''}${d.hidden?`<div class="m-section"><div class="m-label">🌊 深層訊息</div><div class="m-value" style="font-style:italic">${d.hidden}</div></div>`:''}${d.action?`<div class="m-section"><div class="m-label">🎯 今日建議</div><div class="m-value">${d.action.replace(/\n/g,'<br>')}</div></div>`:''}${d.mantra?`<div class="m-section" style="text-align:center"><div class="m-label">✨ 今日箴言</div><div class="m-value" style="color:var(--gold-light);font-style:italic">${d.mantra}</div></div>`:''}<div style="margin-top:16px"><button class="btn btn-danger btn-sm" onclick="deleteDaily(${i})">🗑 刪除紀錄</button></div>`;
   document.getElementById('modal-overlay').classList.add('open');
 }
-function loadNoteToForm(i){
-  parsedCard={...notes[i]};document.getElementById('nb-name').value=notes[i].name||'';document.getElementById('nb-number').value=notes[i].num||'';
-  document.getElementById('modal-overlay').classList.remove('open');switchTab('notebook');
-  setTimeout(()=>{document.getElementById('nb-paste').value='（已從筆記庫載入）';const show=(id,val)=>{const el=document.getElementById(id);el.textContent=val||'—';el.className='preview-val'+(val?'':' preview-empty')};show('pv-origin',parsedCard.origin);show('pv-pos',parsedCard.posKw);show('pv-neg',parsedCard.negKw);show('pv-love',parsedCard.love);show('pv-career',parsedCard.career);show('pv-health',parsedCard.health);show('pv-image',parsedCard.image);show('pv-tip',parsedCard.tip);document.getElementById('nb-preview').classList.add('show')},300);
-  toast('已載入，可直接儲存');
-}
+function loadNoteToForm(i){parsedCard={...notes[i]};document.getElementById('nb-name').value=notes[i].name||'';document.getElementById('nb-number').value=notes[i].num||'';document.getElementById('modal-overlay').classList.remove('open');switchTab('notebook');setTimeout(()=>{document.getElementById('nb-paste').value='（已從筆記庫載入）';const show=(id,val)=>{const el=document.getElementById(id);el.textContent=val||'—';el.className='preview-val'+(val?'':' preview-empty')};show('pv-origin',parsedCard.origin);show('pv-pos',parsedCard.posKw);show('pv-neg',parsedCard.negKw);show('pv-love',parsedCard.love);show('pv-career',parsedCard.career);show('pv-health',parsedCard.health);show('pv-image',parsedCard.image);show('pv-tip',parsedCard.tip);document.getElementById('nb-preview').classList.add('show')},300);toast('已載入，可直接儲存')}
 function deleteNote(i){if(!confirm(`確定刪除《${notes[i].name}》？`))return;const name=notes[i].name;notes.splice(i,1);saveNotes();document.getElementById('modal-overlay').classList.remove('open');renderArchive();toast(`《${name}》已刪除`)}
 function deleteDaily(i){if(!confirm('確定刪除這筆占卜紀錄？'))return;dailyRecords.splice(i,1);saveDailyRecords();document.getElementById('modal-overlay').classList.remove('open');renderArchive();toast('已刪除')}
 function renderProgress(){
@@ -406,20 +347,9 @@ function renderBackupStatus(){
   const bt=load(KEYS.time);
   document.getElementById('backup-status-area').innerHTML=`<div style="padding:14px 15px;background:rgba(0,0,0,.18);border-radius:12px;border:1px solid var(--border);margin-bottom:14px"><div style="font-size:.78rem;color:var(--gold-light);margin-bottom:6px">📂 目前狀態</div><div style="font-size:.88rem;color:rgba(245,237,224,.65);line-height:1.9">學習卡片：<strong style="color:var(--gold)">${notes.length} 張</strong><br>占卜紀錄：<strong style="color:var(--gold)">${dailyRecords.length} 筆</strong><br>最後更新：<strong style="color:var(--parchment)">${bt?new Date(bt).toLocaleString('zh-TW'):'—'}</strong></div><div style="margin-top:10px"><span class="status-pill ${(notes.length+dailyRecords.length)>0?'status-ok':'status-warn'}">${(notes.length+dailyRecords.length)>0?'✓ 建議定期匯出備份':'⚠ 尚未建立任何資料'}</span></div></div>`;
 }
-function exportData(){
-  if(!notes.length&&!dailyRecords.length){toast('目前沒有資料可匯出');return}
-  const blob=new Blob([JSON.stringify({version:3,exported:new Date().toISOString(),notes,dailyRecords},null,2)],{type:'application/json'});
-  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`塔羅筆記備份_${new Date().toLocaleDateString('zh-TW').replace(/\//g,'-')}.json`;a.click();toast('備份已下載 ✓');
-}
-function importData(event){
-  const file=event.target.files[0];if(!file)return;const reader=new FileReader();
-  reader.onload=e=>{try{const data=JSON.parse(e.target.result);const iN=data.notes||(Array.isArray(data)?data:[]);const iD=data.dailyRecords||[];if(!iN.length&&!iD.length){toast('找不到有效資料');return}if(!confirm(`即將匯入 ${iN.length} 張卡片、${iD.length} 筆紀錄，確定嗎？`))return;let added=0;iN.forEach(n=>{if(!notes.find(x=>x.name===n.name)){notes.push(n);added++}});iD.forEach(d=>{if(!dailyRecords.find(x=>x.id===d.id))dailyRecords.push(d)});saveNotes();saveDailyRecords();renderBackupStatus();toast(`成功匯入 ${added} 張卡片 ✓`)}catch(e){toast('檔案格式錯誤')}};
-  reader.readAsText(file);event.target.value='';
-}
-function clearAll(){
-  if(!confirm('確定清除所有資料？不可復原！'))return;if(!confirm(`再次確認：清除 ${notes.length} 張卡片 + ${dailyRecords.length} 筆紀錄？`))return;
-  notes=[];dailyRecords=[];saveNotes();saveDailyRecords();save(KEYS.init,true);renderBackupStatus();toast('所有資料已清除');
-}
+function exportData(){if(!notes.length&&!dailyRecords.length){toast('目前沒有資料可匯出');return}const blob=new Blob([JSON.stringify({version:3,exported:new Date().toISOString(),notes,dailyRecords},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`塔羅筆記備份_${new Date().toLocaleDateString('zh-TW').replace(/\//g,'-')}.json`;a.click();toast('備份已下載 ✓')}
+function importData(event){const file=event.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=e=>{try{const data=JSON.parse(e.target.result);const iN=data.notes||(Array.isArray(data)?data:[]);const iD=data.dailyRecords||[];if(!iN.length&&!iD.length){toast('找不到有效資料');return}if(!confirm(`即將匯入 ${iN.length} 張卡片、${iD.length} 筆紀錄，確定嗎？`))return;let added=0;iN.forEach(n=>{if(!notes.find(x=>x.name===n.name)){notes.push(n);added++}});iD.forEach(d=>{if(!dailyRecords.find(x=>x.id===d.id))dailyRecords.push(d)});saveNotes();saveDailyRecords();renderBackupStatus();toast(`成功匯入 ${added} 張卡片 ✓`)}catch(e){toast('檔案格式錯誤')}};reader.readAsText(file);event.target.value=''}
+function clearAll(){if(!confirm('確定清除所有資料？不可復原！'))return;if(!confirm(`再次確認：清除 ${notes.length} 張卡片 + ${dailyRecords.length} 筆紀錄？`))return;notes=[];dailyRecords=[];saveNotes();saveDailyRecords();save(KEYS.init,true);renderBackupStatus();toast('所有資料已清除')}
 function closeModal(e){if(e.target===document.getElementById('modal-overlay'))document.getElementById('modal-overlay').classList.remove('open')}
 </script>
 
