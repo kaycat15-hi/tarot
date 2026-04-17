@@ -10,123 +10,132 @@
 <title>塔羅牌學習系統</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Noto+Serif+TC:wght@300;400;700&display=swap" rel="stylesheet">
 <style>
-:root{--parchment:#f5ede0;--gold:#c9a84c;--gold-light:#e8cc80;--amethyst:#6b3fa0;--rose:#c2637a;--midnight:#0f0820;--border:rgba(201,168,76,0.32)}
+:root{
+  --parchment:#fdf3e3;
+  --gold:#c8873a;
+  --gold-light:#e8b06a;
+  --warm:#8b3a2a;
+  --rose:#c2637a;
+  --midnight:#1a0f08;
+  --surface:#2a1508;
+  --surface2:#3a1e0c;
+  --border:rgba(200,135,58,0.35)
+}
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{height:100%}
-body{background:var(--midnight);color:var(--parchment);font-family:'Noto Serif TC',serif;min-height:100vh;overflow-x:hidden;overflow-y:scroll;-webkit-overflow-scrolling:touch;padding-bottom:calc(88px + env(safe-area-inset-bottom));font-size:17px;line-height:1.65}
-body::before{content:'';position:fixed;inset:0;background:radial-gradient(1px 1px at 8% 12%,rgba(255,255,255,.5) 0%,transparent 100%),radial-gradient(1px 1px at 25% 35%,rgba(255,255,255,.3) 0%,transparent 100%),radial-gradient(1px 1px at 50% 8%,rgba(255,255,255,.4) 0%,transparent 100%),radial-gradient(1px 1px at 72% 20%,rgba(255,255,255,.28) 0%,transparent 100%),radial-gradient(1px 1px at 88% 50%,rgba(255,255,255,.45) 0%,transparent 100%),radial-gradient(1px 1px at 60% 75%,rgba(255,255,255,.35) 0%,transparent 100%),radial-gradient(ellipse at 50% 0%,rgba(107,63,160,.22) 0%,transparent 55%),var(--midnight);pointer-events:none;z-index:0}
+body{background:var(--midnight);color:var(--parchment);font-family:'Noto Serif TC',serif;min-height:100vh;overflow-x:hidden;overflow-y:scroll;-webkit-overflow-scrolling:touch;padding-bottom:calc(88px + env(safe-area-inset-bottom));font-size:16px;line-height:1.65}
+body::before{content:'';position:fixed;inset:0;background:
+  radial-gradient(ellipse at 20% 0%,rgba(180,80,20,.2) 0%,transparent 50%),
+  radial-gradient(ellipse at 80% 100%,rgba(140,50,10,.15) 0%,transparent 50%),
+  radial-gradient(1px 1px at 15% 20%,rgba(255,220,150,.4) 0%,transparent 100%),
+  radial-gradient(1px 1px at 70% 10%,rgba(255,200,100,.3) 0%,transparent 100%),
+  radial-gradient(1px 1px at 45% 60%,rgba(255,180,80,.2) 0%,transparent 100%),
+  radial-gradient(1px 1px at 85% 40%,rgba(255,220,150,.3) 0%,transparent 100%),
+  var(--midnight);pointer-events:none;z-index:0}
 .app{position:relative;z-index:1;max-width:640px;margin:0 auto}
-header{text-align:center;padding:28px 16px 20px;border-bottom:1px solid var(--border)}
-.logo-symbol{font-size:2rem;margin-bottom:6px;display:block;animation:float 4s ease-in-out infinite}
-@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
-h1{font-family:'Cinzel Decorative',serif;font-size:clamp(.9rem,3.5vw,1.25rem);color:var(--gold);letter-spacing:.07em;line-height:1.3}
-.subtitle{font-size:.72rem;color:rgba(245,237,224,.35);margin-top:4px;letter-spacing:.07em;font-style:italic}
-.bottom-nav{position:fixed;bottom:0;left:0;right:0;z-index:50;background:rgba(15,8,32,.96);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--border);padding:8px 0 calc(8px + env(safe-area-inset-bottom));display:flex}
-.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:5px 2px;background:none;border:none;color:rgba(245,237,224,.35);cursor:pointer;font-family:'Noto Serif TC',serif;font-size:.65rem;letter-spacing:.02em;transition:all .2s;-webkit-appearance:none}
-.nav-item .nav-icon{font-size:1.35rem;line-height:1}
+header{text-align:center;padding:24px 16px 16px;border-bottom:1px solid var(--border)}
+.logo-symbol{font-size:1.8rem;margin-bottom:4px;display:block;animation:float 4s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+h1{font-family:'Cinzel Decorative',serif;font-size:clamp(.85rem,3.2vw,1.15rem);color:var(--gold-light);letter-spacing:.07em;line-height:1.3}
+.subtitle{font-size:.68rem;color:rgba(253,243,227,.3);margin-top:3px;letter-spacing:.07em;font-style:italic}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;z-index:50;background:rgba(26,15,8,.97);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--border);padding:6px 0 calc(6px + env(safe-area-inset-bottom));display:flex}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 2px;background:none;border:none;color:rgba(253,243,227,.3);cursor:pointer;font-family:'Noto Serif TC',serif;font-size:.6rem;letter-spacing:.02em;transition:all .2s;-webkit-appearance:none}
+.nav-item .nav-icon{font-size:1.25rem;line-height:1}
 .nav-item.active{color:var(--gold-light)}
-.nav-item.active .nav-icon{filter:drop-shadow(0 0 5px rgba(201,168,76,.45))}
-.panel{display:none;padding:16px 14px}
+.nav-item.active .nav-icon{filter:drop-shadow(0 0 5px rgba(200,135,58,.5))}
+.panel{display:none;padding:14px 13px}
 .panel.active{display:block;animation:fadeIn .3s ease}
 @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-.card-box{background:linear-gradient(145deg,#1e1232,#160e28);border:1px solid var(--border);border-radius:14px;padding:20px 18px;margin-bottom:16px;box-shadow:0 6px 24px rgba(0,0,0,.35)}
-.card-box h2{font-family:'Cinzel Decorative',serif;font-size:.78rem;color:var(--gold);letter-spacing:.1em;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.card-box{background:linear-gradient(145deg,var(--surface2),var(--surface));border:1px solid var(--border);border-radius:14px;padding:18px 16px;margin-bottom:14px;box-shadow:0 6px 24px rgba(0,0,0,.4)}
+.card-box h2{font-family:'Cinzel Decorative',serif;font-size:.75rem;color:var(--gold-light);letter-spacing:.1em;margin-bottom:14px;display:flex;align-items:center;gap:8px}
 .card-box h2::after{content:'';flex:1;height:1px;background:var(--border)}
-label{display:block;font-size:.8rem;color:var(--gold-light);letter-spacing:.07em;margin-bottom:6px;margin-top:15px}
+label{display:block;font-size:.78rem;color:var(--gold-light);letter-spacing:.06em;margin-bottom:5px;margin-top:13px}
 label:first-of-type{margin-top:0}
-input,textarea,select{width:100%;background:rgba(0,0,0,.32);border:1px solid rgba(201,168,76,.18);border-radius:10px;color:var(--parchment);font-family:'Noto Serif TC',serif;font-size:1rem;padding:12px 13px;transition:border-color .25s;outline:none;-webkit-appearance:none;-webkit-overflow-scrolling:touch}
-input:focus,textarea:focus,select:focus{border-color:var(--gold);box-shadow:0 0 0 2px rgba(201,168,76,.08)}
-select option{background:#1e1232}
+input,textarea{width:100%;background:rgba(0,0,0,.32);border:1px solid rgba(200,135,58,.2);border-radius:10px;color:var(--parchment);font-family:'Noto Serif TC',serif;font-size:.95rem;padding:11px 13px;transition:border-color .25s;outline:none;-webkit-appearance:none;-webkit-overflow-scrolling:touch}
+input:focus,textarea:focus{border-color:var(--gold);box-shadow:0 0 0 2px rgba(200,135,58,.1)}
 textarea{resize:none;line-height:1.7;overflow-y:auto;-webkit-overflow-scrolling:touch;display:block}
-.ta-sm{height:78px}.ta-md{height:108px}.ta-xl{height:145px}
-.paste-zone{background:rgba(107,63,160,.08);border:2px dashed rgba(107,63,160,.35);border-radius:14px;padding:15px;margin-top:14px;margin-bottom:15px}
-.paste-zone:focus-within{border-color:var(--gold)}
-.paste-zone-title{font-size:.78rem;color:var(--gold-light);letter-spacing:.07em;margin-bottom:9px;display:flex;align-items:center;gap:7px}
-.paste-zone-title .badge{background:linear-gradient(135deg,var(--amethyst),#9070d0);color:var(--parchment);font-size:.63rem;padding:3px 8px;border-radius:10px}
-.paste-zone textarea{background:rgba(0,0,0,.2);border:1px solid rgba(201,168,76,.12);font-size:.95rem;height:128px;color:rgba(245,237,224,.7)}
-.parse-btn{width:100%;padding:12px;background:linear-gradient(135deg,var(--amethyst),#9070d0);border:none;border-radius:10px;color:var(--parchment);font-family:'Noto Serif TC',serif;font-size:.93rem;cursor:pointer;margin-top:9px;letter-spacing:.04em;-webkit-appearance:none}
-.parse-btn:active{opacity:.85}
-.parsed-preview{display:none;margin-top:13px;background:rgba(0,0,0,.2);border-radius:12px;overflow:hidden;border:1px solid var(--border)}
-.parsed-preview.show{display:block;animation:fadeIn .28s ease}
-.preview-row{padding:11px 13px;border-bottom:1px solid rgba(201,168,76,.07);display:flex;gap:11px}
-.preview-row:last-child{border-bottom:none}
-.preview-label{font-size:.7rem;color:var(--gold-light);letter-spacing:.06em;min-width:55px;margin-top:2px;flex-shrink:0}
-.preview-val{font-size:.88rem;color:rgba(245,237,224,.75);line-height:1.62;flex:1}
-.preview-empty{color:rgba(245,237,224,.25);font-style:italic}
-.btn{display:flex;align-items:center;justify-content:center;gap:6px;padding:13px 18px;border:none;border-radius:12px;font-family:'Noto Serif TC',serif;font-size:.93rem;cursor:pointer;transition:all .2s;letter-spacing:.04em;width:100%;-webkit-appearance:none}
+.ta-sm{height:75px}.ta-md{height:110px}.ta-lg{height:150px}
+.btn{display:flex;align-items:center;justify-content:center;gap:6px;padding:12px 18px;border:none;border-radius:12px;font-family:'Noto Serif TC',serif;font-size:.9rem;cursor:pointer;transition:all .2s;letter-spacing:.04em;width:100%;-webkit-appearance:none}
 .btn:active{opacity:.85;transform:scale(.98)}
-.btn-gold{background:linear-gradient(135deg,#9a7228,var(--gold));color:#0f0820;font-weight:700;box-shadow:0 4px 14px rgba(201,168,76,.28);margin-top:15px}
-.btn-primary{background:linear-gradient(135deg,var(--amethyst),#8050d0);color:var(--parchment);box-shadow:0 4px 14px rgba(107,63,160,.35);margin-top:15px}
-.btn-sm{width:auto;padding:10px 17px;font-size:.86rem;margin-top:0}
+.btn-gold{background:linear-gradient(135deg,#7a4010,var(--gold));color:#fdf3e3;font-weight:700;box-shadow:0 4px 14px rgba(200,135,58,.3);margin-top:14px}
+.btn-sm{width:auto;padding:9px 15px;font-size:.82rem;margin-top:0}
 .btn-outline{background:transparent;border:1px solid var(--border);color:var(--gold-light)}
 .btn-danger{background:rgba(194,99,122,.13);border:1px solid rgba(194,99,122,.27);color:#e09090}
-.picker-toggle{background:rgba(0,0,0,.18);border:1px dashed var(--border);border-radius:10px;padding:10px 13px;cursor:pointer;color:rgba(245,237,224,.4);font-size:.84rem;text-align:center;margin-top:9px;display:block;width:100%;font-family:'Noto Serif TC',serif;-webkit-appearance:none}
-.card-picker{display:none;margin-top:9px;background:rgba(0,0,0,.28);border:1px solid var(--border);border-radius:12px;padding:13px;max-height:210px;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.ori-toggle{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px}
+.ori-btn{padding:11px;border-radius:10px;border:1px solid var(--border);background:transparent;color:rgba(253,243,227,.4);font-family:'Noto Serif TC',serif;font-size:.9rem;cursor:pointer;transition:all .2s;-webkit-appearance:none}
+.ori-btn.selected{border-color:var(--gold-light);background:rgba(200,135,58,.12);color:var(--gold-light)}
+.picker-toggle{background:rgba(0,0,0,.2);border:1px dashed var(--border);border-radius:10px;padding:9px 13px;cursor:pointer;color:rgba(253,243,227,.38);font-size:.8rem;text-align:center;margin-top:8px;display:block;width:100%;font-family:'Noto Serif TC',serif;-webkit-appearance:none}
+.card-picker{display:none;margin-top:8px;background:rgba(0,0,0,.35);border:1px solid var(--border);border-radius:12px;padding:12px;max-height:200px;overflow-y:auto;-webkit-overflow-scrolling:touch}
 .card-picker.open{display:block;animation:fadeIn .2s ease}
-.picker-section-title{font-size:.7rem;color:var(--gold);letter-spacing:.1em;margin-bottom:7px;margin-top:11px;padding-bottom:3px;border-bottom:1px solid rgba(201,168,76,.18)}
+.picker-section-title{font-size:.68rem;color:var(--gold);letter-spacing:.1em;margin-bottom:6px;margin-top:10px;padding-bottom:3px;border-bottom:1px solid rgba(200,135,58,.18)}
 .picker-section-title:first-child{margin-top:0}
 .card-chips{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:3px}
-.card-chip{background:rgba(107,63,160,.13);border:1px solid rgba(107,63,160,.25);border-radius:16px;padding:4px 11px;font-size:.76rem;color:rgba(245,237,224,.6);cursor:pointer;transition:all .16s}
-.card-chip.selected{background:rgba(107,63,160,.38);border-color:var(--amethyst);color:var(--parchment)}
-.ori-toggle{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px}
-.ori-btn{padding:12px;border-radius:10px;border:1px solid var(--border);background:transparent;color:rgba(245,237,224,.4);font-family:'Noto Serif TC',serif;font-size:.93rem;cursor:pointer;transition:all .2s;-webkit-appearance:none}
-.ori-btn.selected{border-color:var(--gold);background:rgba(201,168,76,.1);color:var(--gold-light)}
-.claude-tip{background:rgba(107,63,160,.1);border:1px solid rgba(107,63,160,.26);border-radius:12px;padding:12px 14px;font-size:.82rem;color:rgba(245,237,224,.58);line-height:1.75;margin-bottom:15px}
-.claude-tip strong{color:var(--gold-light);display:block;margin-bottom:3px;font-size:.77rem;letter-spacing:.06em}
-.note-card{background:linear-gradient(145deg,#1e1232,#160e28);border:1px solid var(--border);border-radius:13px;padding:14px 15px;margin-bottom:10px;cursor:pointer;transition:all .2s}
-.note-card:active{transform:scale(.98);border-color:var(--gold)}
-.note-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
-.note-name{font-family:'Cinzel Decorative',serif;font-size:.83rem;color:var(--gold)}
-.note-date{font-size:.7rem;color:rgba(245,237,224,.28)}
+.card-chip{background:rgba(139,58,42,.15);border:1px solid rgba(139,58,42,.28);border-radius:16px;padding:4px 10px;font-size:.72rem;color:rgba(253,243,227,.58);cursor:pointer;transition:all .16s}
+.card-chip.selected{background:rgba(200,135,58,.28);border-color:var(--gold);color:var(--parchment)}
+
+/* 今日運勢卡片 */
+.fortune-card{background:linear-gradient(145deg,#4a1e08,#3a1208);border:1px solid rgba(200,135,58,.5);border-radius:14px;padding:18px 16px;margin-bottom:14px;display:none}
+.fortune-card.visible{display:block;animation:fadeIn .4s ease}
+.fortune-header{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.fortune-card-name{font-family:‘Cinzel Decorative’,serif;font-size:.9rem;color:var(–gold-light)}
+.fortune-ori{font-size:.72rem;padding:3px 9px;border-radius:12px;background:rgba(200,135,58,.18);border:1px solid var(–border);color:var(–gold-light)}
+.fortune-section{margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid rgba(200,135,58,.12)}
+.fortune-section:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.fortune-label{font-size:.7rem;color:var(–gold-light);letter-spacing:.08em;margin-bottom:5px}
+.fortune-text{font-size:.92rem;color:rgba(253,243,227,.82);line-height:1.8}
+.fortune-mantra{text-align:center;font-style:italic;color:var(–gold-light);font-size:.95rem;line-height:1.7;padding:12px;background:rgba(200,135,58,.08);border-radius:10px;border:1px solid rgba(200,135,58,.18)}
+
+/* 筆記卡片 */
+.note-card{background:linear-gradient(145deg,var(–surface2),var(–surface));border:1px solid var(–border);border-radius:13px;padding:13px 14px;margin-bottom:10px;cursor:pointer;transition:all .2s}
+.note-card:active{transform:scale(.98);border-color:var(–gold)}
+.note-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px}
+.note-name{font-family:‘Cinzel Decorative’,serif;font-size:.8rem;color:var(–gold-light)}
+.note-date{font-size:.67rem;color:rgba(253,243,227,.26)}
 .note-kws{display:flex;flex-wrap:wrap;gap:5px}
-.kw-pill{background:rgba(107,63,160,.16);border:1px solid rgba(107,63,160,.3);border-radius:14px;padding:3px 9px;font-size:.7rem;color:rgba(245,237,224,.6)}
-.kw-pill.neg{background:rgba(194,99,122,.1);border-color:rgba(194,99,122,.24);color:rgba(245,237,224,.6)}
-.empty-state{text-align:center;padding:50px 20px;color:rgba(245,237,224,.22);font-style:italic;font-size:.88rem;line-height:1.8}
-.empty-icon{font-size:2.3rem;margin-bottom:11px}
-.search-wrap{position:relative;margin-bottom:13px}
-.search-wrap input{padding-left:37px}
-.search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:.88rem;pointer-events:none}
-.section-label{font-size:.74rem;color:var(--gold-light);letter-spacing:.08em;margin-bottom:9px;padding:0 2px}
-.record-display{background:linear-gradient(145deg,#0c0618,#160e28);border:1px solid rgba(201,168,76,.25);border-radius:13px;padding:18px 16px;margin-top:14px;display:none}
-.record-display.visible{display:block;animation:fadeIn .35s ease}
-.record-display h3{font-family:'Cinzel Decorative',serif;font-size:.76rem;color:var(--gold);letter-spacing:.1em;margin-bottom:14px;text-align:center}
-.rd-section{margin-bottom:13px;padding-bottom:13px;border-bottom:1px solid rgba(201,168,76,.07)}
-.rd-section:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
-.rd-title{font-size:.74rem;color:var(--gold-light);letter-spacing:.08em;margin-bottom:5px}
-.rd-body{font-size:.95rem;color:rgba(245,237,224,.8);line-height:1.8}
-.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:15px}
-.stat-box{background:linear-gradient(145deg,#1e1232,#160e28);border:1px solid var(--border);border-radius:13px;padding:13px 7px;text-align:center}
-.stat-num{font-family:'Cinzel Decorative',serif;font-size:1.55rem;color:var(--gold)}
-.stat-label{font-size:.65rem;color:rgba(245,237,224,.32);margin-top:3px;letter-spacing:.05em}
-.prog-wrap{margin-bottom:13px}
-.prog-label-row{display:flex;justify-content:space-between;font-size:.74rem;color:rgba(245,237,224,.36);margin-bottom:5px}
-.prog-bar-bg{background:rgba(0,0,0,.3);border-radius:20px;height:8px;overflow:hidden}
-.prog-bar{height:100%;border-radius:20px;background:linear-gradient(90deg,var(--amethyst),var(--gold));transition:width .7s ease}
-.backup-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:15px}
-.backup-card{background:rgba(0,0,0,.18);border:1px solid var(--border);border-radius:13px;padding:16px 12px;text-align:center}
-.backup-icon{font-size:1.7rem;margin-bottom:6px}
-.backup-title{font-size:.83rem;color:var(--gold-light);margin-bottom:3px}
-.backup-desc{font-size:.73rem;color:rgba(245,237,224,.3);line-height:1.58;margin-bottom:11px}
-.status-pill{font-size:.7rem;padding:4px 10px;border-radius:16px;display:inline-block}
+.kw-pill{background:rgba(200,135,58,.14);border:1px solid rgba(200,135,58,.26);border-radius:14px;padding:3px 9px;font-size:.68rem;color:rgba(253,243,227,.65)}
+.kw-pill.neg{background:rgba(194,99,122,.1);border-color:rgba(194,99,122,.22);color:rgba(253,243,227,.6)}
+.empty-state{text-align:center;padding:48px 20px;color:rgba(253,243,227,.2);font-style:italic;font-size:.85rem;line-height:1.8}
+.empty-icon{font-size:2.2rem;margin-bottom:10px}
+.search-wrap{position:relative;margin-bottom:12px}
+.search-wrap input{padding-left:36px}
+.search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:.85rem;pointer-events:none}
+.section-label{font-size:.72rem;color:var(–gold-light);letter-spacing:.08em;margin-bottom:8px;padding:0 2px}
+.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:14px}
+.stat-box{background:linear-gradient(145deg,var(–surface2),var(–surface));border:1px solid var(–border);border-radius:13px;padding:13px 7px;text-align:center}
+.stat-num{font-family:‘Cinzel Decorative’,serif;font-size:1.5rem;color:var(–gold-light)}
+.stat-label{font-size:.63rem;color:rgba(253,243,227,.3);margin-top:3px;letter-spacing:.05em}
+.prog-wrap{margin-bottom:12px}
+.prog-label-row{display:flex;justify-content:space-between;font-size:.72rem;color:rgba(253,243,227,.34);margin-bottom:5px}
+.prog-bar-bg{background:rgba(0,0,0,.3);border-radius:20px;height:7px;overflow:hidden}
+.prog-bar{height:100%;border-radius:20px;background:linear-gradient(90deg,var(–warm),var(–gold));transition:width .7s ease}
+.backup-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.backup-card{background:rgba(0,0,0,.18);border:1px solid var(–border);border-radius:13px;padding:15px 12px;text-align:center}
+.backup-icon{font-size:1.6rem;margin-bottom:5px}
+.backup-title{font-size:.8rem;color:var(–gold-light);margin-bottom:3px}
+.backup-desc{font-size:.7rem;color:rgba(253,243,227,.28);line-height:1.55;margin-bottom:10px}
+.status-pill{font-size:.68rem;padding:4px 10px;border-radius:16px;display:inline-block}
 .status-ok{background:rgba(74,124,107,.16);color:#7ec8a0;border:1px solid rgba(74,124,107,.26)}
-.status-warn{background:rgba(201,168,76,.1);color:var(--gold-light);border:1px solid rgba(201,168,76,.2)}
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:200;display:none;align-items:flex-end;justify-content:center}
+.status-warn{background:rgba(200,135,58,.1);color:var(–gold-light);border:1px solid rgba(200,135,58,.2)}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.87);z-index:200;display:none;align-items:flex-end;justify-content:center}
 .modal-overlay.open{display:flex;animation:fadeIn .22s ease}
-.modal{background:linear-gradient(165deg,#1e1232,#0f0820);border:1px solid var(--gold);border-radius:22px 22px 0 0;padding:20px 18px calc(20px + env(safe-area-inset-bottom));width:100%;max-height:88vh;overflow-y:auto;-webkit-overflow-scrolling:touch}
-.modal-handle{width:36px;height:4px;background:rgba(201,168,76,.28);border-radius:2px;margin:0 auto 16px}
+.modal{background:linear-gradient(165deg,var(–surface2),var(–midnight));border:1px solid var(–gold);border-radius:22px 22px 0 0;padding:20px 18px calc(20px + env(safe-area-inset-bottom));width:100%;max-height:88vh;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.modal-handle{width:36px;height:4px;background:rgba(200,135,58,.28);border-radius:2px;margin:0 auto 16px}
 .modal-close-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
-.modal h2{font-family:'Cinzel Decorative',serif;color:var(--gold);font-size:.88rem}
-.modal-close{background:none;border:none;color:rgba(245,237,224,.38);font-size:1.2rem;cursor:pointer;padding:4px;width:auto}
-.m-section{margin-bottom:12px}
-.m-label{font-size:.73rem;color:var(--gold-light);letter-spacing:.09em;margin-bottom:4px}
-.m-value{font-size:.92rem;color:rgba(245,237,224,.78);line-height:1.75}
+.modal h2{font-family:‘Cinzel Decorative’,serif;color:var(–gold-light);font-size:.85rem}
+.modal-close{background:none;border:none;color:rgba(253,243,227,.36);font-size:1.2rem;cursor:pointer;padding:4px;width:auto}
+.m-section{margin-bottom:11px}
+.m-label{font-size:.7rem;color:var(–gold-light);letter-spacing:.08em;margin-bottom:4px}
+.m-value{font-size:.9rem;color:rgba(253,243,227,.76);line-height:1.75}
 .m-kws{display:flex;flex-wrap:wrap;gap:5px}
-.m-divider{height:1px;background:var(--border);margin:12px 0}
-.toast{position:fixed;bottom:94px;left:50%;transform:translateX(-50%) translateY(20px);background:linear-gradient(135deg,var(--amethyst),#4a2080);color:var(--parchment);padding:11px 22px;border-radius:24px;font-size:.84rem;box-shadow:0 5px 18px rgba(0,0,0,.5);z-index:300;opacity:0;transition:all .27s;pointer-events:none;max-width:88vw;text-align:center}
+.m-divider{height:1px;background:var(–border);margin:11px 0}
+.toast{position:fixed;bottom:92px;left:50%;transform:translateX(-50%) translateY(20px);background:linear-gradient(135deg,var(–warm),#a03020);color:var(–parchment);padding:10px 22px;border-radius:24px;font-size:.82rem;box-shadow:0 5px 18px rgba(0,0,0,.5);z-index:300;opacity:0;transition:all .27s;pointer-events:none;max-width:88vw;text-align:center}
 .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
-::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(–border);border-radius:2px}
 @media(max-width:380px){.backup-grid{grid-template-columns:1fr}}
 </style>
+
 </head>
 <body>
 <div class="app">
@@ -135,164 +144,291 @@ textarea{resize:none;line-height:1.7;overflow-y:auto;-webkit-overflow-scrolling:
   <h1>塔羅牌學習系統</h1>
   <div class="subtitle">Tarot Wisdom · Daily Oracle · Knowledge Archive</div>
 </header>
-<div id="panel-notebook" class="panel active">
-  <div class="claude-tip"><strong>💡 使用方式</strong>在 Claude 輸入「幫我生成《牌名》的學習卡片」→ 複製整段內容貼入智慧貼上框 → 點「自動拆分」→ 儲存</div>
+
+<!-- 每日占卜 -->
+
+<div id="panel-daily" class="panel active">
   <div class="card-box">
-    <h2>🃏 建立學習卡片</h2>
-    <label>牌名</label><input type="text" id="nb-name" placeholder="例：愚者、月亮、聖杯三…">
-    <button class="picker-toggle" onclick="togglePicker('picker1','nb-name','nb-number')">📋 從 78 張牌表選牌 ▾</button>
+    <h2>🌙 今日占卜</h2>
+    <label>今天抽到的牌</label>
+    <input type="text" id="daily-card" placeholder="例：星星、太陽、聖杯三…" oninput="onCardInput()">
+    <button class="picker-toggle" onclick="togglePicker('picker1','daily-card',null)">📋 從 78 張牌表選牌 ▾</button>
     <div id="picker1" class="card-picker"></div>
-    <label>牌號 / 花色</label><input type="text" id="nb-number" placeholder="例：0 號大阿爾克那 / 聖杯">
-    <div class="paste-zone">
-      <div class="paste-zone-title">✨ 智慧貼上<span class="badge">一鍵填入</span></div>
-      <textarea id="nb-paste" class="ta-xl" placeholder="把 Claude 給的完整學習卡片內容貼在這裡…"></textarea>
-      <button class="parse-btn" onclick="parseCardContent()">🪄 自動拆分填入各欄位</button>
-    </div>
-    <div class="parsed-preview" id="nb-preview">
-      <div class="preview-row"><span class="preview-label">🌀 原型</span><span class="preview-val" id="pv-origin">—</span></div>
-      <div class="preview-row"><span class="preview-label">▲ 正位</span><span class="preview-val" id="pv-pos">—</span></div>
-      <div class="preview-row"><span class="preview-label">▽ 逆位</span><span class="preview-val" id="pv-neg">—</span></div>
-      <div class="preview-row"><span class="preview-label">💕 感情</span><span class="preview-val" id="pv-love">—</span></div>
-      <div class="preview-row"><span class="preview-label">⚡ 事業</span><span class="preview-val" id="pv-career">—</span></div>
-      <div class="preview-row"><span class="preview-label">🌿 健康</span><span class="preview-val" id="pv-health">—</span></div>
-      <div class="preview-row"><span class="preview-label">🖼 記憶點</span><span class="preview-val" id="pv-image">—</span></div>
-      <div class="preview-row"><span class="preview-label">✨ 箴言</span><span class="preview-val" id="pv-tip">—</span></div>
-    </div>
-    <button class="btn btn-gold" onclick="saveCard()">💾 儲存到筆記庫</button>
-    <button class="btn btn-outline" style="margin-top:10px" onclick="clearNbForm()">🗑 清除表單</button>
-  </div>
-</div>
-<div id="panel-daily" class="panel">
-  <div class="claude-tip"><strong>💡 使用方式</strong>告訴 Claude 你抽到什麼牌、發生了什麼 → 把解析整段貼入智慧貼上框 → 點「自動拆分」→ 儲存</div>
-  <div class="card-box">
-    <h2>🌙 今日占卜紀錄</h2>
-    <label>今天抽到的牌</label><input type="text" id="daily-card" placeholder="例：星星、太陽…">
-    <button class="picker-toggle" onclick="togglePicker('picker2','daily-card',null)">📋 從牌表選牌 ▾</button>
-    <div id="picker2" class="card-picker"></div>
     <label>牌面方向</label>
     <div class="ori-toggle">
       <button class="ori-btn selected" id="ori-pos" onclick="selectOri('正位')">▲ 正位</button>
       <button class="ori-btn" id="ori-neg" onclick="selectOri('逆位')">▽ 逆位</button>
     </div>
-    <label>今天發生了什麼？</label>
-    <textarea class="ta-md" id="daily-event" placeholder="用幾句話描述今天的狀況…"></textarea>
-    <div class="paste-zone">
-      <div class="paste-zone-title">✨ 智慧貼上 Claude 解析<span class="badge">一鍵填入</span></div>
-      <textarea id="daily-paste" class="ta-xl" placeholder="把 Claude 給的完整占卜解析貼在這裡…"></textarea>
-      <button class="parse-btn" onclick="parseDailyContent()">🪄 自動拆分填入各欄位</button>
-    </div>
-    <div class="parsed-preview" id="daily-preview">
-      <div class="preview-row"><span class="preview-label">⚡ 能量</span><span class="preview-val" id="dpv-energy">—</span></div>
-      <div class="preview-row"><span class="preview-label">🪞 映射</span><span class="preview-val" id="dpv-mapping">—</span></div>
-      <div class="preview-row"><span class="preview-label">🌊 深層</span><span class="preview-val" id="dpv-hidden">—</span></div>
-      <div class="preview-row"><span class="preview-label">🎯 建議</span><span class="preview-val" id="dpv-action">—</span></div>
-      <div class="preview-row"><span class="preview-label">✨ 箴言</span><span class="preview-val" id="dpv-mantra">—</span></div>
-    </div>
-    <button class="btn btn-primary" onclick="saveDailyRecord()">💾 儲存今日占卜紀錄</button>
-    <button class="btn btn-outline" style="margin-top:10px" onclick="clearDailyForm()">🗑 清除表單</button>
+    <button class="btn btn-outline" style="margin-top:12px" onclick="generateFortune()">✨ 產生今日運勢</button>
   </div>
-  <div class="record-display" id="daily-result"></div>
+
+  <div class="fortune-card" id="fortune-display"></div>
+
+  <div class="card-box" id="record-form" style="display:none">
+    <h2>📝 今日紀錄</h2>
+    <label>今天發生了什麼？</label>
+    <textarea class="ta-lg" id="daily-event" placeholder="用幾句話描述今天的狀況、心情、遇到的事…"></textarea>
+    <button class="btn btn-gold" onclick="saveDailyRecord()">💾 儲存今日占卜紀錄</button>
+    <button class="btn btn-outline" style="margin-top:10px" onclick="clearDailyForm()">🗑 清除</button>
+  </div>
 </div>
-<div id="panel-archive" class="panel">
-  <div class="search-wrap"><span class="search-icon">🔍</span><input type="text" id="search-input" placeholder="搜尋牌名或關鍵詞…" oninput="renderArchive()"></div>
-  <div id="archive-list"></div>
+
+<!-- 牌義庫 -->
+
+<div id="panel-cards" class="panel">
+  <div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input type="text" id="card-search" placeholder="搜尋牌名或關鍵詞…" oninput="renderCardLibrary()">
+  </div>
+  <div id="card-library-list"></div>
 </div>
-<div id="panel-progress" class="panel"><div id="progress-content"></div></div>
+
+<!-- 占卜紀錄 -->
+
+<div id="panel-records" class="panel">
+  <div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input type="text" id="record-search" placeholder="搜尋牌名或事件…" oninput="renderRecords()">
+  </div>
+  <div id="records-list"></div>
+</div>
+
+<!-- 進度 -->
+
+<div id="panel-progress" class="panel">
+  <div id="progress-content"></div>
+</div>
+
+<!-- 備份 -->
+
 <div id="panel-backup" class="panel">
   <div class="card-box">
     <h2>💾 備份管理</h2>
     <div class="backup-grid">
-      <div class="backup-card"><div class="backup-icon">📤</div><div class="backup-title">匯出備份</div><div class="backup-desc">下載 JSON 到裝置永久保存</div><button class="btn btn-gold btn-sm" onclick="exportData()">下載備份</button></div>
-      <div class="backup-card"><div class="backup-icon">📥</div><div class="backup-title">匯入備份</div><div class="backup-desc">從 JSON 備份恢復筆記</div><input type="file" id="import-file" accept=".json" style="display:none" onchange="importData(event)"><button class="btn btn-outline btn-sm" onclick="document.getElementById('import-file').click()">選擇檔案</button></div>
+      <div class="backup-card">
+        <div class="backup-icon">📤</div>
+        <div class="backup-title">匯出備份</div>
+        <div class="backup-desc">下載 JSON 到裝置永久保存</div>
+        <button class="btn btn-gold btn-sm" onclick="exportData()">下載備份</button>
+      </div>
+      <div class="backup-card">
+        <div class="backup-icon">📥</div>
+        <div class="backup-title">匯入備份</div>
+        <div class="backup-desc">從 JSON 備份恢復紀錄</div>
+        <input type="file" id="import-file" accept=".json" style="display:none" onchange="importData(event)">
+        <button class="btn btn-outline btn-sm" onclick="document.getElementById('import-file').click()">選擇檔案</button>
+      </div>
     </div>
     <div id="backup-status-area"></div>
     <div style="margin-top:14px;background:rgba(194,99,122,.06);border:1px solid rgba(194,99,122,.18);border-radius:12px;padding:15px">
-      <div style="font-size:.78rem;color:rgba(245,237,224,.36);margin-bottom:11px;line-height:1.65">⚠️ 清除所有筆記與占卜紀錄，不可復原</div>
+      <div style="font-size:.76rem;color:rgba(253,243,227,.34);margin-bottom:10px;line-height:1.65">⚠️ 清除所有占卜紀錄，不可復原</div>
       <button class="btn btn-danger btn-sm" onclick="clearAll()">🗑 清除全部資料</button>
     </div>
   </div>
 </div>
 </div>
+
 <nav class="bottom-nav">
-  <button class="nav-item active" onclick="switchTab('notebook')"><span class="nav-icon">📖</span>學習卡片</button>
-  <button class="nav-item" onclick="switchTab('daily')"><span class="nav-icon">🌙</span>每日占卜</button>
-  <button class="nav-item" onclick="switchTab('archive')"><span class="nav-icon">🗄️</span>筆記庫</button>
+  <button class="nav-item active" onclick="switchTab('daily')"><span class="nav-icon">🌙</span>每日占卜</button>
+  <button class="nav-item" onclick="switchTab('cards')"><span class="nav-icon">🃏</span>牌義庫</button>
+  <button class="nav-item" onclick="switchTab('records')"><span class="nav-icon">📜</span>占卜紀錄</button>
   <button class="nav-item" onclick="switchTab('progress')"><span class="nav-icon">📊</span>進度</button>
   <button class="nav-item" onclick="switchTab('backup')"><span class="nav-icon">💾</span>備份</button>
 </nav>
+
 <div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
   <div class="modal" id="modal-content"><div class="modal-handle"></div></div>
 </div>
 <div id="toast" class="toast"></div>
+
 <script>
 const TAROT_78={'大阿爾克那':['愚者(0)','魔術師(1)','女祭司(2)','女皇(3)','皇帝(4)','教皇(5)','戀人(6)','戰車(7)','力量(8)','隱士(9)','命運之輪(10)','正義(11)','吊人(12)','死神(13)','節制(14)','惡魔(15)','塔(16)','星星(17)','月亮(18)','太陽(19)','審判(20)','世界(21)'],'聖杯':['聖杯王牌','聖杯二','聖杯三','聖杯四','聖杯五','聖杯六','聖杯七','聖杯八','聖杯九','聖杯十','聖杯侍者','聖杯騎士','聖杯皇后','聖杯國王'],'權杖':['權杖王牌','權杖二','權杖三','權杖四','權杖五','權杖六','權杖七','權杖八','權杖九','權杖十','權杖侍者','權杖騎士','權杖皇后','權杖國王'],'寶劍':['寶劍王牌','寶劍二','寶劍三','寶劍四','寶劍五','寶劍六','寶劍七','寶劍八','寶劍九','寶劍十','寶劍侍者','寶劍騎士','寶劍皇后','寶劍國王'],'星幣':['星幣王牌','星幣二','星幣三','星幣四','星幣五','星幣六','星幣七','星幣八','星幣九','星幣十','星幣侍者','星幣騎士','星幣皇后','星幣國王']};
 
-const PRELOAD_NOTES=[
-{id:1743609600001,name:‘愚者’,num:‘0 號大阿爾克那’,origin:‘數字 0，代表無限與圓滿的起點。愚者是塔羅旅程的第一步，對應神話中「英雄出發」的原型——一個無所畏懼、尚未被世界定義的靈魂，踏出懸崖邊緣的第一步。’,posKw:‘新開始・冒險・純真’,negKw:‘魯莽・逃避・準備不足’,love:‘正位：一段全新的感情正在萌芽，放下過去的包袱，用最純粹的心去相遇。逆位：因為恐懼受傷而不敢踏出第一步。’,career:‘正位：適合創業、轉職、嘗試從未做過的事，現在跳出去是對的時機。逆位：計畫不夠周全就貿然行動，或因為逃避現實而錯失機會。’,health:‘正位：身心狀態輕盈，適合嘗試新的運動或生活方式。逆位：忽視身體發出的警訊，過於隨性對待自己的健康。’,image:‘想像一個背著小包袱的年輕人，站在懸崖邊，眼睛看著天空而不是腳下。記住：眼睛看天，腳踩懸崖。’,tip:‘不是因為準備好了才出發，而是出發之後才會準備好。’,date:‘2026/4/3’},
-{id:1743609600002,name:‘魔術師’,num:‘1 號大阿爾克那’,origin:‘數字 1，萬物起源的第一個數字。魔術師對應「創造者」原型，一手指天接收靈感，一手指地將其落實，頭頂∞代表無限的可能性。’,posKw:‘顯化・意志力・掌握資源’,negKw:‘操弄・才能浪費・欺騙’,love:‘正位：主動出擊的時機，你有魅力有能力，勇敢表達心意。逆位：用話術吸引對方，或被花言巧語的人迷惑。’,career:‘正位：手上的資源和能力剛好夠用，大膽去做，這是你的時機。逆位：明明有才能卻沒有發揮，或把能力用在不正當的地方。’,health:‘正位：身心能量充沛，專注力強，適合啟動新的健康計畫。逆位：過度消耗意志力，或忽視身體訊號只靠意志硬撐。’,image:‘桌上四樣工具一樣不缺，他不是在等更好的條件，他現在就開始了。記住：魔術師從不說「等我準備好」。’,tip:‘你已經有了所有需要的東西，缺的只是開始。’,date:‘2026/4/3’},
-{id:1743609600003,name:‘女祭司’,num:‘2 號大阿爾克那’,origin:‘數字 2，代表二元與平衡。女祭司對應「智慧守護者」原型，坐在意識與潛意識的邊界，一黑一白柱子代表她能看見兩面，膝上的書代表她已知道答案，但選擇靜靜等待揭曉的時機。’,posKw:‘直覺・靜待・內在智慧’,negKw:‘壓抑直覺・逃避真相・忽視內心’,love:‘正位：感情還不到表態的時機，靜靜觀察對方，答案會自然浮現。逆位：明明感覺到關係有問題，卻假裝沒事，逃避面對真實的狀況。’,career:‘正位：不要急著行動，先蒐集資訊、觀察局勢，時機未到時靜待是最聰明的選擇。逆位：忽視內心對某件事的不安感，或壓抑自己真正想做的事。’,health:‘正位：身體在告訴你什麼，靜下來傾聽，不要用忙碌蓋過身體的訊號。逆位：明知道身體需要休息，卻一直硬撐，假裝沒問題。’,image:‘她坐在那裡什麼都不做，但她什麼都知道。記住：沉默不是沒有答案，是答案還不到說出口的時候。’,tip:‘最深的智慧，往往藏在最安靜的等待裡。’,date:‘2026/4/3’},
-{id:1743609600004,name:‘女皇’,num:‘3 號大阿爾克那’,origin:‘數字 3，代表創造與豐盛的具現。女皇對應「大地之母」原型——她不努力創造豐盛，因為她本身就是豐盛。’,posKw:‘豐盛・創造・滋養’,negKw:‘匱乏感・過度付出・創造力受阻’,love:‘正位：感情滋潤豐盛，給予與接受都很自然，是充滿愛的狀態。逆位：給予太多卻忘了滋養自己，或感情上有匱乏感與不安全感。’,career:‘正位：創造力旺盛，資源豐沛，適合開展新計畫或藝術創作。逆位：創造力受阻，感覺資源不夠，或過度依賴他人的肯定。’,health:‘正位：身心狀態豐盈，好好享受感官的喜悅，滋養自己是現在最重要的事。逆位：忽視自己的需求，只顧付出而忘記補充能量。’,image:‘她坐在大自然裡，周圍一切都在生長。記住：她是豐盛本身，不是努力得來的豐盛。’,tip:‘資源源源不絕而來，前提是你願意接受它。’,date:‘2026/4/9’},
-{id:1743609600009,name:‘皇帝’,num:‘4 號大阿爾克那’,origin:‘數字 4，代表穩固與結構。皇帝對應「父親」原型——他用秩序和規則建立安全的世界。’,posKw:‘秩序・權威・穩固’,negKw:‘失控・過度威權・缺乏紀律’,love:‘正位：穩定可靠的伴侶，用行動保護對方，給關係帶來安全感。逆位：過度控制伴侶，或無法承擔責任，讓對方沒有安全感。’,career:‘正位：建立清晰的結構和計畫，用紀律推進目標，是領導者的能量。逆位：獨斷專行不聽建議，或紀律崩潰、計畫失控。’,health:‘正位：有規律的作息和運動計畫，用紀律維持健康。逆位：作息混亂，或用過度嚴苛的方式對待自己的身體。’,image:‘女皇坐在花園裡，皇帝坐在光禿禿的山上。記住：岩石不是荒涼，是最堅固的基礎。’,tip:‘自由需要邊界，豐盛需要結構。’,date:‘2026/4/10’},
-{id:1743609600010,name:‘教皇’,num:‘5 號大阿爾克那’,origin:‘數字 5，代表變動與衝突的臨界點。教皇對應「精神導師」原型——他是神聖與世俗之間的橋梁。’,posKw:‘傳統・精神指引・制度’,negKw:‘教條・反叛・打破規則’,love:‘正位：遵循傳統的感情觀，重視承諾與儀式，或向長輩、朋友尋求感情建議。逆位：打破傳統的感情方式，或被陳舊的感情觀念綁住而無法前進。’,career:‘正位：遵循既有的制度和流程，向有經驗的前輩學習，是穩健推進的時期。逆位：對體制感到窒息，想要打破框架，或過度依賴規則而缺乏彈性。’,health:‘正位：遵循傳統的養生方式，或尋求專業醫療建議，按部就班照顧自己。逆位：忽視身體發出的訊號，死守不適合自己的生活習慣。’,image:‘兩個人跪在他面前聽他說話，他舉手祝福。記住：皇帝說「照我說的做」，教皇說「讓我告訴你前人怎麼說」。’,tip:‘真正的智慧不是自己想出來的，是從千百年的傳承中提煉出來的。’,date:‘2026/4/10’},
-{id:1743609600013,name:‘戀人’,num:‘6 號大阿爾克那’,origin:‘數字 6，代表和諧與平衡的達成。戀人對應「選擇者」原型——這不只是愛情牌，更是「做出真心選擇」的牌。’,posKw:‘選擇・結合・價值觀一致’,negKw:‘錯誤選擇・價值觀衝突・逃避決定’,love:‘正位：兩人真心相互選擇，靈性與慾望都有，是深度連結的感情。逆位：感情中有一方在逃避承諾，或兩人價值觀根本不一致。’,career:‘正位：面臨重要選擇，要用心而不是用腦做決定，選擇符合自己價值觀的方向。逆位：選錯了方向，或一直不敢做決定而錯失時機。’,health:‘正位：身心靈三者平衡，慾望與靈性都照顧到。逆位：忽略身體只活在靈性，或忽略靈性只顧慾望。’,image:‘男人看女人，女人看天使，天使看著一切。記住：真正的愛，是三個層次同時存在——慾望、情感、靈性。缺一個，就不完整。’,tip:‘最重要的選擇，不是用腦袋想出來的，是用心感覺到的。’,date:‘2026/4/12’},
-{id:1743609600014,name:‘戰車’,num:‘7 號大阿爾克那’,origin:‘數字 7，代表挑戰與突破的關鍵時刻。戰車對應「征服者」原型——他不靠外力，靠的是純粹的意志力讓相反的力量統一向前。’,posKw:‘意志力・掌控・勝利前進’,negKw:‘失控・方向錯誤・強迫執行’,love:‘正位：主動出擊，用意志力推進感情，目標清晰，不輕易放棄。逆位：過度控制對方，或情緒失控讓關係崩潰，方向完全錯誤。’,career:‘正位：衝勁十足，全力以赴，憑意志力突破障礙，是最適合衝刺的時期。逆位：方向錯誤還在硬衝，或因過度強迫自己而精疲力竭。’,health:‘正位：意志力強大，可以克服惰性，是建立新健康習慣的好時機。逆位：過度逼迫身體，忽視休息訊號，或完全失去自律。’,image:‘沒有韁繩，但兩隻獸往同一方向走。記住：真正的控制不是拉緊韁繩，是讓所有的力量都想往同一個地方去。’,tip:‘不是壓制內心的衝突，而是讓所有的力量都朝著同一個目標燃燒。’,date:‘2026/4/12’},
-{id:1743609600015,name:‘力量’,num:‘8 號大阿爾克那’,origin:‘數字 8，代表無限循環的能量（頭頂的∞）。力量對應「慈悲者」原型——她不用武器，用愛讓最兇猛的獸低頭。白衣代表純粹，花環代表與自然和諧，獅子代表我們內心最原始的本能與恐懼。’,posKw:‘內在力量・柔軟・耐心’,negKw:‘內在力量耗盡・被恐懼支配・以蠻力代替柔軟’,love:‘正位：用愛與耐心經營感情，不強迫、不控制，讓對方自然靠近。逆位：用蠻力或恐懼維繫關係，或自己的愛已耗盡，撐不下去了。’,career:‘正位：用耐心和柔軟克服困難，不硬碰硬，以柔克剛往往比強攻更有效。逆位：蠻力硬撐卻越來越疲憊，或因恐懼而失去判斷力。’,health:‘正位：溫柔對待自己的身體，用愛而不是強迫來建立健康習慣。逆位：用意志力硬撐，忽視身體發出的疲憊訊號。’,image:‘她把手伸進獅子嘴裡，臉上是微笑不是恐懼。記住：獅子沒有被打敗，是被愛融化了。真正的力量，是讓最兇猛的東西也想對你溫柔。’,tip:‘真正的強大，不是讓對方害怕你，而是讓對方願意在你面前放下防衛。’,date:‘2026/4/12’},
-{id:1743609600016,name:‘隱士’,num:‘9 號大阿爾克那’,origin:‘數字 9，代表旅程接近完成，需要停下來沉澱。隱士對應「智者」原型——他不是逃離世界，而是帶著所有的人生經歷走到高處，用燈籠照亮自己也照亮後來者。灰袍代表超越世俗的冷靜，雪山代表孤獨而清醒的高度。’,posKw:‘獨處・內省・尋找內在智慧’,negKw:‘過度孤立・拒絕內省・與世界脫節’,love:‘正位：需要給自己和對方一些獨處的空間，才能看清楚感情真正的樣子。逆位：過度孤立拒絕親密，或完全逃避獨處不願面對感情的真相。’,career:‘正位：退一步冷靜思考，不跟著市場情緒走，用沉澱後的智慧做決定。逆位：把自己封閉起來不接受外界資訊，或一直往外跑逃避做決定。’,health:‘正位：給身心一段安靜的時間，冥想、獨處、讓自己充電。逆位：過度孤立導致憂鬱，或完全不給自己安靜的時間而耗盡。’,image:‘燈只照腳下一小片，但他走得很穩。記住：不需要看到整條路，只需要看清楚眼前這一步。智慧不是知道所有答案，是在黑暗中還能穩穩地走。’,tip:‘不需要看見整條路，只需要讓燈光照亮你現在踩的這一步。’,date:‘2026/4/12’},
-{id:1743609600011,name:‘正義’,num:‘11 號大阿爾克那’,origin:‘數字 11，代表因果與平衡的法則。正義對應「裁判者」原型——她手持天秤衡量事實，手持寶劍執行裁決。她不帶情緒，只看真相。’,posKw:‘公平・因果・清醒判斷’,negKw:‘不公平・逃避責任・自我欺騙’,love:‘正位：感情中需要誠實面對彼此，付出與接受要對等，雙方都要承擔責任。逆位：逃避感情中該承擔的責任，或用不公平的標準衡量對方。’,career:‘正位：按規則行事，結果會公平呈現，這是講究誠信與能力的時期。逆位：用不正當的手段或迴避責任，最終因果會回來。’,health:‘正位：身體給你的訊號是公平的，照顧自己就會有好的回應。逆位：忽視身體的警訊，或在健康上自我欺騙。’,image:‘她坐著，左手天秤、右手寶劍，眼睛直視前方。記住：天秤不說謊，寶劍不手軟。’,tip:‘看清楚之後選擇沉默，是比吶喊更有力量的正義。’,date:‘2026/4/11’},
-{id:1743609600005,name:‘太陽’,num:‘19 號大阿爾克那’,origin:‘數字 19，接近塔羅旅程的終點。太陽對應「純粹喜悅」的原型——一個赤裸的孩子騎著白馬，在燦爛的太陽下奔跑。他不需要盔甲，因為光本身就是保護。’,posKw:‘喜悅・清晰・活力充沛’,negKw:‘過度樂觀・自我膨脹・光芒被遮蔽’,love:‘正位：關係明朗、溫暖、充滿活力，是感情最好的狀態之一。逆位：過度理想化對方，或把快樂建立在不切實際的期待上。’,career:‘正位：能力被看見，計畫順利推進，是展現自己的好時機。逆位：過度自信導致忽略細節，或光芒太強而壓過團隊。’,health:‘正位：活力旺盛，身心狀態明亮，適合戶外活動。逆位：過度消耗精力，或眼睛、皮膚等與光有關的部位需要注意。’,image:‘赤裸的孩子騎白馬在陽光下奔跑，什麼都不怕，什麼都不藏。記住：孩子不是因為無知才無畏，是因為完全活在當下才無畏。’,tip:‘陽光下沒有秘密，也不需要秘密。’,date:‘2026/4/9’},
-{id:1743609600006,name:‘權杖八’,num:‘權杖’,origin:‘數字 8，代表力量與動能的高峰。權杖八對應「箭在弦上、一觸即發」的原型——事情已經啟動，正在空中飛行，無法回頭也不需要回頭。’,posKw:‘快速推進・訊息傳遞・行動力’,negKw:‘延誤・混亂・急躁失控’,love:‘正位：感情快速升溫，訊息頻繁往來，關係正在加速發展。逆位：溝通出現誤解或延遲，急於求成反而讓對方感到壓力。’,career:‘正位：事情快速推進，可能同時處理多件任務，效率極高的時期。逆位：計畫趕不上變化，事情卡關或方向混亂，需要重新整理優先順序。’,health:‘正位：精力旺盛，適合高強度運動或密集的行程安排。逆位：過度消耗體力，身體跟不上腦袋的節奏，需要適時煞車休息。’,image:‘八支權杖同時斜插在空中飛射，沒有人拿著它們，它們自己在飛。記住：沒有人控制，但方向一致，速度極快。’,tip:‘在飛速之中，你從未真正錯過。’,date:‘2026/4/3’},
-{id:1743609600007,name:‘權杖皇后’,num:‘權杖’,origin:‘宮廷牌中最有行動力的女性能量。權杖皇后對應「充滿熱情的創造者」原型——她知道自己要什麼，優雅而堅定地實現它，腳邊的黑貓代表她也有直覺與神秘的一面。’,posKw:‘行動力・務實・熱情自信’,negKw:‘衝動・控制欲・燃燒殆盡’,love:‘正位：主動、熱情、有魅力，是感情中的主導者，帶給對方活力與溫暖。逆位：佔有欲過強，或因過度付出而感到疲憊與委屈。’,career:‘正位：在工作中展現強大執行力，多線並進也能應對自如，是天生的領導者。逆位：過度控制或強迫他人按自己方式做事，消耗人際關係。’,health:‘正位：精力充沛，活力旺盛，適合挑戰高強度目標。逆位：燃燒過度，需要警惕身心耗竭，學會適時放手。’,image:‘她坐在王座上，一手握著權杖，腳邊有一隻黑貓。記住：她是把事情做完的那個人。’,tip:‘熱情是火，智慧是讓火燒得剛剛好。’,date:‘2026/4/7’},
-{id:1743609600008,name:‘聖杯四’,num:‘聖杯’,origin:‘數字 4，代表穩定與靜止。聖杯四對應「迷失在內心世界」的原型——一個人坐在樹下，面前三個聖杯，天上還有一隻手遞來第四個，但他沒有抬頭看見。’,posKw:‘冥想・不滿足・錯過機會’,negKw:‘覺醒・重新投入・接受新機會’,love:‘正位：對現有感情感到無聊或不滿足，卻沒看見身邊其實有新的可能。逆位：終於從情感低潮中走出來，願意重新打開心扉。’,career:‘正位：悶在現狀裡，機會就在眼前卻視而不見。逆位：從消極狀態中甦醒，開始積極面對工作機會。’,health:‘正位：長期悶悶不樂，對身心都有消耗，需要打破慣性。逆位：開始行動，走出去，身心都會跟著好轉。’,image:‘他坐在樹下盯著三個杯子發呆，天上的手遞來第四個他都沒看見。記住：有時候我們最需要的禮物，就在我們沒有抬頭的那個方向。’,tip:‘抬起頭來，你以為沒有的，其實早就在那裡了。’,date:‘2026/4/9’},
-{id:1743609600012,name:‘星幣三’,num:‘星幣’,origin:‘數字 3，代表合作與技藝的展現。星幣三對應「工匠」原型——三個人在教堂前討論建造計畫，代表用技術和努力把想法變成現實，強調合作與專業。’,posKw:‘合作・技藝・扎實執行’,negKw:‘缺乏合作・馬虎了事・方向不一致’,love:‘正位：兩人一起為關係努力，分工合作，把感情經營得扎實。逆位：各做各的，沒有共同目標，或一方不願意付出。’,career:‘正位：團隊合作順暢，各司其職，專業技能被看見，是展現實力的好時機。逆位：團隊溝通不良，或做事馬虎，基礎沒有打好。’,health:‘正位：按部就班地照顧身體，規律飲食和運動，扎實建立健康習慣。逆位：忽視基本的身體保養，或三天打魚兩天曬網。’,image:‘三個人看著同一張藍圖，沒有人單打獨鬥。記住：最好的作品不是一個人做出來的，是三個人對著同一張圖，一磚一瓦砌出來的。’,tip:‘不需要英雄式的衝刺，把每一塊磚砌好就夠了。’,date:‘2026/4/11’},
-];
+// ===== 牌義資料庫 =====
+const CARD_DATA={
+  '愚者':{num:'0 號大阿爾克那',posKw:'新開始・冒險・純真',negKw:'魯莽・逃避・準備不足',origin:'數字 0，代表無限與圓滿的起點。愚者是塔羅旅程的第一步，對應神話中「英雄出發」的原型——一個無所畏懼、尚未被世界定義的靈魂，踏出懸崖邊緣的第一步。',image:'想像一個背著小包袱的年輕人，站在懸崖邊，眼睛看著天空而不是腳下。記住：眼睛看天，腳踩懸崖。',tip:'不是因為準備好了才出發，而是出發之後才會準備好。',
+    fortune:{pos:{energy:'今天有新的機緣或想法即將萌芽，放輕鬆、保持開放，跟著直覺走。',note:'避免過度規劃，也不要因為「沒準備好」就裹足不前。',mantra:'✨ 世界比你想的更願意接住你。'},neg:{energy:'今天可能有些魯莽的衝動，或者相反地，用「還沒準備好」逃避某件事。',note:'停下來問問自己：我是真的沒準備好，還是在逃避？',mantra:'✨ 準備好的感覺，永遠在出發之後才會來。'}}},
+  '魔術師':{num:'1 號大阿爾克那',posKw:'顯化・意志力・掌握資源',negKw:'操弄・才能浪費・欺騙',origin:'數字 1，萬物起源。魔術師對應「創造者」原型，一手指天接收靈感，一手指地將其落實，頭頂∞代表無限的可能性。',image:'桌上四樣工具一樣不缺，他不是在等更好的條件，他現在就開始了。',tip:'你已經有了所有需要的東西，缺的只是開始。',
+    fortune:{pos:{energy:'今天你的能量充沛，手上的資源和能力剛好夠用，適合啟動新的事情。',note:'不要等待更好的時機，你現在就有足夠的條件。',mantra:'✨ 魔法從不等待，它在你拿起第一樣工具的瞬間開始。'},neg:{energy:'今天可能有才能卻沒發揮，或者把力氣用在不對的地方。',note:'注意是否有人（包括自己）在用話術或假象誤導判斷。',mantra:'✨ 真正的力量不需要偽裝，它自己會發光。'}}},
+  '女祭司':{num:'2 號大阿爾克那',posKw:'直覺・靜待・內在智慧',negKw:'壓抑直覺・逃避真相・忽視內心',origin:'數字 2，代表二元與平衡。女祭司對應「智慧守護者」原型，坐在意識與潛意識的邊界。',image:'她坐在那裡什麼都不做，但她什麼都知道。記住：沉默不是沒有答案，是答案還不到說出口的時候。',tip:'最深的智慧，往往藏在最安靜的等待裡。',
+    fortune:{pos:{energy:'今天不適合主動出擊，靜下來觀察和感受，答案會自然浮現。',note:'如果有什麼事情讓你感覺不對勁，相信那個感覺。',mantra:'✨ 安靜，是讓真相有機會說話的姿態。'},neg:{energy:'今天可能有重要的直覺被你壓下去了，或者在逃避某個你其實已經知道的答案。',note:'停下來，問問自己：我真正感覺到的是什麼？',mantra:'✨ 你已經知道答案了，只是還不敢承認。'}}},
+  '女皇':{num:'3 號大阿爾克那',posKw:'豐盛・創造・滋養',negKw:'匱乏感・過度付出・創造力受阻',origin:'數字 3，代表創造與豐盛的具現。女皇對應「大地之母」原型——她本身就是豐盛。',image:'她坐在大自然裡，周圍一切都在生長。她不需要做什麼，豐盛自然而來。',tip:'資源源源不絕而來，前提是你願意接受它。',
+    fortune:{pos:{energy:'今天豐盛的能量環繞著你，適合創作、享受、滋養自己。',note:'好好接受別人的好意，不要習慣性地推開。',mantra:'✨ 你值得被好好滋養，就從今天開始。'},neg:{energy:'今天可能給得太多卻忘了補充自己，或者有匱乏感揮之不去。',note:'先照顧好自己，才有餘力給予別人。',mantra:'✨ 空的杯子倒不出水，先把自己裝滿。'}}},
+  '皇帝':{num:'4 號大阿爾克那',posKw:'秩序・權威・穩固',negKw:'失控・過度威權・缺乏紀律',origin:'數字 4，代表穩固與結構。皇帝對應「父親」原型——他用秩序和規則建立安全的世界。',image:'女皇坐在花園裡，皇帝坐在光禿禿的山上。記住：岩石不是荒涼，是最堅固的基礎。',tip:'自由需要邊界，豐盛需要結構。',
+    fortune:{pos:{energy:'今天適合建立規則、做計畫、用紀律推進事情，是穩紮穩打的日子。',note:'把混亂的事情整理一下，給它一個清楚的結構。',mantra:'✨ 紀律不是限制，是讓你走得更遠的地基。'},neg:{energy:'今天可能有些事情失控，或者感覺被某個過於嚴格的規則壓著喘不過氣。',note:'管理自己，但不要用鞭打代替引導。',mantra:'✨ 最好的秩序，是讓人感到安全，而不是恐懼。'}}},
+  '教皇':{num:'5 號大阿爾克那',posKw:'傳統・精神指引・制度',negKw:'教條・反叛・打破規則',origin:'數字 5，代表變動與衝突的臨界點。教皇對應「精神導師」原型——他是神聖與世俗之間的橋梁。',image:'兩個人跪在他面前聽他說話，他舉手祝福。記住：皇帝說「照我說的做」，教皇說「讓我告訴你前人怎麼說」。',tip:'真正的智慧不是自己想出來的，是從千百年的傳承中提煉出來的。',
+    fortune:{pos:{energy:'今天適合遵循已有的方法，向有經驗的人請教，按部就班推進。',note:'不需要重新發明輪子，前人的智慧就是你的捷徑。',mantra:'✨ 傳統是前人用時間換來的智慧，值得被尊重。'},neg:{energy:'今天可能對某個規則或傳統感到窒息，想要打破框架。',note:'改變之前先確認你真的理解這個規則存在的原因。',mantra:'✨ 打破規則之前，先弄清楚規則為什麼存在。'}}},
+  '戀人':{num:'6 號大阿爾克那',posKw:'選擇・結合・價值觀一致',negKw:'錯誤選擇・價值觀衝突・逃避決定',origin:'數字 6，代表和諧與平衡的達成。戀人對應「選擇者」原型——這不只是愛情牌，更是「做出真心選擇」的牌。',image:'男人看女人，女人看天使，天使看著一切。記住：真正的愛，是三個層次同時存在——慾望、情感、靈性。缺一個，就不完整。',tip:'最重要的選擇，不是用腦袋想出來的，是用心感覺到的。',
+    fortune:{pos:{energy:'今天有重要的選擇或連結需要你用心面對，跟著真實的自己走。',note:'不要因為害怕做錯而逃避選擇，選了才有機會修正。',mantra:'✨ 最對的選擇，永遠是對自己誠實的那一個。'},neg:{energy:'今天可能面對一個不知道怎麼選的困境，或者感覺自己跟某個重要的事物失去連結。',note:'先停下來，弄清楚你真正想要的是什麼。',mantra:'✨ 不知道選什麼，是因為還沒搞清楚自己要什麼。'}}},
+  '戰車':{num:'7 號大阿爾克那',posKw:'意志力・掌控・勝利前進',negKw:'失控・方向錯誤・強迫執行',origin:'數字 7，代表挑戰與突破的關鍵時刻。戰車對應「征服者」原型——他不靠外力，靠的是純粹的意志力讓相反的力量統一向前。',image:'沒有韁繩，但兩隻獸往同一方向走。記住：真正的控制不是拉緊韁繩，是讓所有的力量都想往同一個地方去。',tip:'不是壓制內心的衝突，而是讓所有的力量都朝著同一個目標燃燒。',
+    fortune:{pos:{energy:'今天意志力強大，適合衝刺、突破、全力推進某件事。',note:'確認方向對了再衝，速度快的時候更要注意方向。',mantra:'✨ 當你知道要去哪裡，全世界都會為你讓路。'},neg:{energy:'今天可能有點失控，或者方向搞錯了還在硬衝，越努力越累。',note:'停下來問問：我現在衝的方向，是我真正想去的地方嗎？',mantra:'✨ 往錯誤的方向奔跑，只會讓你離目標更遠。'}}},
+  '力量':{num:'8 號大阿爾克那',posKw:'內在力量・柔軟・耐心',negKw:'內在力量耗盡・被恐懼支配・以蠻力代替柔軟',origin:'數字 8，代表無限循環的能量（頭頂的∞）。力量對應「慈悲者」原型——她不用武器，用愛讓最兇猛的獸低頭。',image:'她把手伸進獅子嘴裡，臉上是微笑不是恐懼。記住：獅子沒有被打敗，是被愛融化了。',tip:'真正的強大，不是讓對方害怕你，而是讓對方願意在你面前放下防衛。',
+    fortune:{pos:{energy:'今天用溫柔和耐心比用蠻力更有效，柔軟是今天最大的力量。',note:'遇到困難時不要硬碰硬，試試看用愛和理解化解。',mantra:'✨ 真正的強大，是在任何情況下都能保持溫柔。'},neg:{energy:'今天可能感覺內在力量快耗盡，或者在用蠻力硬撐一件讓你疲憊的事。',note:'今天需要的不是更努力，而是更溫柔地對待自己。',mantra:'✨ 你不需要用力氣來證明自己的價值。'}}},
+  '隱士':{num:'9 號大阿爾克那',posKw:'獨處・內省・尋找內在智慧',negKw:'過度孤立・拒絕內省・與世界脫節',origin:'數字 9，代表旅程接近完成，需要停下來沉澱。隱士對應「智者」原型——他不是逃離世界，是帶著所有經歷走到高處，用燈籠照亮自己也照亮後來者。',image:'燈只照腳下一小片，但他走得很穩。記住：不需要看到整條路，只需要看清楚眼前這一步。',tip:'不需要看見整條路，只需要讓燈光照亮你現在踩的這一步。',
+    fortune:{pos:{energy:'今天適合獨處、反思、聽聽自己內心的聲音，不需要熱鬧。',note:'給自己一段安靜的時間，你會找到一直在等待的答案。',mantra:'✨ 最清醒的答案，往往在最安靜的時刻浮現。'},neg:{energy:'今天可能把自己關得太緊，或者相反地，用忙碌逃避需要面對自己的時刻。',note:'適度的孤獨是充電，過度的孤立是逃避。',mantra:'✨ 走進自己，不是為了躲避世界，是為了更清醒地回到世界。'}}},
+  '命運之輪':{num:'10 號大阿爾克那',posKw:'命運轉折・時機・順勢而為',negKw:'抗拒變化・壞運循環・時機未到',origin:'數字 10，代表一個完整循環的結束與新循環的開始。命運之輪對應「命運」原型——沒有人能停止輪子，但智者知道如何順勢而為。',image:'斯芬克斯坐在頂端，看著上上下下的一切，不動如山。記住：智慧不是讓你永遠在頂端，是讓你在任何位置都能看清楚輪子在往哪裡轉。',tip:'輪子永遠在轉，聰明的人不是抓住頂端，而是學會隨著輪子流動。',
+    fortune:{pos:{energy:'今天有轉機出現，時機來了，順著這股流走，不要抗拒。',note:'如果有好事發生，大方接受，輪子轉到你這邊了。',mantra:'✨ 好運不是偶然，是你準備好了，輪子剛好轉到這裡。'},neg:{energy:'今天可能感覺事情卡住，或者壞運氣一直循環找不到出口。',note:'停止對抗，先接受現在的狀況，才能看清楚下一步怎麼走。',mantra:'✨ 輪子永遠在轉，現在在下面，不代表永遠在下面。'}}},
+  '正義':{num:'11 號大阿爾克那',posKw:'公平・因果・清醒判斷',negKw:'不公平・逃避責任・自我欺騙',origin:'數字 11，代表因果與平衡的法則。正義對應「裁判者」原型——她手持天秤衡量事實，手持寶劍執行裁決。她不帶情緒，只看真相。',image:'她坐著，左手天秤、右手寶劍，眼睛直視前方。記住：天秤不說謊，寶劍不手軟。',tip:'看清楚之後選擇沉默，是比吶喊更有力量的正義。',
+    fortune:{pos:{energy:'今天要用清醒和公平的眼光看事情，做出合理的判斷，不要偏袒任何一方（包括自己）。',note:'如果有什麼事情需要解決，就直接面對，公平處理。',mantra:'✨ 看清楚，然後行動。看清楚，然後放下。'},neg:{energy:'今天可能有點逃避責任，或者有些事情你知道是什麼情況，卻在騙自己。',note:'對自己誠實，是今天最需要的功課。',mantra:'✨ 最難承認的真相，往往是最需要面對的真相。'}}},
+  '吊人':{num:'12 號大阿爾克那',posKw:'暫停・換角度・自願犧牲換洞見',negKw:'拖延・抗拒放手・無謂犧牲',origin:'數字 12，代表自願的暫停與犧牲換來的洞見。吊人對應「暫停者」原型——他主動選擇倒掛，用不同的角度看世界。頭頂光環代表這個暫停是有價值的。',image:'他倒掛著臉上有光環和微笑。記住：他是自願的，而且他在這個不尋常的位置看到了別人看不到的東西。',tip:'有時候放慢腳步，是為了看見一直在那裡卻從未注意到的風景。',
+    fortune:{pos:{energy:'今天適合暫停、等待、換一個角度看事情，不要急著行動。',note:'這個暫停不是浪費時間，是在醞釀更重要的洞見。',mantra:'✨ 倒過來看，世界會給你從未見過的風景。'},neg:{energy:'今天可能有些事情一直拖著不解決，或者在做一些無謂的犧牲卻沒有得到任何回報。',note:'分清楚什麼是有意義的等待，什麼是逃避。',mantra:'✨ 該放手的事，握得越緊只會越痛。'}}},
+  '太陽':{num:'19 號大阿爾克那',posKw:'喜悅・清晰・活力充沛',negKw:'過度樂觀・自我膨脹・光芒被遮蔽',origin:'數字 19，接近塔羅旅程的終點。太陽對應「純粹喜悅」的原型——一個赤裸的孩子騎著白馬，在燦爛的太陽下奔跑。',image:'赤裸的孩子騎白馬在陽光下奔跑，什麼都不怕，什麼都不藏。記住：孩子不是因為無知才無畏，是因為完全活在當下才無畏。',tip:'陽光下沒有秘密，也不需要秘密。',
+    fortune:{pos:{energy:'今天是充滿活力和喜悅的日子，讓自己明亮一點，好事會跟著來。',note:'把快樂分享出去，今天的光能照亮很多人。',mantra:'✨ 今天，允許自己快樂，不需要理由。'},neg:{energy:'今天可能有點過度樂觀，或者某些事情遮住了你本來的光芒。',note:'保持真實，過於表演的快樂反而讓人疲憊。',mantra:'✨ 真正的光，是從裡面發出來的，不需要刻意展示。'}}},
+  '權杖八':{num:'權杖',posKw:'快速推進・訊息傳遞・行動力',negKw:'延誤・混亂・急躁失控',origin:'數字 8，代表力量與動能的高峰。權杖八對應「箭在弦上、一觸即發」的原型——事情已經啟動，正在空中飛行，無法回頭也不需要回頭。',image:'八支權杖同時斜插在空中飛射，沒有人拿著它們，它們自己在飛。記住：沒有人控制，但方向一致，速度極快。',tip:'在飛速之中，你從未真正錯過。',
+    fortune:{pos:{energy:'今天事情推進得飛快，訊息滿天飛，跟上節奏就好不要抗拒。',note:'多件事同時進行是今天的常態，保持彈性。',mantra:'✨ 在飛速之中，你從未真正錯過。'},neg:{energy:'今天可能事情亂成一鍋粥，或者因為太急躁讓事情更混亂。',note:'先停下來整理優先順序，再重新出發。',mantra:'✨ 慢一步，不是落後，是讓自己看得更清楚。'}}},
+  '權杖皇后':{num:'權杖',posKw:'行動力・務實・熱情自信',negKw:'衝動・控制欲・燃燒殆盡',origin:'宮廷牌中最有行動力的女性能量。權杖皇后對應「充滿熱情的創造者」原型——她知道自己要什麼，優雅而堅定地實現它，腳邊的黑貓代表她也有直覺與神秘的一面。',image:'她坐在王座上，一手握著權杖，腳邊有一隻黑貓。記住：她是把事情做完的那個人。',tip:'熱情是火，智慧是讓火燒得剛剛好。',
+    fortune:{pos:{energy:'今天你充滿行動力，適合把清單上的事情一件一件搞定。',note:'你今天是把事情做完的那個人，相信自己的節奏。',mantra:'✨ 把該做的做完，剩下的時間，就好好屬於自己。'},neg:{energy:'今天可能有點衝動，或者感覺快燒完了，能量快到極限。',note:'熱情很珍貴，不要讓它燃燒殆盡，今天適合煞車一下。',mantra:'✨ 知道什麼時候停下來，也是一種力量。'}}},
+  '聖杯四':{num:'聖杯',posKw:'冥想・不滿足・錯過機會',negKw:'覺醒・重新投入・接受新機會',origin:'數字 4，代表穩定與靜止。聖杯四對應「迷失在內心世界」的原型——一個人坐在樹下，面前三個聖杯，天上還有一隻手遞來第四個，但他沒有抬頭看見。',image:'他坐在樹下盯著三個杯子發呆，天上的手遞來第四個他都沒看見。記住：有時候我們最需要的禮物，就在我們沒有抬頭的那個方向。',tip:'抬起頭來，你以為沒有的，其實早就在那裡了。',
+    fortune:{pos:{energy:'今天可能對現狀感到不滿足，但機會可能就在你視線的邊緣，記得抬頭看。',note:'不要只盯著你沒有的，看看你已經有的。',mantra:'✨ 抬起頭來，你以為沒有的，其實早就在那裡了。'},neg:{energy:'今天適合從悶悶的狀態中走出來，重新投入生活，有新的可能在等你。',note:'今天特別適合接受一個之前習慣拒絕的邀請或機會。',mantra:'✨ 走出去，世界比你想像的更歡迎你。'}}},
+  '星幣三':{num:'星幣',posKw:'合作・技藝・扎實執行',negKw:'缺乏合作・馬虎了事・方向不一致',origin:'數字 3，代表合作與技藝的展現。星幣三對應「工匠」原型——三個人在教堂前討論建造計畫，代表用技術和努力把想法變成現實，強調合作與專業。',image:'三個人看著同一張藍圖，沒有人單打獨鬥。記住：最好的作品不是一個人做出來的，是三個人對著同一張圖，一磚一瓦砌出來的。',tip:'不需要英雄式的衝刺，把每一塊磚砌好就夠了。',
+    fortune:{pos:{energy:'今天適合跟人合作、專注技藝、一步一步把事情做紮實。',note:'今天不需要英雄式的衝刺，把每一件小事做好就夠了。',mantra:'✨ 不需要英雄式的衝刺，把每一塊磚砌好就夠了。'},neg:{energy:'今天可能跟合作的人方向不一致，或者有事情做得太馬虎。',note:'對齊目標，確認大家在說同一件事，再繼續推進。',mantra:'✨ 方向一致，才能把力氣花在對的地方。'}}},
+};
 
-const PRELOAD_DAILY=[
-{id:1743696000001,card:‘權杖八’,ori:‘正位’,event:‘差點來不及去演唱會現場，會後有陌生人發彩帶給我，逛了夜市，趕上火車回家，到家後下大雨’,energy:‘權杖八是塔羅中速度最快的牌，八支權杖同時在空中飛射，代表事情快速推進、來不及思考就已經發生，一切都在動態中。’,mapping:‘差點來不及→緊迫衝刺的核心能量；陌生人給彩帶→快速流動中意外收到的驚喜；逛夜市→人潮湧動正是八支箭齊飛的熱鬧感；趕上火車→在最後一刻抓住移動的節奏；到家下大雨→高速過後天地給了一個句點。’,hidden:‘以為自己一直在「趕」，其實整天都在對的節奏裡。信任流動，不要跟速度對抗。’,action:‘當你下次焦慮「來不及」，想起這個週六——趕著卻都趕上了，還多收到了一條彩帶。’,mantra:‘在飛速之中，你從未真正錯過。’,date:‘2026/4/5’,time:‘週六’},
-{id:1743696000002,card:‘權杖皇后’,ori:‘逆位’,event:‘跟朋友聚餐吃港式茶餐廳好吃，頭次找朋友練習塔羅牌簡單但有達到牌義朋友有繼續述說，下午去吃下午茶太甜，接著逛花市買花和拿到免費海芋，走了一萬五，晚上泡麵加青菜，昨天好喝的手搖今天變難喝’,energy:‘權杖皇后逆位的核心提醒是「不要衝動」——熱情仍在，但需要收斂，避免過度、過快、過猛。’,mapping:‘港式茶餐廳好吃→滿足但沒有貪多；練習塔羅牌點到即止→正是逆位皇后的智慧；下午茶太甜→身體直接給了「過度」的感覺；花市買花加免費海芋→意外的收穫不是衝動購買；走了一萬五但晚上泡麵收尾→自然煞車。’,hidden:‘今天做到了逆位皇后最難的功課——熱情行動但沒有失控。這張牌不是在警告你，是在肯定你今天的節制。’,action:‘把練習塔羅牌這件事繼續做。下次可以試著問對方「這跟你最近的什麼事有關？」’,mantra:‘熱情是火，智慧是讓火燒得剛剛好。’,date:‘2026/4/5’,time:‘今日’},
-{id:1743782400001,card:‘寶劍皇后’,ori:‘逆位’,event:‘早上抽牌，下午看到龍龜團購，看中五隻：龍血石820、金太陽860、彩螢石520、藍磷灰1060、加勒比海昂方解石600。已喊藍磷灰和加勒比海昂方解石。’,energy:‘寶劍皇后逆位提醒此刻思緒可能不如表面清晰，情緒或慾望正在悄悄影響判斷力。’,mapping:‘說「只是看看」卻喊了兩隻；說「還在考慮」卻已研究每隻礦訊。牌完全說中：「我已經決定了，只是假裝在考慮。」’,hidden:‘塔羅牌不是魔法，是把已經知道但不想承認的事說出來。’,action:‘不用全拿，但最心動的那隻不要因為猶豫而錯過。誠實面對自己的答案，清醒地做決定。’,mantra:‘最清醒的判斷，是對自己誠實。’,date:‘2026/4/7’,time:‘今日’},
-{id:1743868800001,card:‘權杖皇后’,ori:‘正位’,event:‘處理完手機登入網路銀行密碼狀況，繳卡費、還債務、轉帳買龍龜（藍磷灰＋加勒比海昂方解石），工作上把薪資表更新，晚上想吃熱滷味沒開改成魚酥羹麵，滑手機一晚上。’,energy:‘權杖皇后正位是塔羅中最有行動力、最務實的女性能量——她知道自己要什麼，然後一件一件把它完成。今天你就是她。’,mapping:‘處理網路銀行密碼→遇到障礙不迴避直接解決；繳卡費還債務→務實面對財務不拖延；轉帳買龍龜→昨天清醒判斷今天執行；熱滷味沒開改魚酥羹麵→靈活調整不執著；滑手機一晚上→皇后也需要充電。’,hidden:‘昨天逆位提醒別衝動，今天正位說你做到了。逆位到正位，是你自己走過來的。’,action:‘今天做了很多務實的事，滑手機一晚上是你應得的。不需要每一刻都有生產力。’,mantra:‘把該做的做完，剩下的時間，就好好屬於自己。’,date:‘2026/4/8’,time:‘今日’},
-{id:1743955200001,card:‘聖杯四’,ori:‘逆位’,event:‘睡過頭11點才到公司要晚下班，朋友約也不行太晚。上午弄的部分工時人員表下午經確認不用操作了，正好。處理之前自提金額不符的事天數算錯了誤差605元五月補上。感覺大家都在忙。臨時決定月底去台南玩，朋友想當天來回，我想多住一晚。’,energy:‘聖杯四逆位說你今天從「悠哉坐著」的狀態醒來了，開始行動和面對。’,mapping:‘睡過頭→還坐在樹下的狀態；但醒來之後處理工時表、解決自提金額誤差、決定台南之旅——一件件把事情推進了。’,hidden:‘台南「多住一晚」的念頭，就是那隻從天上伸來的手。聽你內心的聲音。’,action:‘台南多住一晚，值得。給自己一點悠哉的空間，不是懶，是補充能量。’,mantra:‘抬起頭來，你以為沒有的，其實早就在那裡了。’,date:‘2026/4/9’,time:‘今日’},
-{id:1744041600001,card:‘太陽’,ori:‘正位’,event:‘今天很熱公司開冷氣了。訂了下週跟朋友聚餐的餐廳和月底去台南的高鐵票，住宿由朋友的姊姊贊助。放在位子後面的公司文件底部都潮濕發霉了。朋友訂了明天慶生的餐廳，覺得不要隨便打槍別人。早上醒來眼睛無法對焦。趁還沒漲價買了12元噗浪的噗幣。感覺都在做各種計畫和執行。’,energy:‘太陽是塔羅中最正面的牌之一——光明、喜悅、活力、清晰。一切都攤在陽光下，沒有陰影，沒有隱藏，就是純粹的能量向前衝。’,mapping:‘今天很熱公司開冷氣→太陽字面上就出現了；訂聚餐訂高鐵票→計畫明確朝目標前進；住宿由朋友姊姊贊助→意外的光和溫暖從別人身上照過來；文件底部潮濕發霉→太陽把角落的問題照出來暴露在檯面上。’,hidden:‘今天你活得很「透明」——計畫都說出來了，票也訂了，餐廳也定了。太陽說：你現在不需要想太多，就讓事情在光裡展開就好。’,action:‘眼睛無法對焦是身體提醒你，光太強的時候也需要閉眼休息一下。’,mantra:‘陽光下沒有秘密，也不需要秘密。’,date:‘2026/4/10’,time:‘今日’},
-{id:1744128000001,card:‘正義’,ori:‘正位’,event:‘收到預訂的龍龜和衣服。下午整理之前泡水的公司文件。晚餐幫偶像慶生，結果餐點都不好吃也不夠熱。去美食街買紅葉蛋糕沒有經典口味。閱讀別人的塔羅日記。忍著沒有在線上吐槽老是喊口號沒有要改的社畜。’,energy:‘正義手持天秤與寶劍，她不偏不倚，看清楚事實之後做出裁決。今天你的能量就是這把天秤——什麼該說、什麼不該說，你都清楚地知道。’,mapping:‘收到龍龜和衣服→等待有了結果，天秤平衡了；整理泡水文件→不逃避直面問題；幫偶像慶生但餐點不好→付出不一定等於完美的回報；忍著沒有吐槽社畜→今天最正義的行為。’,hidden:’「忍著沒有吐槽」不是委屈，是正義。你知道說了也沒用，所以選擇不浪費能量在無效的地方。’,action:‘那個「老是喊口號沒有要改」的狀況，你的正義感已經看得很清楚了。不需要吐槽，但可以思考：你能做什麼讓自己在這個環境裡不消耗？’,mantra:‘看清楚之後選擇沉默，是比吶喊更有力量的正義。’,date:‘2026/4/11’,time:‘今日’},
-{id:1744214400001,card:‘星幣三’,ori:‘正位’,event:‘抽到權杖3重複所以又抽了張星幣3。大部分滑了手機。準備了午餐（吃完拉肚子）。晚上去夜市買牛排和奶茶。想買排骨酥售完、醃芭樂太多人不想排。去7-11買了明天的兩餐。中午貓掌黏到黏鼠板，用橄欖油清乾淨。將地面清出一塊空間。周邊的小公仔收納完畢。收納箱組裝完成。’,energy:‘星幣三是「工匠」的牌——三個人在合作建造，各司其職，按照藍圖一步一步把事情做好。不是衝刺，是扎實地把每一件事完成。’,mapping:‘滑手機大部分時間→照本宣科，今天就是休息模式；準備午餐→按部就班自己動手做；夜市買牛排和奶茶→目標明確去了就買到；排骨酥售完芭樂太多人→有些事照計畫走有些事現場調整；7-11買明天兩餐→提前規劃正是星幣三的務實；貓掌黏到黏鼠板用橄欖油清乾淨→遇到突發狀況用正確的方法處理；清出地面空間收納小公仔組裝收納箱→今天最標準的星幣三。’,hidden:‘今天做的事看起來很「普通」，但星幣三說：扎實地把每一件小事做好，就是建造宏偉建築的方式。’,action:‘拉肚子要注意，明天的兩餐已經備好了，讓腸胃休息一下。橄欖油清貓掌這件事記一下，以後用得到。’,mantra:‘不需要英雄式的衝刺，把每一塊磚砌好就夠了。’,date:‘2026/4/11’,time:‘今日’},
-{id:1744300800001,card:‘戀人’,ori:‘正位’,event:‘困擾幾天的表格今天找到方法解決了。晚上跟朋友吃飯，提早一小時下班。吃了好吃的港式飲茶，朋友送了葡吉羅宋，我帶了厚蛋捲分送一人一根。帶來塔羅牌但沒有時間跟朋友練習。開始處理老闆交代的信貸問題，繳稅事宜詢問。晚上帶朋友去買手搖，獲得朋友肯定品味。搭火車回家。抽選鬍子男演唱會中票了。今天各種好事發生。成功拒絕手搖的誘惑，我很棒。’,energy:‘戀人正位是選擇、結合、價值觀一致的能量。今天你做了很多「對的選擇」——選擇去陪朋友、選擇分享、選擇拒絕誘惑。每一個選擇都是你。’,mapping:‘困擾幾天的表格找到解法→戀人代表兩個元素終於對齊，問題和答案「結合」了；提早一小時下班陪朋友→清楚知道什麼對你重要，做出選擇；港式飲茶好吃葡吉羅宋→豐盛流動，給予與接受都很自然；帶厚蛋捲分送一人一根→你也是給予者，戀人的雙向流動；帶朋友買手搖獲得肯定品味→你的選擇被認可，品味就是價值觀的展現；抽到鬍子男演唱會的票→天外飛來的禮物，就像天使在戀人牌上方見證的祝福；成功拒絕手搖的誘惑→你清楚知道自己的選擇，並且做到了。’,hidden:‘今天的戀人不是在說愛情，是在說「你跟自己的價值觀一致」。從帶蛋捲分享、選好喝的手搖、到拒絕誘惑——你今天的每一個選擇都是真實的你。’,action:’「我很棒」這句話說得非常對。今天你值得這樣肯定自己。帶塔羅牌沒時間練習沒關係，你今天活出的每一刻都是最好的塔羅練習。’,mantra:‘最重要的選擇，不是別人給你的，是你用心感覺到的。’,date:‘2026/4/13’,time:‘今日’},
-];
+// 今日運勢生成
+let selectedOri='正位';
+let currentFortune=null;
 
-let notes=[],dailyRecords=[],selectedOri=‘正位’,parsedCard={},parsedDaily={};
-const KEYS={notes:‘tarot_notes_v3’,daily:‘tarot_daily_v3’,time:‘tarot_backup_time’,init:‘tarot_init_v14’};
+function onCardInput(){const fc=document.getElementById('fortune-display');fc.classList.remove('visible');fc.innerHTML='';document.getElementById('record-form').style.display='none';}
+function selectOri(ori){selectedOri=ori;document.getElementById('ori-pos').classList.toggle('selected',ori==='正位');document.getElementById('ori-neg').classList.toggle('selected',ori==='逆位')}
+
+function generateFortune(){
+  const cardName=document.getElementById('daily-card').value.trim();
+  if(!cardName){toast('請先輸入或選擇今天抽到的牌');return}
+  const data=CARD_DATA[cardName];
+  if(!data){toast('這張牌的運勢資料尚未建立，請直接填寫紀錄');document.getElementById('record-form').style.display='block';return}
+  const f=selectedOri==='正位'?data.fortune.pos:data.fortune.neg;
+  currentFortune=f;
+  const fc=document.getElementById('fortune-display');
+  fc.innerHTML=`
+    <div class="fortune-header">
+      <span class="fortune-card-name">《${cardName}》</span>
+      <span class="fortune-ori">${selectedOri}</span>
+    </div>
+    <div class="fortune-section">
+      <div class="fortune-label">⚡ 今日能量</div>
+      <div class="fortune-text">${f.energy}</div>
+    </div>
+    <div class="fortune-section">
+      <div class="fortune-label">⚠️ 今日注意</div>
+      <div class="fortune-text">${f.note}</div>
+    </div>
+    <div class="fortune-section" style="border:none;padding-bottom:0;margin-bottom:0">
+      <div class="fortune-label">🌿 療癒金句</div>
+      <div class="fortune-mantra">${f.mantra}</div>
+    </div>
+  `;
+  fc.classList.add('visible');
+  document.getElementById('record-form').style.display='block';
+}
+
+// 每日占卜儲存
+const KEYS={daily:'tarot_daily_v3',time:'tarot_backup_time',init:'tarot_init_v16'};
+let dailyRecords=[];
 
 function save(key,data){const s=JSON.stringify(data);try{localStorage.setItem(key,s)}catch(e){}try{sessionStorage.setItem(key,s)}catch(e){}}
 function load(key){try{const d=localStorage.getItem(key);if(d)return JSON.parse(d)}catch(e){}try{const d=sessionStorage.getItem(key);if(d)return JSON.parse(d)}catch(e){}return null}
-function saveNotes(){save(KEYS.notes,notes);save(KEYS.time,new Date().toISOString())}
-function saveDailyRecords(){save(KEYS.daily,dailyRecords);save(KEYS.time,new Date().toISOString())}
-function loadData(){const initialized=load(KEYS.init);if(!initialized){notes=PRELOAD_NOTES;dailyRecords=PRELOAD_DAILY;save(KEYS.notes,notes);save(KEYS.daily,dailyRecords);save(KEYS.init,true);save(KEYS.time,new Date().toISOString())}else{notes=load(KEYS.notes)||[];dailyRecords=load(KEYS.daily)||[]}}
-loadData();
+function saveRecords(){save(KEYS.daily,dailyRecords);save(KEYS.time,new Date().toISOString())}
 
-function toast(msg){const t=document.getElementById(‘toast’);t.textContent=msg;t.classList.add(‘show’);setTimeout(()=>t.classList.remove(‘show’),2800)}
-const TABS=[‘notebook’,‘daily’,‘archive’,‘progress’,‘backup’];
-function switchTab(tab){TABS.forEach((t,i)=>document.querySelectorAll(’.nav-item’)[i].classList.toggle(‘active’,t===tab));document.querySelectorAll(’.panel’).forEach(p=>p.classList.remove(‘active’));document.getElementById(‘panel-’+tab).classList.add(‘active’);if(tab===‘archive’)renderArchive();if(tab===‘progress’)renderProgress();if(tab===‘backup’)renderBackupStatus();window.scrollTo({top:0,behavior:‘smooth’})}
-function buildPicker(id){const c=document.getElementById(id);let html=’’;for(const[suit,cards]of Object.entries(TAROT_78)){html+=`<div class="picker-section-title">${suit}</div><div class="card-chips">`;html+=cards.map(card=>`<span class="card-chip" onclick="pickCard(event,'${card}','${id}')">${card}</span>`).join(’’);html+=’</div>’}c.innerHTML=html}
-function togglePicker(pickerId,inputId,numInputId){const p=document.getElementById(pickerId);if(!p.innerHTML)buildPicker(pickerId);p._inputId=inputId;p._numId=numInputId;p.classList.toggle(‘open’)}
-function pickCard(e,card,pickerId){const p=document.getElementById(pickerId);const clean=card.replace(/(\d+)/,’’).trim();document.getElementById(p._inputId).value=clean;if(p._numId){const m=card.match(/((\d+))/);if(m)document.getElementById(p._numId).value=`${m[1]} 號大阿爾克那`;else for(const[suit,cards]of Object.entries(TAROT_78)){if(suit!==‘大阿爾克那’&&cards.includes(card))document.getElementById(p._numId).value=suit}}p.querySelectorAll(’.card-chip’).forEach(c=>c.classList.remove(‘selected’));e.target.classList.add(‘selected’);setTimeout(()=>p.classList.remove(‘open’),280)}
-function selectOri(ori){selectedOri=ori;document.getElementById(‘ori-pos’).classList.toggle(‘selected’,ori===‘正位’);document.getElementById(‘ori-neg’).classList.toggle(‘selected’,ori===‘逆位’)}
-function parseCardContent(){const raw=document.getElementById(‘nb-paste’).value.trim();if(!raw){toast(‘請先貼入 Claude 給的卡片內容’);return}const extract=(text,labels)=>{for(const label of labels){const pats=[new RegExp(label+’[：:]*\s*([\s\S]+?)(?=\n[\s\S]{1,20}[：:]|\n[▲▽💕⚡🌿🖼✨]|$)’,‘i’),new RegExp(label+’\s*\n([\s\S]+?)(?=\n\S|$)’,‘i’)];for(const pat of pats){const m=text.match(pat);if(m&&m[1]&&m[1].trim().length>2)return m[1].trim().replace(/\n+/g,’ ‘)}}return ‘’};parsedCard={origin:extract(raw,[‘數字與原型’,‘原型’,‘數字’]),posKw:extract(raw,[‘正位關鍵詞’,‘正位’,‘▲’]),negKw:extract(raw,[‘逆位關鍵詞’,‘逆位’,‘▽’]),love:extract(raw,[‘感情’,‘💕’]),career:extract(raw,[‘事業’,‘⚡’]),health:extract(raw,[‘健康’,‘🌿’]),image:extract(raw,[‘圖像記憶’,‘記憶點’,‘🖼’]),tip:extract(raw,[‘箴言’,‘大師箴言’,‘✨’])};const anyFound=Object.values(parsedCard).some(v=>v.length>0);if(!anyFound){parsedCard.origin=raw;toast(‘未偵測到格式，已存入原型欄位’)}else toast(‘✓ 自動拆分完成！確認後點儲存’);const show=(id,val)=>{const el=document.getElementById(id);el.textContent=val||’—’;el.className=‘preview-val’+(val?’’:’ preview-empty’)};show(‘pv-origin’,parsedCard.origin);show(‘pv-pos’,parsedCard.posKw);show(‘pv-neg’,parsedCard.negKw);show(‘pv-love’,parsedCard.love);show(‘pv-career’,parsedCard.career);show(‘pv-health’,parsedCard.health);show(‘pv-image’,parsedCard.image);show(‘pv-tip’,parsedCard.tip);document.getElementById(‘nb-preview’).classList.add(‘show’)}
-function parseDailyContent(){const raw=document.getElementById(‘daily-paste’).value.trim();if(!raw){toast(‘請先貼入 Claude 給的解析內容’);return}const extract=(text,labels)=>{for(const label of labels){const pats=[new RegExp(label+’[：:]*\s*([\s\S]+?)(?=\n[⚡🪞🌊🎯✨]|\n\*\*|$)’,‘i’),new RegExp(label+’\s*\n([\s\S]+?)(?=\n[⚡🪞🌊🎯✨]|$)’,‘i’)];for(const pat of pats){const m=text.match(pat);if(m&&m[1]&&m[1].trim().length>2)return m[1].trim()}}return ‘’};parsedDaily={energy:extract(raw,[‘今日牌義能量’,‘牌義能量’,‘⚡ 今日’]),mapping:extract(raw,[‘生活映射’,‘🪞’]),hidden:extract(raw,[‘深層訊息’,‘🌊’]),action:extract(raw,[‘今日建議’,‘建議行動’,‘🎯’]),mantra:extract(raw,[‘今日箴言’,‘箴言’,‘✨’])};const anyFound=Object.values(parsedDaily).some(v=>v.length>0);if(!anyFound){parsedDaily.mapping=raw;toast(‘未偵測到格式，已存入生活映射欄位’)}else toast(‘✓ 自動拆分完成！確認後點儲存’);const show=(id,val)=>{const el=document.getElementById(id);el.textContent=val||’—’;el.className=‘preview-val’+(val?’’:’ preview-empty’)};show(‘dpv-energy’,parsedDaily.energy);show(‘dpv-mapping’,parsedDaily.mapping);show(‘dpv-hidden’,parsedDaily.hidden);show(‘dpv-action’,parsedDaily.action);show(‘dpv-mantra’,parsedDaily.mantra);document.getElementById(‘daily-preview’).classList.add(‘show’)}
-function saveCard(){const name=document.getElementById(‘nb-name’).value.trim();if(!name){toast(‘請輸入牌名’);return}if(!parsedCard.origin&&!parsedCard.posKw&&!parsedCard.love){toast(‘請先貼入內容並點「自動拆分」’);return}const num=document.getElementById(‘nb-number’).value.trim();const noteData={id:Date.now(),name,num,…parsedCard,date:new Date().toLocaleDateString(‘zh-TW’)};const exists=notes.find(n=>n.name===name);if(!exists){notes.unshift(noteData);toast(`《${name}》已儲存 ✓`)}else{Object.assign(exists,noteData);toast(`《${name}》已更新 ✓`)}saveNotes();parsedCard={}}
-function clearNbForm(){document.getElementById(‘nb-name’).value=’’;document.getElementById(‘nb-number’).value=’’;document.getElementById(‘nb-paste’).value=’’;document.getElementById(‘nb-preview’).classList.remove(‘show’);parsedCard={};toast(‘表單已清除’)}
-function saveDailyRecord(){const card=document.getElementById(‘daily-card’).value.trim();const ev=document.getElementById(‘daily-event’).value.trim();if(!card){toast(‘請輸入牌名’);return}if(!ev){toast(‘請描述今天發生的事’);return}const record={id:Date.now(),card,ori:selectedOri,event:ev,…parsedDaily,date:new Date().toLocaleDateString(‘zh-TW’),time:new Date().toLocaleTimeString(‘zh-TW’,{hour:‘2-digit’,minute:‘2-digit’})};dailyRecords.unshift(record);if(dailyRecords.length>90)dailyRecords=dailyRecords.slice(0,90);saveDailyRecords();const el=document.getElementById(‘daily-result’);el.innerHTML=`<h3>🌙 《${card}》${selectedOri} · ${record.date}</h3><div class="rd-section"><div class="rd-title">📝 今日事件</div><div class="rd-body">${ev}</div></div>${record.energy?`<div class="rd-section"><div class="rd-title">⚡ 牌義能量</div><div class="rd-body">${record.energy}</div></div>`:''}${record.mapping?`<div class="rd-section"><div class="rd-title">🪞 生活映射</div><div class="rd-body">${record.mapping.replace(/\n/g,’<br>’)}</div></div>`:''}${record.hidden?`<div class="rd-section"><div class="rd-title">🌊 深層訊息</div><div class="rd-body" style="font-style:italic">${record.hidden}</div></div>`:''}${record.action?`<div class="rd-section"><div class="rd-title">🎯 今日建議</div><div class="rd-body">${record.action.replace(/\n/g,’<br>’)}</div></div>`:''}${record.mantra?`<div class="rd-section" style="border:none;text-align:center"><div class="rd-title">✨ 今日箴言</div><div class="rd-body" style="color:var(--gold-light);font-style:italic">${record.mantra}</div></div>`:''}`;el.classList.add(‘visible’);toast(‘占卜紀錄已儲存 ✓’);parsedDaily={}}
-function clearDailyForm(){[‘daily-card’,‘daily-event’,‘daily-paste’].forEach(id=>document.getElementById(id).value=’’);document.getElementById(‘daily-preview’).classList.remove(‘show’);document.getElementById(‘daily-result’).classList.remove(‘visible’);selectedOri=‘正位’;document.getElementById(‘ori-pos’).classList.add(‘selected’);document.getElementById(‘ori-neg’).classList.remove(‘selected’);parsedDaily={};toast(‘表單已清除’)}
-function renderArchive(){const el=document.getElementById(‘archive-list’);const q=(document.getElementById(‘search-input’)?.value||’’).toLowerCase();const noteCards=notes.filter(n=>n.name.toLowerCase().includes(q)||(n.posKw||’’).toLowerCase().includes(q)||(n.negKw||’’).toLowerCase().includes(q));const dailyCards=dailyRecords.filter(d=>d.card.toLowerCase().includes(q)||(d.event||’’).toLowerCase().includes(q));if(!noteCards.length&&!dailyCards.length){el.innerHTML=`<div class="empty-state"><div class="empty-icon">🌑</div>${q?'找不到符合的紀錄':'尚未建立任何筆記'}</div>`;return}let html=’’;if(noteCards.length){html+=`<div class="section-label">📖 學習卡片（${noteCards.length}）</div>`;html+=noteCards.map(n=>`<div class="note-card" onclick="openNote(${notes.indexOf(n)})"><div class="note-header"><span class="note-name">《${n.name}》${n.num?' · '+n.num:''}</span><span class="note-date">${n.date}</span></div><div class="note-kws">${(n.posKw||'').split('・').filter(Boolean).map(k=>`<span class="kw-pill">${k.trim()}</span>`).join('')}${(n.negKw||'').split('・').filter(Boolean).map(k=>`<span class="kw-pill neg">${k.trim()}</span>`).join('')}</div></div>`).join(’’)}if(dailyCards.length){html+=`<div class="section-label" style="margin-top:${noteCards.length?'16px':'0'}">🌙 每日占卜（${dailyCards.length}）</div>`;html+=dailyCards.map(d=>`<div class="note-card" onclick="openDaily(${dailyRecords.indexOf(d)})"><div class="note-header"><span class="note-name">《${d.card}》${d.ori}</span><span class="note-date">${d.date}</span></div><div style="font-size:.8rem;color:rgba(245,237,224,.4);margin-top:5px;line-height:1.5">${d.event.length>50?d.event.slice(0,50)+'…':d.event}</div></div>`).join(’’)}el.innerHTML=html}
-function openNote(i){const n=notes[i];document.getElementById(‘modal-content’).innerHTML=`<div class="modal-handle"></div><div class="modal-close-row"><h2>《${n.name}》${n.num?'· '+n.num:''}</h2><button class="modal-close" onclick="document.getElementById('modal-overlay').classList.remove('open')">✕</button></div>${n.origin?`<div class="m-section"><div class="m-label">🌀 原型</div><div class="m-value">${n.origin}</div></div><div class="m-divider"></div>`:''}<div class="m-section"><div class="m-label">▲ 正位</div><div class="m-kws">${(n.posKw||'').split('・').filter(Boolean).map(k=>`<span class="kw-pill">${k.trim()}</span>`).join('')||'—'}</div></div><div class="m-section"><div class="m-label">▽ 逆位</div><div class="m-kws">${(n.negKw||'').split('・').filter(Boolean).map(k=>`<span class="kw-pill neg">${k.trim()}</span>`).join('')||'—'}</div></div><div class="m-divider"></div>${n.love?`<div class="m-section"><div class="m-label">💕 感情</div><div class="m-value">${n.love}</div></div>`:''}${n.career?`<div class="m-section"><div class="m-label">⚡ 事業</div><div class="m-value">${n.career}</div></div>`:''}${n.health?`<div class="m-section"><div class="m-label">🌿 健康</div><div class="m-value">${n.health}</div></div>`:''}${n.image?`<div class="m-divider"></div><div class="m-section"><div class="m-label">🖼 圖像記憶</div><div class="m-value" style="font-style:italic;color:var(--gold-light)">${n.image}</div></div>`:''}${n.tip?`<div class="m-section"><div class="m-label">✨ 箴言</div><div class="m-value">${n.tip}</div></div>`:''}<div style="margin-top:16px;display:grid;grid-template-columns:1fr 1fr;gap:10px"><button class="btn btn-outline btn-sm" onclick="loadNoteToForm(${i})">✏️ 編輯</button><button class="btn btn-danger btn-sm" onclick="deleteNote(${i})">🗑 刪除</button></div>`;document.getElementById(‘modal-overlay’).classList.add(‘open’)}
-function openDaily(i){const d=dailyRecords[i];document.getElementById(‘modal-content’).innerHTML=`<div class="modal-handle"></div><div class="modal-close-row"><h2>《${d.card}》${d.ori} · ${d.date}</h2><button class="modal-close" onclick="document.getElementById('modal-overlay').classList.remove('open')">✕</button></div><div class="m-section"><div class="m-label">📝 今日事件</div><div class="m-value">${d.event}</div></div><div class="m-divider"></div>${d.energy?`<div class="m-section"><div class="m-label">⚡ 牌義能量</div><div class="m-value">${d.energy}</div></div>`:''}${d.mapping?`<div class="m-section"><div class="m-label">🪞 生活映射</div><div class="m-value">${d.mapping.replace(/\n/g,’<br>’)}</div></div>`:''}${d.hidden?`<div class="m-section"><div class="m-label">🌊 深層訊息</div><div class="m-value" style="font-style:italic">${d.hidden}</div></div>`:''}${d.action?`<div class="m-section"><div class="m-label">🎯 今日建議</div><div class="m-value">${d.action.replace(/\n/g,’<br>’)}</div></div>`:''}${d.mantra?`<div class="m-section" style="text-align:center"><div class="m-label">✨ 今日箴言</div><div class="m-value" style="color:var(--gold-light);font-style:italic">${d.mantra}</div></div>`:''}<div style="margin-top:16px"><button class="btn btn-danger btn-sm" onclick="deleteDaily(${i})">🗑 刪除紀錄</button></div>`;document.getElementById(‘modal-overlay’).classList.add(‘open’)}
-function loadNoteToForm(i){parsedCard={…notes[i]};document.getElementById(‘nb-name’).value=notes[i].name||’’;document.getElementById(‘nb-number’).value=notes[i].num||’’;document.getElementById(‘modal-overlay’).classList.remove(‘open’);switchTab(‘notebook’);setTimeout(()=>{document.getElementById(‘nb-paste’).value=’（已從筆記庫載入）’;const show=(id,val)=>{const el=document.getElementById(id);el.textContent=val||’—’;el.className=‘preview-val’+(val?’’:’ preview-empty’)};show(‘pv-origin’,parsedCard.origin);show(‘pv-pos’,parsedCard.posKw);show(‘pv-neg’,parsedCard.negKw);show(‘pv-love’,parsedCard.love);show(‘pv-career’,parsedCard.career);show(‘pv-health’,parsedCard.health);show(‘pv-image’,parsedCard.image);show(‘pv-tip’,parsedCard.tip);document.getElementById(‘nb-preview’).classList.add(‘show’)},300);toast(‘已載入，可直接儲存’)}
-function deleteNote(i){if(!confirm(`確定刪除《${notes[i].name}》？`))return;const name=notes[i].name;notes.splice(i,1);saveNotes();document.getElementById(‘modal-overlay’).classList.remove(‘open’);renderArchive();toast(`《${name}》已刪除`)}
-function deleteDaily(i){if(!confirm(‘確定刪除這筆占卜紀錄？’))return;dailyRecords.splice(i,1);saveDailyRecords();document.getElementById(‘modal-overlay’).classList.remove(‘open’);renderArchive();toast(‘已刪除’)}
-function renderProgress(){const total=78,learned=notes.length;const allMajor=TAROT_78[‘大阿爾克那’].map(c=>c.replace(/(\d+)/,’’).trim());const majorLearned=Math.min(notes.filter(n=>allMajor.includes(n.name)).length,22);const pct=Math.round(learned/total*100);const suits=[‘聖杯’,‘權杖’,‘寶劍’,‘星幣’];const suitStats=suits.map(suit=>{const done=Math.min(notes.filter(n=>TAROT_78[suit].includes(n.name)||(n.num&&n.num.includes(suit))).length,14);return{suit,done,pct:Math.round(done/14*100)}});document.getElementById(‘progress-content’).innerHTML=`<div class="stat-grid"><div class="stat-box"><div class="stat-num">${learned}</div><div class="stat-label">學習卡片</div></div><div class="stat-box"><div class="stat-num">${dailyRecords.length}</div><div class="stat-label">占卜紀錄</div></div><div class="stat-box"><div class="stat-num">${pct}%</div><div class="stat-label">完成度</div></div></div><div class="card-box"><h2>📜 學習進度</h2><div class="prog-wrap"><div class="prog-label-row"><span>整體（${learned}/78 張）</span><span>${pct}%</span></div><div class="prog-bar-bg"><div class="prog-bar" style="width:${pct}%"></div></div></div><div class="prog-wrap"><div class="prog-label-row"><span>🌟 大阿爾克那（${majorLearned}/22）</span><span>${Math.round(majorLearned/22*100)}%</span></div><div class="prog-bar-bg"><div class="prog-bar" style="width:${Math.round(majorLearned/22*100)}%;background:linear-gradient(90deg,#c9a84c,#e8cc80)"></div></div></div><div style="font-size:.75rem;color:var(--gold-light);margin:13px 0 10px;letter-spacing:.06em">🎴 小阿爾克那各花色</div>${suitStats.map(s=>`<div class="prog-wrap"><div class="prog-label-row"><span>${s.suit}（${s.done}/14）</span><span>${s.pct}%</span></div><div class="prog-bar-bg"><div class="prog-bar" style="width:${s.pct}%;background:linear-gradient(90deg,var(--amethyst),var(--rose))"></div></div></div>`).join('')}<div style="margin-top:15px;display:grid;grid-template-columns:1fr 1fr;gap:10px"><div style="background:rgba(0,0,0,.2);border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center"><div style="font-size:1rem;margin-bottom:4px">📅</div><div style="font-size:.67rem;color:rgba(245,237,224,.35)">最近學習</div><div style="font-size:.85rem;margin-top:3px">${notes[0]?'《'+notes[0].name+'》':'—'}</div></div><div style="background:rgba(0,0,0,.2);border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center"><div style="font-size:1rem;margin-bottom:4px">🎯</div><div style="font-size:.67rem;color:rgba(245,237,224,.35)">距完成還差</div><div style="font-size:.85rem;margin-top:3px">${total-learned} 張</div></div></div></div>`}
-function renderBackupStatus(){const bt=load(KEYS.time);document.getElementById(‘backup-status-area’).innerHTML=`<div style="padding:14px 15px;background:rgba(0,0,0,.18);border-radius:12px;border:1px solid var(--border);margin-bottom:14px"><div style="font-size:.78rem;color:var(--gold-light);margin-bottom:6px">📂 目前狀態</div><div style="font-size:.88rem;color:rgba(245,237,224,.65);line-height:1.9">學習卡片：<strong style="color:var(--gold)">${notes.length} 張</strong><br>占卜紀錄：<strong style="color:var(--gold)">${dailyRecords.length} 筆</strong><br>最後更新：<strong style="color:var(--parchment)">${bt?new Date(bt).toLocaleString('zh-TW'):'—'}</strong></div><div style="margin-top:10px"><span class="status-pill ${(notes.length+dailyRecords.length)>0?'status-ok':'status-warn'}">${(notes.length+dailyRecords.length)>0?'✓ 建議定期匯出備份':'⚠ 尚未建立任何資料'}</span></div></div>`}
-function exportData(){if(!notes.length&&!dailyRecords.length){toast(‘目前沒有資料可匯出’);return}const blob=new Blob([JSON.stringify({version:3,exported:new Date().toISOString(),notes,dailyRecords},null,2)],{type:‘application/json’});const a=document.createElement(‘a’);a.href=URL.createObjectURL(blob);a.download=`塔羅筆記備份_${new Date().toLocaleDateString('zh-TW').replace(/\//g,'-')}.json`;a.click();toast(‘備份已下載 ✓’)}
-function importData(event){const file=event.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=e=>{try{const data=JSON.parse(e.target.result);const iN=data.notes||(Array.isArray(data)?data:[]);const iD=data.dailyRecords||[];if(!iN.length&&!iD.length){toast(‘找不到有效資料’);return}if(!confirm(`即將匯入 ${iN.length} 張卡片、${iD.length} 筆紀錄，確定嗎？`))return;let added=0;iN.forEach(n=>{if(!notes.find(x=>x.name===n.name)){notes.push(n);added++}});iD.forEach(d=>{if(!dailyRecords.find(x=>x.id===d.id))dailyRecords.push(d)});saveNotes();saveDailyRecords();renderBackupStatus();toast(`成功匯入 ${added} 張卡片 ✓`)}catch(e){toast(‘檔案格式錯誤’)}};reader.readAsText(file);event.target.value=’’}
-function clearAll(){if(!confirm(‘確定清除所有資料？不可復原！’))return;if(!confirm(`再次確認：清除 ${notes.length} 張卡片 + ${dailyRecords.length} 筆紀錄？`))return;notes=[];dailyRecords=[];saveNotes();saveDailyRecords();save(KEYS.init,true);renderBackupStatus();toast(‘所有資料已清除’)}
-function closeModal(e){if(e.target===document.getElementById(‘modal-overlay’))document.getElementById(‘modal-overlay’).classList.remove(‘open’)}
+function loadData(){
+  const initialized=load(KEYS.init);
+  if(!initialized){
+    dailyRecords=PRELOAD_DAILY;
+    save(KEYS.daily,dailyRecords);save(KEYS.init,true);save(KEYS.time,new Date().toISOString());
+  }else{dailyRecords=load(KEYS.daily)||[]}
+}
+
+function saveDailyRecord(){
+  const card=document.getElementById('daily-card').value.trim();
+  const ev=document.getElementById('daily-event').value.trim();
+  if(!card){toast('請輸入牌名');return}
+  if(!ev){toast('請描述今天發生的事');return}
+  const data=CARD_DATA[card];
+  const f=currentFortune||(data?(selectedOri==='正位'?data.fortune.pos:data.fortune.neg):null);
+  const record={id:Date.now(),card,ori:selectedOri,event:ev,energy:f?f.energy:'',note:f?f.note:'',mantra:f?f.mantra:'',date:new Date().toLocaleDateString('zh-TW'),time:new Date().toLocaleTimeString('zh-TW',{hour:'2-digit',minute:'2-digit'})};
+  dailyRecords.unshift(record);if(dailyRecords.length>90)dailyRecords=dailyRecords.slice(0,90);
+  saveRecords();toast('占卜紀錄已儲存 ✓');
+}
+
+function clearDailyForm(){
+  document.getElementById('daily-card').value='';document.getElementById('daily-event').value='';
+  const fc=document.getElementById('fortune-display');fc.classList.remove('visible');fc.innerHTML='';
+  document.getElementById('record-form').style.display='none';
+  selectedOri='正位';document.getElementById('ori-pos').classList.add('selected');document.getElementById('ori-neg').classList.remove('selected');
+  currentFortune=null;toast('表單已清除');
+}
+
+// 牌義庫
+function renderCardLibrary(){
+  const el=document.getElementById('card-library-list');
+  const q=(document.getElementById('card-search')?.value||'').toLowerCase();
+  const cards=Object.entries(CARD_DATA).filter(([name,d])=>name.toLowerCase().includes(q)||(d.posKw||'').toLowerCase().includes(q)||(d.negKw||'').toLowerCase().includes(q));
+  if(!cards.length){el.innerHTML=`<div class="empty-state"><div class="empty-icon">🌑</div>找不到符合的牌</div>`;return}
+  el.innerHTML=cards.map(([name,d])=>`<div class="note-card" onclick="openCardDetail('${name}')"><div class="note-header"><span class="note-name">《${name}》<span style="font-size:.68rem;color:rgba(253,243,227,.38);font-family:'Noto Serif TC',serif"> ${d.num}</span></span></div><div class="note-kws">${(d.posKw||'').split('・').filter(Boolean).map(k=>`<span class="kw-pill">${k.trim()}</span>`).join('')}${(d.negKw||'').split('・').filter(Boolean).map(k=>`<span class="kw-pill neg">${k.trim()}</span>`).join('')}</div></div>`).join('');
+}
+
+function openCardDetail(name){
+  const d=CARD_DATA[name];if(!d)return;
+  const fp=d.fortune?.pos;const fn=d.fortune?.neg;
+  document.getElementById('modal-content').innerHTML=`<div class="modal-handle"></div><div class="modal-close-row"><h2>《${name}》· ${d.num}</h2><button class="modal-close" onclick="document.getElementById('modal-overlay').classList.remove('open')">✕</button></div>${d.origin?`<div class="m-section"><div class="m-label">🌀 原型</div><div class="m-value">${d.origin}</div></div><div class="m-divider"></div>`:''}<div class="m-section"><div class="m-label">▲ 正位</div><div class="m-kws">${(d.posKw||'').split('・').filter(Boolean).map(k=>`<span class="kw-pill">${k.trim()}</span>`).join('')}</div></div><div class="m-section"><div class="m-label">▽ 逆位</div><div class="m-kws">${(d.negKw||'').split('・').filter(Boolean).map(k=>`<span class="kw-pill neg">${k.trim()}</span>`).join('')}</div></div><div class="m-divider"></div>${fp?`<div class="m-section"><div class="m-label">⚡ 正位今日能量</div><div class="m-value">${fp.energy}</div></div><div class="m-section"><div class="m-label">⚠️ 正位注意</div><div class="m-value">${fp.note}</div></div><div class="m-section"><div class="m-label">🌿 正位療癒金句</div><div class="m-value" style="font-style:italic;color:var(--gold-light)">${fp.mantra}</div></div><div class="m-divider"></div>`:''} ${fn?`<div class="m-section"><div class="m-label">⚡ 逆位今日能量</div><div class="m-value">${fn.energy}</div></div><div class="m-section"><div class="m-label">⚠️ 逆位注意</div><div class="m-value">${fn.note}</div></div><div class="m-section"><div class="m-label">🌿 逆位療癒金句</div><div class="m-value" style="font-style:italic;color:var(--gold-light)">${fn.mantra}</div></div><div class="m-divider"></div>`:''}${d.image?`<div class="m-section"><div class="m-label">🖼 圖像記憶</div><div class="m-value" style="font-style:italic;color:var(--gold-light)">${d.image}</div></div>`:''}${d.tip?`<div class="m-section"><div class="m-label">✨ 箴言</div><div class="m-value">${d.tip}</div></div>`:''}`;
+  document.getElementById('modal-overlay').classList.add('open');
+}
+
+// 占卜紀錄
+function renderRecords(){
+  const el=document.getElementById('records-list');
+  const q=(document.getElementById('record-search')?.value||'').toLowerCase();
+  const filtered=dailyRecords.filter(d=>d.card.toLowerCase().includes(q)||(d.event||'').toLowerCase().includes(q));
+  if(!filtered.length){el.innerHTML=`<div class="empty-state"><div class="empty-icon">🌙</div>${q?'找不到符合的紀錄':'尚未建立任何占卜紀錄'}</div>`;return}
+  el.innerHTML=filtered.map(d=>`<div class="note-card" onclick="openRecord(${dailyRecords.indexOf(d)})"><div class="note-header"><span class="note-name">《${d.card}》${d.ori}</span><span class="note-date">${d.date}</span></div><div style="font-size:.78rem;color:rgba(253,243,227,.42);margin-top:5px;line-height:1.5">${d.event.length>55?d.event.slice(0,55)+'…':d.event}</div>${d.mantra?`<div style="font-size:.74rem;color:var(--gold-light);font-style:italic;margin-top:6px">${d.mantra}</div>`:''}</div>`).join('');
+}
+
+function openRecord(i){
+  const d=dailyRecords[i];
+  document.getElementById('modal-content').innerHTML=`<div class="modal-handle"></div><div class="modal-close-row"><h2>《${d.card}》${d.ori} · ${d.date}</h2><button class="modal-close" onclick="document.getElementById('modal-overlay').classList.remove('open')">✕</button></div><div class="m-section"><div class="m-label">📝 今日事件</div><div class="m-value">${d.event}</div></div>${d.energy||d.note||d.mantra?'<div class="m-divider"></div>':''}${d.energy?`<div class="m-section"><div class="m-label">⚡ 今日能量</div><div class="m-value">${d.energy}</div></div>`:''}${d.note?`<div class="m-section"><div class="m-label">⚠️ 今日注意</div><div class="m-value">${d.note}</div></div>`:''}${d.mapping?`<div class="m-section"><div class="m-label">🪞 生活映射</div><div class="m-value">${d.mapping.replace(/\n/g,'<br>')}</div></div>`:''}${d.hidden?`<div class="m-section"><div class="m-label">🌊 深層訊息</div><div class="m-value" style="font-style:italic">${d.hidden}</div></div>`:''}${d.action?`<div class="m-section"><div class="m-label">🎯 今日建議</div><div class="m-value">${d.action}</div></div>`:''}${d.mantra?`<div class="m-section" style="text-align:center"><div class="m-label">🌿 療癒金句</div><div class="m-value" style="color:var(--gold-light);font-style:italic">${d.mantra}</div></div>`:''}<div style="margin-top:16px"><button class="btn btn-danger btn-sm" onclick="deleteRecord(${i})">🗑 刪除紀錄</button></div>`;
+  document.getElementById('modal-overlay').classList.add('open');
+}
+function deleteRecord(i){if(!confirm('確定刪除這筆占卜紀錄？'))return;dailyRecords.splice(i,1);saveRecords();document.getElementById('modal-overlay').classList.remove('open');renderRecords();toast('已刪除')}
+
+// 進度
+function renderProgress(){
+  const total=Object.keys(CARD_DATA).length;
+  const dr=dailyRecords.length;
+  const learned=Object.keys(CARD_DATA).length;
+  document.getElementById('progress-content').innerHTML=`<div class="stat-grid"><div class="stat-box"><div class="stat-num">${learned}</div><div class="stat-label">已建牌義</div></div><div class="stat-box"><div class="stat-num">${dr}</div><div class="stat-label">占卜紀錄</div></div><div class="stat-box"><div class="stat-num">${Math.round(learned/78*100)}%</div><div class="stat-label">完成度</div></div></div><div class="card-box"><h2>📜 學習進度</h2><div class="prog-wrap"><div class="prog-label-row"><span>整體（${learned}/78 張）</span><span>${Math.round(learned/78*100)}%</span></div><div class="prog-bar-bg"><div class="prog-bar" style="width:${Math.round(learned/78*100)}%"></div></div></div><div class="prog-wrap"><div class="prog-label-row"><span>🌟 大阿爾克那</span><span>${Math.round(13/22*100)}%</span></div><div class="prog-bar-bg"><div class="prog-bar" style="width:${Math.round(13/22*100)}%;background:linear-gradient(90deg,#8b3a2a,var(--gold))"></div></div></div><div style="margin-top:14px;background:rgba(0,0,0,.2);border:1px solid var(--border);border-radius:12px;padding:14px"><div style="font-size:.75rem;color:var(--gold-light);margin-bottom:8px;letter-spacing:.06em">📖 已建牌義</div><div style="display:flex;flex-wrap:wrap;gap:6px">${Object.keys(CARD_DATA).map(name=>`<span style="background:rgba(200,135,58,.14);border:1px solid rgba(200,135,58,.25);border-radius:12px;padding:3px 9px;font-size:.7rem;color:rgba(253,243,227,.65)">${name}</span>`).join('')}</div></div></div>`;
+}
+
+// 備份
+function renderBackupStatus(){
+  const bt=load(KEYS.time);
+  document.getElementById('backup-status-area').innerHTML=`<div style="padding:13px 15px;background:rgba(0,0,0,.18);border-radius:12px;border:1px solid var(--border);margin-bottom:13px"><div style="font-size:.76rem;color:var(--gold-light);margin-bottom:6px">📂 目前狀態</div><div style="font-size:.86rem;color:rgba(253,243,227,.62);line-height:1.9">占卜紀錄：<strong style="color:var(--gold-light)">${dailyRecords.length} 筆</strong><br>最後更新：<strong style="color:var(--parchment)">${bt?new Date(bt).toLocaleString('zh-TW'):'—'}</strong></div><div style="margin-top:9px"><span class="status-pill ${dailyRecords.length>0?'status-ok':'status-warn'}">${dailyRecords.length>0?'✓ 建議定期匯出備份':'⚠ 尚未建立任何資料'}</span></div></div>`;
+}
+function exportData(){if(!dailyRecords.length){toast('目前沒有資料可匯出');return}const blob=new Blob([JSON.stringify({version:4,exported:new Date().toISOString(),dailyRecords},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`塔羅占卜備份_${new Date().toLocaleDateString('zh-TW').replace(/\//g,'-')}.json`;a.click();toast('備份已下載 ✓')}
+function importData(event){const file=event.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=e=>{try{const data=JSON.parse(e.target.result);const iD=data.dailyRecords||[];if(!iD.length){toast('找不到有效資料');return}if(!confirm(`即將匯入 ${iD.length} 筆紀錄，確定嗎？`))return;let added=0;iD.forEach(d=>{if(!dailyRecords.find(x=>x.id===d.id)){dailyRecords.push(d);added++}});saveRecords();renderBackupStatus();toast(`成功匯入 ${added} 筆紀錄 ✓`)}catch(e){toast('檔案格式錯誤')}};reader.readAsText(file);event.target.value=''}
+function clearAll(){if(!confirm('確定清除所有資料？不可復原！'))return;dailyRecords=[];saveRecords();save(KEYS.init,true);renderBackupStatus();toast('所有資料已清除')}
+
+// 導航與選牌
+const TABS=['daily','cards','records','progress','backup'];
+function switchTab(tab){TABS.forEach((t,i)=>document.querySelectorAll('.nav-item')[i].classList.toggle('active',t===tab));document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));document.getElementById('panel-'+tab).classList.add('active');if(tab==='cards')renderCardLibrary();if(tab==='records')renderRecords();if(tab==='progress')renderProgress();if(tab==='backup')renderBackupStatus();window.scrollTo({top:0,behavior:'smooth'})}
+function buildPicker(id){const c=document.getElementById(id);let html='';for(const[suit,cards]of Object.entries(TAROT_78)){html+=`<div class="picker-section-title">${suit}</div><div class="card-chips">`;html+=cards.map(card=>`<span class="card-chip" onclick="pickCard(event,'${card}','${id}')">${card}</span>`).join('');html+='</div>'}c.innerHTML=html}
+function togglePicker(pickerId,inputId,numInputId){const p=document.getElementById(pickerId);if(!p.innerHTML)buildPicker(pickerId);p._inputId=inputId;p.classList.toggle('open')}
+function pickCard(e,card,pickerId){const p=document.getElementById(pickerId);const clean=card.replace(/\(\d+\)/,'').trim();document.getElementById(p._inputId).value=clean;p.querySelectorAll('.card-chip').forEach(c=>c.classList.remove('selected'));e.target.classList.add('selected');setTimeout(()=>p.classList.remove('open'),280);onCardInput()}
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2800)}
+function closeModal(e){if(e.target===document.getElementById('modal-overlay'))document.getElementById('modal-overlay').classList.remove('open')}
+
+// 預載每日紀錄
+const PRELOAD_DAILY=[
+  {id:1743696000001,card:'權杖八',ori:'正位',event:'差點來不及去演唱會現場，會後有陌生人發彩帶給我，逛了夜市，趕上火車回家，到家後下大雨',energy:'權杖八是塔羅中速度最快的牌，八支權杖同時在空中飛射，代表事情快速推進、來不及思考就已經發生，一切都在動態中。',note:'以為自己一直在「趕」，其實整天都在對的節奏裡。信任流動，不要跟速度對抗。',mantra:'✨ 在飛速之中，你從未真正錯過。',date:'2026/4/5',time:'週六'},
+  {id:1743782400001,card:'寶劍皇后',ori:'逆位',event:'早上抽牌，下午看到龍龜團購，看中五隻：藍磷灰1060、加勒比海昂方解石600等。已喊藍磷灰和加勒比海昂方解石。',energy:'寶劍皇后逆位提醒此刻思緒可能不如表面清晰，情緒或慾望正在悄悄影響判斷力。',note:'說「只是看看」卻喊了兩隻——塔羅牌不是魔法，是把已經知道但不想承認的事說出來。',mantra:'✨ 最清醒的判斷，是對自己誠實。',date:'2026/4/7',time:'今日'},
+  {id:1743868800001,card:'權杖皇后',ori:'正位',event:'處理完手機登入網路銀行密碼狀況，繳卡費、還債務、轉帳買龍龜，工作上把薪資表更新，晚上想吃熱滷味沒開改成魚酥羹麵，滑手機一晚上。',energy:'權杖皇后正位是塔羅中最有行動力、最務實的女性能量——她知道自己要什麼，然後一件一件把它完成。今天你就是她。',note:'今天做了很多務實的事，滑手機一晚上是你應得的。不需要每一刻都有生產力。',mantra:'✨ 把該做的做完，剩下的時間，就好好屬於自己。',date:'2026/4/8',time:'今日'},
+  {id:1743955200001,card:'聖杯四',ori:'逆位',event:'睡過頭11點才到公司。上午弄的工時表下午確認不用操作了。處理自提金額不符的事誤差605元五月補上。臨時決定月底去台南玩，朋友想當天來回，我想多住一晚。',energy:'聖杯四逆位說你今天從「悠哉坐著」的狀態醒來了，開始行動和面對。',note:'台南「多住一晚」的念頭，就是那隻從天上伸來的手。聽你內心的聲音。',mantra:'✨ 抬起頭來，你以為沒有的，其實早就在那裡了。',date:'2026/4/9',time:'今日'},
+  {id:1744041600001,card:'太陽',ori:'正位',event:'今天很熱公司開冷氣了。訂了下週跟朋友聚餐的餐廳和月底去台南的高鐵票，住宿由朋友的姊姊贊助。公司文件底部都潮濕發霉了。早上醒來眼睛無法對焦。趁還沒漲價買了噗幣。',energy:'太陽是塔羅中最正面的牌之一——光明、喜悅、活力、清晰。一切都攤在陽光下，就是純粹的能量向前衝。',note:'眼睛無法對焦是身體提醒你，光太強的時候也需要閉眼休息一下。',mantra:'✨ 陽光下沒有秘密，也不需要秘密。',date:'2026/4/10',time:'今日'},
+  {id:1744128000001,card:'正義',ori:'正位',event:'收到預訂的龍龜和衣服。下午整理之前泡水的公司文件。晚餐幫偶像慶生，結果餐點都不好吃也不夠熱。去美食街買紅葉蛋糕沒有經典口味。閱讀別人的塔羅日記。忍著沒有在線上吐槽老是喊口號沒有要改的社畜。',energy:'正義手持天秤與寶劍，她不偏不倚，看清楚事實之後做出裁決。今天你的能量就是這把天秤——什麼該說、什麼不該說，你都清楚地知道。',note:'「忍著沒有吐槽」不是委屈，是正義。你知道說了也沒用，所以選擇不浪費能量在無效的地方。',mantra:'✨ 看清楚之後選擇沉默，是比吶喊更有力量的正義。',date:'2026/4/11',time:'今日'},
+  {id:1744214400001,card:'星幣三',ori:'正位',event:'抽到權杖3重複所以又抽了張星幣3。大部分滑了手機。準備了午餐（吃完拉肚子）。晚上去夜市買牛排和奶茶。想買排骨酥售完、醃芭樂太多人不想排。去7-11買了明天的兩餐。中午貓掌黏到黏鼠板，用橄欖油清乾淨。將地面清出一塊空間。周邊的小公仔收納完畢。收納箱組裝完成。',energy:'星幣三是「工匠」的牌——按照藍圖一步一步把事情做好。不是衝刺，是扎實地把每一件事完成。',note:'拉肚子要注意，明天的兩餐已經備好了，讓腸胃休息一下。橄欖油清貓掌這件事記一下，以後用得到。',mantra:'✨ 不需要英雄式的衝刺，把每一塊磚砌好就夠了。',date:'2026/4/11',time:'今日'},
+  {id:1744300800001,card:'戀人',ori:'正位',event:'困擾幾天的表格今天找到方法解決了。晚上跟朋友吃飯，提早一小時下班。吃了好吃的港式飲茶，朋友送了葡吉羅宋，我帶了厚蛋捲分送一人一根。開始處理老闆交代的信貸問題，繳稅事宜詢問。晚上帶朋友去買手搖，獲得朋友肯定品味。抽選鬍子男演唱會中票了。成功拒絕手搖的誘惑，我很棒。',energy:'戀人正位是選擇、結合、價值觀一致的能量。今天你做了很多「對的選擇」——選擇去陪朋友、選擇分享、選擇拒絕誘惑。',note:'「我很棒」這句話說得非常對。今天你值得這樣肯定自己。',mantra:'✨ 最重要的選擇，不是別人給你的，是你用心感覺到的。',date:'2026/4/13',time:'今日'},
+  {id:1744387200001,card:'命運之輪',ori:'正位',event:'今天抽了三張牌，寶劍2逆、星幣8逆、權杖國王逆。早上遲到10:45才到。開始有認真工作。演唱會的票還沒讓掉。看到網路上一些不好的新聞（大部分是可怕的中國案子）。',energy:'命運之輪提醒你今天雖然三張牌全逆位，事情有點卡，但輪子一直在轉，這只是輪子轉到某個位置而已。',note:'三張逆位不代表壞事，代表今天能量有點亂，不要強行推進，順著流走。不好的新聞讓自己適度接觸就好，不需要全部吸收進來。',mantra:'✨ 輪子永遠在轉，現在在下面，不代表永遠在下面。',date:'2026/4/14',time:'今日'},
+];
+
+loadData();
 </script>
 
 </body>
