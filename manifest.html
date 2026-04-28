@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>錢錢顯化庫 🐼</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  body { background: #f5f5f0; font-family: -apple-system, 'Noto Sans TC', sans-serif; color: #2c2c2c; min-height: 100vh; padding-bottom: 90px; }
+
+  .header { background: #fff; padding: 28px 24px 20px; border-bottom: 1px solid #f0ede8; position: sticky; top: 0; z-index: 100; }
+  .header h1 { font-size: 20px; font-weight: 900; letter-spacing: -0.5px; }
+  .header p  { font-size: 10px; font-weight: 700; color: #f59e0b; letter-spacing: 3px; margin-top: 3px; }
+
+  .nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(255,255,255,0.96); backdrop-filter: blur(12px); border-top: 1px solid #f0ede8; display: flex; justify-content: space-around; align-items: center; padding: 12px 32px 20px; z-index: 100; }
+  .nav-btn { background: none; border: none; color: #ccc; cursor: pointer; padding: 8px; border-radius: 12px; transition: color .2s; display: flex; align-items: center; justify-content: center; }
+  .nav-btn.active { color: #f59e0b; }
+  .nav-add { background: #f59e0b; border: none; color: #fff; width: 52px; height: 52px; border-radius: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 16px rgba(245,158,11,.35); font-size: 28px; font-weight: 300; line-height: 1; transition: background .2s; }
+  .nav-add:hover { background: #f0a500; }
+
+  .page { display: none; padding: 20px 16px; }
+  .page.active { display: block; }
+
+  .card { background: #fff; border-radius: 28px; padding: 20px; border: 1px solid #f0ede8; margin-bottom: 16px; }
+
+  input[type=date], select, textarea {
+    width: 100%; border: 1px solid #e8e4de; border-radius: 14px;
+    padding: 12px 14px; font-size: 13px; font-family: inherit;
+    background: #f9f8f5; color: #2c2c2c; appearance: none; outline: none;
+  }
+  input[type=date]:focus, select:focus, textarea:focus { border-color: #f59e0b; }
+  textarea { resize: none; min-height: 110px; line-height: 1.6; }
+
+  .label { font-size: 10px; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 5px; display: block; }
+  .label.amber { color: #f59e0b; }
+  .label.indigo { color: #6366f1; }
+  .sublabel { font-size: 9px; color: #aaa; margin-bottom: 6px; display: block; }
+
+  .row { display: flex; gap: 12px; }
+  .col { flex: 1; min-width: 0; }
+
+  .energy-card { background: linear-gradient(135deg, #fffbeb, #fff7ed); border: 2px dashed #fcd34d; border-radius: 24px; padding: 16px; margin: 4px 0; }
+  .energy-title { font-size: 10px; font-weight: 900; color: #d97706; letter-spacing: 2px; margin-bottom: 10px; }
+  .energy-row { font-size: 12px; font-weight: 700; color: #3c3c3c; margin-bottom: 6px; }
+  .energy-row span.amber { color: #b45309; }
+  .energy-row span.indigo { color: #4f46e5; }
+  .energy-meta { font-size: 10px; color: #aaa; margin-top: 4px; }
+
+  .night-slots { display: flex; flex-direction: column; gap: 8px; }
+  .night-slot { display: flex; align-items: center; gap: 8px; }
+  .night-slot-num { font-size: 10px; font-weight: 900; color: #6366f1; width: 16px; flex-shrink: 0; }
+  .night-slot select { flex: 1; margin: 0; }
+  .btn-add-slot { background: #eef2ff; border: none; color: #6366f1; border-radius: 10px; padding: 8px 14px; font-size: 11px; font-weight: 900; cursor: pointer; width: 100%; margin-top: 4px; }
+  .btn-add-slot:hover { background: #e0e7ff; }
+  .btn-remove { background: none; border: none; color: #ccc; font-size: 16px; cursor: pointer; padding: 0 4px; flex-shrink: 0; }
+
+  .btn-row { display: flex; gap: 10px; }
+  .btn-save-icon { background: #f59e0b; color: #fff; border: none; border-radius: 14px; padding: 14px 18px; cursor: pointer; font-size: 18px; transition: background .2s; }
+  .btn-save-icon:hover { background: #f0a500; }
+  .btn-main { flex: 1; background: #1c1c1e; color: #fff; border: none; border-radius: 14px; padding: 14px; font-size: 13px; font-weight: 900; cursor: pointer; letter-spacing: 1px; transition: background .2s; }
+  .btn-main:hover { background: #333; }
+
+  .cal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+  .cal-header h2 { font-size: 16px; font-weight: 900; }
+  .cal-nav { background: none; border: none; cursor: pointer; padding: 8px; border-radius: 10px; font-size: 18px; color: #555; }
+  .cal-nav:hover { background: #f5f5f0; }
+  .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+  .cal-dow { font-size: 10px; font-weight: 900; color: #ccc; text-align: center; padding: 4px 0; }
+  .cal-day { aspect-ratio: 1; border-radius: 10px; border: none; cursor: pointer; font-size: 11px; font-weight: 700; color: #bbb; background: #f9f8f5; position: relative; display: flex; align-items: center; justify-content: center; transition: all .15s; }
+  .cal-day:hover { background: #f0ede8; }
+  .cal-day.has-record { background: #f59e0b; color: #fff; box-shadow: 0 2px 8px rgba(245,158,11,.3); }
+  .cal-day.has-record:hover { background: #f0a500; }
+  .cal-day.today-mark { outline: 2px solid #f59e0b; }
+  .cal-day.cal-empty { background: transparent !important; cursor: default !important; }
+  .cal-dot { position: absolute; top: 3px; right: 3px; width: 5px; height: 5px; background: #a5b4fc; border-radius: 50%; }
+
+  .stats-card { background: #1c1c1e; border-radius: 24px; padding: 20px; color: #fff; margin-bottom: 14px; }
+  .stats-title { font-size: 10px; font-weight: 900; letter-spacing: 2px; margin-bottom: 14px; }
+  .stats-title.amber { color: #f59e0b; }
+  .stats-title.indigo { color: #a5b4fc; }
+  .stat-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .stat-name { font-size: 11px; font-weight: 900; width: 60px; flex-shrink: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .stat-bar-wrap { flex: 1; height: 6px; background: #333; border-radius: 99px; overflow: hidden; }
+  .stat-bar-amber  { height: 100%; background: #f59e0b; border-radius: 99px; }
+  .stat-bar-indigo { height: 100%; background: #818cf8; border-radius: 99px; }
+  .stat-count { font-size: 11px; font-weight: 700; width: 20px; text-align: right; }
+  .stat-count.amber  { color: #f59e0b; }
+  .stat-count.indigo { color: #a5b4fc; }
+  .stats-meta { font-size: 10px; color: #555; margin-top: 10px; }
+
+  .night-overview { background: #0f0f23; border-radius: 24px; padding: 20px; margin-bottom: 14px; }
+  .night-overview-title { font-size: 10px; font-weight: 900; color: #a5b4fc; letter-spacing: 2px; margin-bottom: 14px; }
+  .night-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+  .night-tag { background: #1e1b4b; border-radius: 99px; padding: 6px 12px; font-size: 11px; font-weight: 700; color: #c7d2fe; display: flex; align-items: center; gap: 5px; }
+  .night-tag-count { background: #4f46e5; color: #fff; border-radius: 99px; font-size: 9px; font-weight: 900; padding: 1px 6px; }
+
+  .lib-banner { background: #fffbeb; border: 1px solid #fde68a; border-radius: 16px; padding: 14px 16px; margin-bottom: 14px; }
+  .lib-banner p:first-child { font-size: 11px; font-weight: 900; color: #b45309; }
+  .lib-banner p:last-child  { font-size: 10px; color: #d97706; margin-top: 3px; }
+  .lib-card { background: #fff; border-radius: 24px; padding: 18px; border: 1px solid #f0ede8; margin-bottom: 10px; }
+  .lib-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+  .lib-id { font-size: 9px; font-weight: 900; color: #f59e0b; letter-spacing: 2px; }
+  .lib-name { font-size: 18px; font-weight: 900; margin: 3px 0; }
+  .lib-right { text-align: right; }
+  .lib-zodiac { font-size: 11px; font-weight: 900; color: #6366f1; }
+  .lib-zodiac-en { font-size: 9px; color: #ccc; font-weight: 700; margin-top: 2px; }
+  .lib-element { font-size: 10px; color: #aaa; font-weight: 700; margin-top: 2px; }
+  .lib-tags { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .lib-tag { padding: 10px 12px; border-radius: 12px; font-size: 11px; font-weight: 700; }
+  .lib-tag.amber  { background: #fffbeb; color: #92400e; }
+  .lib-tag.indigo { background: #eef2ff; color: #3730a3; }
+  .lib-meta { font-size: 10px; color: #bbb; margin-top: 8px; }
+
+  /* 儲存狀態指示 */
+  .save-indicator { font-size: 10px; color: #aaa; text-align: center; padding: 6px; }
+  .save-indicator.saved { color: #22c55e; }
+
+  .toast { position: fixed; top: 80px; left: 50%; transform: translateX(-50%); background: #1c1c1e; color: #fff; padding: 10px 20px; border-radius: 99px; font-size: 12px; font-weight: 700; z-index: 999; opacity: 0; transition: opacity .3s; pointer-events: none; white-space: nowrap; }
+  .toast.show { opacity: 1; }
+
+  .mt12 { margin-top: 12px; }
+  .mt8  { margin-top: 8px; }
+  .empty { text-align: center; padding: 48px 0; color: #ccc; }
+  .empty p:first-child { font-size: 14px; font-weight: 700; }
+  .empty p:last-child  { font-size: 11px; margin-top: 6px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>錢錢顯化庫 🐼</h1>
+  <p>DAILY ENERGY MAPPING</p>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- 今日記錄 -->
+<div class="page" id="page-today">
+  <div class="card">
+    <input type="date" id="inp-date" />
+
+    <div class="mt12">
+      <span class="label amber">晨間錢錢 🐼</span>
+      <span class="sublabel">熊貓之道・大牌 only・選完自動帶龍龜</span>
+      <select id="sel-morning" onchange="onMorningChange()">
+        <option value="">選擇牌名</option>
+      </select>
+    </div>
+
+    <div id="energy-wrap" class="mt12" style="display:none">
+      <div class="energy-card">
+        <div class="energy-title">✦ 今日龍龜・自動連動</div>
+        <div class="energy-row">🐢 龍龜夥伴：<span class="amber" id="e-turtle"></span></div>
+        <div class="energy-row">📿 建議手串：<span class="indigo" id="e-bracelet"></span></div>
+        <div class="energy-meta" id="e-meta"></div>
+      </div>
+    </div>
+
+    <div class="mt12">
+      <span class="label indigo">睡前典典 🌙</span>
+      <span class="sublabel">偉特牌・整副 78 張・可加到 5 張・存入昨日紀錄</span>
+      <div class="night-slots" id="night-slots"></div>
+      <button class="btn-add-slot mt8" id="btn-add-night" onclick="addNightSlot()">＋ 再加一張</button>
+    </div>
+
+    <div class="mt12">
+      <span class="label" style="color:#888">今日事件</span>
+      <textarea id="inp-event" placeholder="今天發生了什麼？紀錄大小事、情緒、轉折…"></textarea>
+    </div>
+
+    <div class="mt12">
+      <span class="label" style="color:#888">解析備註 <span style="font-weight:400;color:#bbb;font-size:9px;letter-spacing:0">（從對話貼入）</span></span>
+      <textarea id="inp-analysis" placeholder="把 Claude 的解析貼在這裡…" style="min-height:90px"></textarea>
+    </div>
+
+    <div class="mt12">
+      <button class="btn-main" onclick="saveRecord()" style="width:100%">💾 儲存紀錄</button>
+    </div>
+    <div class="save-indicator" id="save-indicator"></div>
+  </div>
+</div>
+
+<!-- 月曆 -->
+<div class="page active" id="page-calendar">
+  <div class="card">
+    <div class="cal-header">
+      <button class="cal-nav" onclick="changeMonth(-1)">‹</button>
+      <h2 id="cal-title"></h2>
+      <button class="cal-nav" onclick="changeMonth(1)">›</button>
+    </div>
+    <div class="cal-grid" id="cal-dow"></div>
+    <div class="cal-grid mt8" id="cal-days"></div>
+  </div>
+
+  <div class="stats-card" id="stats-morning" style="display:none">
+    <div class="stats-title amber">▪ 晨間大牌出現率</div>
+    <div id="stats-morning-bars"></div>
+    <div class="stats-meta" id="stats-morning-meta"></div>
+  </div>
+
+  <div class="night-overview" id="night-overview" style="display:none">
+    <div class="night-overview-title">🌙 本月典典總覽</div>
+    <div class="night-tags" id="night-tags"></div>
+  </div>
+
+  <div class="stats-card" id="stats-night" style="display:none">
+    <div class="stats-title indigo">▪ 睡前典典出現率</div>
+    <div id="stats-night-bars"></div>
+    <div class="stats-meta" id="stats-night-meta"></div>
+  </div>
+
+  <div class="empty" id="cal-empty">
+    <p>還沒有紀錄</p>
+    <p>點下方 ＋ 開始今天的記錄</p>
+  </div>
+</div>
+
+<!-- 牌義庫 -->
+<div class="page" id="page-lib">
+  <div class="lib-banner">
+    <p>🐼 晨間錢錢｜熊貓之道塔羅</p>
+    <p>大阿爾克那 22 張 · 家中抽大牌 · 三個月進步後才抽整副</p>
+  </div>
+  <div id="lib-list"></div>
+</div>
+
+<nav class="nav">
+  <button class="nav-btn active" id="nav-calendar" onclick="goPage('calendar')">
+    <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+  </button>
+  <button class="nav-add" onclick="newEntry()">＋</button>
+  <button class="nav-btn" id="nav-lib" onclick="goPage('lib')">
+    <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+  </button>
+</nav>
+
+<script>
+const STORAGE_KEY = 'qianqian-records-v1';
+
+const DATA = {
+  "0":  { name:"愚人",     zodiac:"天王星 ♅", zodiacEn:"Uranus",      beast:"飛鳥",        turtle:"汽水糖 (方解石)",     bracelet:"藍色系手串",        time:"黎明/突發",    element:"風" },
+  "1":  { name:"魔術師",   zodiac:"水星 ☿",   zodiacEn:"Mercury",     beast:"變色龍",      turtle:"麥芽糖 (老礦髮晶)",   bracelet:"金髮晶 / 黃水晶",   time:"週三/清晨",    element:"風" },
+  "2":  { name:"女教皇",   zodiac:"月亮 ☽",   zodiacEn:"Moon",        beast:"白鴞",        turtle:"汽水糖 (方解石)",     bracelet:"小藍球 / 海藍寶",   time:"週一/深夜",    element:"水" },
+  "3":  { name:"皇后",     zodiac:"金星 ♀",   zodiacEn:"Venus",       beast:"大地母神",    turtle:"焦糖 (黃膠花小樹)",   bracelet:"金魚膠花 (必戴)",   time:"週五/春季",    element:"土" },
+  "4":  { name:"皇帝",     zodiac:"牡羊座 ♈", zodiacEn:"Aries",       beast:"公羊/麒麟",  turtle:"焦糖 (黃膠花小樹)",   bracelet:"黑曜石 (必戴)",     time:"正午",         element:"火" },
+  "5":  { name:"教皇",     zodiac:"金牛座 ♉", zodiacEn:"Taurus",      beast:"靈象",        turtle:"沙士糖 (藍磷灰)",     bracelet:"金髮晶",            time:"長期累積",     element:"土" },
+  "6":  { name:"戀人",     zodiac:"雙子座 ♊", zodiacEn:"Gemini",      beast:"雙生蝶",      turtle:"軟糖 (螢石)",         bracelet:"多彩螢石",          time:"短暫交會",     element:"風" },
+  "7":  { name:"戰車",     zodiac:"巨蟹座 ♋", zodiacEn:"Cancer",      beast:"靈龜",        turtle:"麥芽糖 或 焦糖",      bracelet:"黑曜石 (必戴)",     time:"清晨/夏至",    element:"水" },
+  "8":  { name:"力量",     zodiac:"獅子座 ♌", zodiacEn:"Leo",         beast:"雄獅",        turtle:"麥芽糖",              bracelet:"黑曜石 (必戴)",     time:"盛夏/正午",    element:"火" },
+  "9":  { name:"隱士",     zodiac:"處女座 ♍", zodiacEn:"Virgo",       beast:"隱狐",        turtle:"星空糖 (拉長石)",     bracelet:"煙晶柱 / 拉長石",   time:"黃昏/入秋",    element:"土" },
+  "10": { name:"命運之輪", zodiac:"木星 ♃",   zodiacEn:"Jupiter",     beast:"銜尾蛇",      turtle:"沙士糖 (藍磷灰)",     bracelet:"彩色手串",          time:"週四/交替",    element:"火" },
+  "11": { name:"正義",     zodiac:"天秤座 ♎", zodiacEn:"Libra",       beast:"白鶴",        turtle:"沙士糖",              bracelet:"黑曜石",            time:"秋分",         element:"風" },
+  "12": { name:"吊人",     zodiac:"海王星 ♆", zodiacEn:"Neptune",     beast:"深海生物",    turtle:"星空糖",              bracelet:"拉長石",            time:"三週到三個月", element:"水" },
+  "13": { name:"死亡",     zodiac:"天蠍座 ♏", zodiacEn:"Scorpio",     beast:"鳳凰",        turtle:"星空糖",              bracelet:"黑曜石",            time:"深夜/轉化",    element:"水" },
+  "14": { name:"節制",     zodiac:"射手座 ♐", zodiacEn:"Sagittarius", beast:"獨角獸",      turtle:"青嵐 (藍絨晶)",       bracelet:"多彩螢石",          time:"晨昏交替",     element:"火" },
+  "15": { name:"惡魔",     zodiac:"摩羯座 ♑", zodiacEn:"Capricorn",   beast:"山羊/暗影獸", turtle:"黑曜岩原礦",          bracelet:"黑曜石 (必戴)",     time:"冬至/深夜",    element:"土" },
+  "16": { name:"高塔",     zodiac:"火星 ♂",   zodiacEn:"Mars",        beast:"雷龍",        turtle:"星空糖 / 黑曜岩",     bracelet:"黑曜石 (必戴)",     time:"週二/突發",    element:"火" },
+  "17": { name:"星星",     zodiac:"水瓶座 ♒", zodiacEn:"Aquarius",    beast:"青鳥",        turtle:"青嵐 (藍絨晶)",       bracelet:"海藍寶 / 天河石",   time:"雨過天晴",     element:"風" },
+  "18": { name:"月亮",     zodiac:"雙魚座 ♓", zodiacEn:"Pisces",      beast:"錦鯉",        turtle:"青嵐 / 汽水糖",       bracelet:"小藍球 / 海藍寶",   time:"潮汐漲落",     element:"水" },
+  "19": { name:"太陽",     zodiac:"太陽 ☉",   zodiacEn:"Sun",         beast:"金烏",        turtle:"焦糖 (黃膠花小樹)",   bracelet:"金魚膠花 (必戴)",   time:"最光明時刻",   element:"火" },
+  "20": { name:"審判",     zodiac:"冥王星 ♇", zodiacEn:"Pluto",       beast:"白澤",        turtle:"星空糖",              bracelet:"黑曜石",            time:"重要節點",     element:"火" },
+  "21": { name:"世界",     zodiac:"土星 ♄",   zodiacEn:"Saturn",      beast:"玄武",        turtle:"沙士糖 (藍磷灰)",     bracelet:"大藍力士 / 藍虎眼", time:"週六/圓滿",    element:"土" },
+};
+
+const MAJOR = Object.values(DATA).map(d => d.name);
+const SUITS = ["權杖","聖杯","寶劍","星幣"];
+const RANKS = ["王牌","二","三","四","五","六","七","八","九","十","侍者","騎士","皇后","國王"];
+const MINOR = SUITS.flatMap(s => RANKS.map(r => s+r));
+const ALL   = [...MAJOR, ...MINOR];
+
+// ── 狀態 ────────────────────────────────────────────────────
+let records = [];
+let calYear = new Date().getFullYear();
+let calMon  = new Date().getMonth();
+let nightSlotCount = 1;
+const MAX_NIGHT = 5;
+
+// ── localStorage 存取 ────────────────────────────────────────
+function loadFromStorage() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch(e) {
+    console.warn('localStorage 讀取失敗', e);
+    return [];
+  }
+}
+function saveToStorage() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+    showSaveIndicator();
+  } catch(e) {
+    console.warn('localStorage 寫入失敗', e);
+  }
+}
+function showSaveIndicator() {
+  const el = document.getElementById('save-indicator');
+  if (!el) return;
+  el.textContent = '✓ 已自動儲存';
+  el.className = 'save-indicator saved';
+  setTimeout(() => { el.textContent = ''; el.className = 'save-indicator'; }, 2000);
+}
+
+// ── 初始化 ───────────────────────────────────────────────────
+function init() {
+  // 從 localStorage 載入
+  records = loadFromStorage();
+
+  // 晨間選單
+  const sm = document.getElementById('sel-morning');
+  MAJOR.forEach(n => sm.innerHTML += `<option value="${n}">${n}</option>`);
+
+  // 第一個睡前插槽
+  addNightSlot(true);
+
+  // 今日日期
+  document.getElementById('inp-date').value = todayStr();
+
+  // 月曆週標
+  const dow = document.getElementById('cal-dow');
+  ['日','一','二','三','四','五','六'].forEach(d => {
+    dow.innerHTML += `<div class="cal-dow">${d}</div>`;
+  });
+
+  // 牌義庫
+  const lib = document.getElementById('lib-list');
+  Object.entries(DATA).forEach(([id, item]) => {
+    lib.innerHTML += `
+    <div class="lib-card">
+      <div class="lib-top">
+        <div>
+          <div class="lib-id">#${id} MAJOR ARCANA</div>
+          <div class="lib-name">${item.name}</div>
+        </div>
+        <div class="lib-right">
+          <div class="lib-zodiac">${item.zodiac}</div>
+          <div class="lib-zodiac-en">${item.zodiacEn}</div>
+          <div class="lib-element">${item.element}元素</div>
+        </div>
+      </div>
+      <div class="lib-tags">
+        <div class="lib-tag amber">🐢 ${item.turtle}</div>
+        <div class="lib-tag indigo">📿 ${item.bracelet}</div>
+      </div>
+      <div class="lib-meta">🕒 ${item.time}　神獸：${item.beast}</div>
+    </div>`;
+  });
+
+  renderCalendar();
+}
+
+// ── 工具 ────────────────────────────────────────────────────
+function todayStr() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 2000);
+}
+function makeNightOptions(selectedVal) {
+  let opts = `<option value="">選擇牌名</option>`;
+  ALL.forEach(n => {
+    opts += `<option value="${n}" ${n === selectedVal ? 'selected' : ''}>${n}</option>`;
+  });
+  return opts;
+}
+
+// ── 睡前典典插槽 ─────────────────────────────────────────────
+function addNightSlot(isFirst) {
+  if (nightSlotCount > MAX_NIGHT) return;
+  const slots = document.getElementById('night-slots');
+  const div = document.createElement('div');
+  div.className = 'night-slot';
+  div.id = `night-slot-${nightSlotCount}`;
+  div.innerHTML = `
+    <span class="night-slot-num">${nightSlotCount}</span>
+    <select id="sel-night-${nightSlotCount}">${makeNightOptions('')}</select>
+    ${!isFirst ? `<button class="btn-remove" onclick="removeNightSlot(${nightSlotCount})">×</button>` : ''}
+  `;
+  slots.appendChild(div);
+  nightSlotCount++;
+  if (nightSlotCount > MAX_NIGHT) document.getElementById('btn-add-night').style.display = 'none';
+}
+function removeNightSlot(n) {
+  const el = document.getElementById(`night-slot-${n}`);
+  if (el) el.remove();
+  document.getElementById('btn-add-night').style.display = 'block';
+}
+function getNightCards() {
+  const cards = [];
+  for (let i = 1; i <= MAX_NIGHT; i++) {
+    const sel = document.getElementById(`sel-night-${i}`);
+    if (sel && sel.value) cards.push(sel.value);
+  }
+  return cards;
+}
+function setNightCards(cards) {
+  document.getElementById('night-slots').innerHTML = '';
+  nightSlotCount = 1;
+  document.getElementById('btn-add-night').style.display = 'block';
+  const list = (cards && cards.length > 0) ? cards : [''];
+  list.forEach((val, idx) => {
+    const slots = document.getElementById('night-slots');
+    const div = document.createElement('div');
+    div.className = 'night-slot';
+    div.id = `night-slot-${nightSlotCount}`;
+    div.innerHTML = `
+      <span class="night-slot-num">${nightSlotCount}</span>
+      <select id="sel-night-${nightSlotCount}">${makeNightOptions(val)}</select>
+      ${idx > 0 ? `<button class="btn-remove" onclick="removeNightSlot(${nightSlotCount})">×</button>` : ''}
+    `;
+    slots.appendChild(div);
+    nightSlotCount++;
+  });
+  if (nightSlotCount > MAX_NIGHT) document.getElementById('btn-add-night').style.display = 'none';
+}
+
+// ── 頁面切換 ─────────────────────────────────────────────────
+function goPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  const nb = document.getElementById('nav-'+name);
+  if (nb) nb.classList.add('active');
+}
+function newEntry() {
+  document.getElementById('inp-date').value     = todayStr();
+  document.getElementById('sel-morning').value  = '';
+  document.getElementById('inp-event').value    = '';
+  document.getElementById('inp-analysis').value = '';
+  document.getElementById('energy-wrap').style.display = 'none';
+  setNightCards([]);
+  goPage('today');
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+}
+
+// ── 晨間牌聯動 ───────────────────────────────────────────────
+function onMorningChange() {
+  const name = document.getElementById('sel-morning').value;
+  const info = Object.values(DATA).find(d => d.name === name);
+  const wrap = document.getElementById('energy-wrap');
+  if (!info) { wrap.style.display = 'none'; return; }
+  document.getElementById('e-turtle').textContent   = info.turtle;
+  document.getElementById('e-bracelet').textContent = info.bracelet;
+  document.getElementById('e-meta').textContent     = `${info.zodiac}　${info.element}元素　🕒 ${info.time}`;
+  wrap.style.display = 'block';
+}
+
+// ── 儲存 ─────────────────────────────────────────────────────
+function saveRecord() {
+  const date = document.getElementById('inp-date').value;
+  if (!date) { toast('請選擇日期'); return; }
+  const record = {
+    date,
+    morningCard : document.getElementById('sel-morning').value,
+    nightCards  : getNightCards(),
+    event       : document.getElementById('inp-event').value,
+    analysis    : document.getElementById('inp-analysis').value,
+  };
+  records = [record, ...records.filter(r => r.date !== date)];
+  saveToStorage();
+  renderCalendar();
+  toast('✓ 已儲存');
+  setTimeout(() => goPage('calendar'), 600);
+}
+
+// ── 載入紀錄 ─────────────────────────────────────────────────
+function loadRecord(date) {
+  const record = records.find(r => r.date === date);
+  if (!record) return;
+  document.getElementById('inp-date').value     = record.date;
+  document.getElementById('sel-morning').value  = record.morningCard || '';
+  document.getElementById('inp-event').value    = record.event || '';
+  document.getElementById('inp-analysis').value = record.analysis || '';
+  setNightCards(record.nightCards || []);
+  onMorningChange();
+  goPage('today');
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+}
+
+// ── 月曆 ─────────────────────────────────────────────────────
+function changeMonth(dir) {
+  calMon += dir;
+  if (calMon < 0)  { calMon = 11; calYear--; }
+  if (calMon > 11) { calMon = 0;  calYear++; }
+  renderCalendar();
+}
+
+function renderCalendar() {
+  document.getElementById('cal-title').textContent = `${calYear} 年 ${calMon+1} 月`;
+
+  const firstDay  = new Date(calYear, calMon, 1).getDay();
+  const daysTotal = new Date(calYear, calMon+1, 0).getDate();
+  const today     = todayStr();
+
+  const monthRecords = records.filter(r => {
+    const [y,m] = r.date.split('-').map(Number);
+    return y === calYear && m === calMon+1;
+  });
+
+  // 月曆格子
+  let html = '';
+  for (let i = 0; i < firstDay; i++) html += `<div class="cal-day cal-empty"></div>`;
+  for (let i = 1; i <= daysTotal; i++) {
+    const ds  = `${calYear}-${String(calMon+1).padStart(2,'0')}-${String(i).padStart(2,'0')}`;
+    const rec = records.find(r => r.date === ds);
+    const isToday = ds === today;
+    let cls = 'cal-day';
+    if (rec) cls += ' has-record';
+    if (isToday && !rec) cls += ' today-mark';
+    const dot   = rec?.analysis ? '<span class="cal-dot"></span>' : '';
+    const click = rec ? `onclick="loadRecord('${ds}')"` : '';
+    html += `<button class="${cls}" ${click}>${i}${dot}</button>`;
+  }
+  document.getElementById('cal-days').innerHTML = html;
+
+  const empty = document.getElementById('cal-empty');
+  if (records.length === 0) {
+    empty.style.display = 'block';
+    document.getElementById('stats-morning').style.display  = 'none';
+    document.getElementById('night-overview').style.display = 'none';
+    document.getElementById('stats-night').style.display    = 'none';
+    return;
+  }
+  empty.style.display = 'none';
+
+  // 晨間統計
+  const mAcc = {};
+  monthRecords.forEach(r => { if (r.morningCard) mAcc[r.morningCard] = (mAcc[r.morningCard]||0)+1; });
+  const mSorted = Object.entries(mAcc).sort((a,b)=>b[1]-a[1]).slice(0,5);
+  const smWrap = document.getElementById('stats-morning');
+  if (mSorted.length > 0 && monthRecords.length > 0) {
+    smWrap.style.display = 'block';
+    let bars = '';
+    mSorted.forEach(([name, count]) => {
+      const pct = Math.max(8, Math.round((count/monthRecords.length)*100));
+      bars += `<div class="stat-row">
+        <div class="stat-name">${name}</div>
+        <div class="stat-bar-wrap"><div class="stat-bar-amber" style="width:${pct}%"></div></div>
+        <div class="stat-count amber">${count}</div>
+      </div>`;
+    });
+    document.getElementById('stats-morning-bars').innerHTML = bars;
+    document.getElementById('stats-morning-meta').textContent = `本月共 ${monthRecords.length} 筆`;
+  } else { smWrap.style.display = 'none'; }
+
+  // 本月典典總覽
+  const nAcc = {};
+  monthRecords.forEach(r => {
+    (r.nightCards||[]).forEach(c => { if(c) nAcc[c] = (nAcc[c]||0)+1; });
+  });
+  const nSorted = Object.entries(nAcc).sort((a,b)=>b[1]-a[1]);
+  const noWrap = document.getElementById('night-overview');
+  if (nSorted.length > 0) {
+    noWrap.style.display = 'block';
+    let tags = '';
+    nSorted.forEach(([name, count]) => {
+      tags += `<div class="night-tag">${name}${count > 1 ? `<span class="night-tag-count">${count}</span>` : ''}</div>`;
+    });
+    document.getElementById('night-tags').innerHTML = tags;
+  } else { noWrap.style.display = 'none'; }
+
+  // 睡前典典統計
+  const nTop   = nSorted.slice(0,5);
+  const nTotal = nSorted.reduce((s,[,v])=>s+v, 0);
+  const snWrap = document.getElementById('stats-night');
+  if (nTop.length > 0) {
+    snWrap.style.display = 'block';
+    let bars = '';
+    nTop.forEach(([name, count]) => {
+      const pct = Math.max(8, Math.round((count/nTotal)*100));
+      bars += `<div class="stat-row">
+        <div class="stat-name">${name}</div>
+        <div class="stat-bar-wrap"><div class="stat-bar-indigo" style="width:${pct}%"></div></div>
+        <div class="stat-count indigo">${count}</div>
+      </div>`;
+    });
+    document.getElementById('stats-night-bars').innerHTML = bars;
+    document.getElementById('stats-night-meta').textContent = `本月共抽 ${nTotal} 張`;
+  } else { snWrap.style.display = 'none'; }
+}
+
+init();
+</script>
+</body>
+</html>
