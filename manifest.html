@@ -379,16 +379,20 @@ select option{background:#fff;color:var(--ink)}
 
     <!-- 偉特 -->
     <div class="deck-section">
-      <div class="deck-label">🃏 偉特塔羅（睡前）</div>
-      <label>抽到的牌</label>
-      <input type="text" id="daily-card" placeholder="例：星星、太陽、聖杯三…" oninput="onCardInput()">
-      <button class="picker-toggle" onclick="togglePicker('picker1','daily-card',null)">📋 從 78 張牌表選牌 ▾</button>
+      <div class="deck-label">🃏 偉特塔羅（睡前，最多五張）</div>
+      <div style="font-size:.68rem;color:var(--ink3);margin-bottom:8px">牌名後可直接加「逆」，例：星星逆、寶劍2、跳牌聖杯5逆</div>
+      <label>牌 1（主牌）</label>
+      <input type="text" id="daily-card" placeholder="例：星星逆" oninput="onCardInput()">
+      <label style="margin-top:8px">牌 2</label>
+      <input type="text" id="daily-card2" placeholder="例：寶劍2">
+      <label style="margin-top:8px">牌 3</label>
+      <input type="text" id="daily-card3" placeholder="例：聖杯騎士">
+      <label style="margin-top:8px">牌 4（跳牌）</label>
+      <input type="text" id="daily-card4" placeholder="例：跳牌 權杖五逆">
+      <label style="margin-top:8px">牌 5（角色牌）</label>
+      <input type="text" id="daily-card5" placeholder="例：角色牌 星幣國王">
+      <button class="picker-toggle" style="margin-top:8px" onclick="togglePicker('picker1','daily-card',null)">📋 從牌表選牌（填入牌1）▾</button>
       <div id="picker1" class="card-picker"></div>
-      <label>牌面方向</label>
-      <div class="ori-toggle">
-        <button class="ori-btn selected" id="ori-pos" onclick="selectOri('正位')">▲ 正位</button>
-        <button class="ori-btn" id="ori-neg" onclick="selectOri('逆位')">▽ 逆位</button>
-      </div>
     </div>
 
     <!-- 光能神諭卡 -->
@@ -414,7 +418,7 @@ select option{background:#fff;color:var(--ink)}
 
   <div class="fortune-card" id="fortune-display"></div>
 
-  <div class="card-box" id="record-form" style="display:none">
+  <div class="card-box" id="record-form">
     <h2>📝 今日紀錄</h2>
 
     <!-- 龍龜 -->
@@ -424,12 +428,10 @@ select option{background:#fff;color:var(--ink)}
     <label style="margin-top:14px">今天發生了什麼？</label>
     <textarea class="ta-lg" id="daily-event" placeholder="用幾句話描述今天的狀況、心情、遇到的事…"></textarea>
 
-    <!-- 問題與AI解答 -->
+    <!-- 問題欄 -->
     <div class="qa-pair">
       <label>💬 占卜問題（可選）</label>
       <textarea class="ta-sm" id="daily-question" placeholder="今天問了什麼問題…"></textarea>
-      <label>🤖 AI 解答（手動貼入）</label>
-      <textarea class="ta-md" id="daily-ai" placeholder="貼上 AI 解牌內容…"></textarea>
     </div>
 
     <button class="btn btn-sakura" onclick="saveDailyRecord()">💾 儲存今日紀錄</button>
@@ -665,21 +667,23 @@ function selectOri(ori){
 
 function generateFortune(){
   const cardName=document.getElementById('daily-card').value.trim();
-  if(!cardName){toast('請先輸入或選擇偉特牌名');return}
-  const data=CARD_DATA[cardName];
+  if(!cardName){toast('請先輸入牌1的偉特牌名');return}
+  // 偵測逆位：牌名含「逆」
+  const isReversed=cardName.includes('逆');
+  const cleanName=cardName.replace('逆','').trim();
+  const data=CARD_DATA[cleanName];
   if(!data){
-    toast('這張牌的運勢資料尚未建立，請直接填寫紀錄');
-    document.getElementById('record-form').style.display='block';
+    toast('這張牌的運勢資料尚未建立，可直接填寫下方紀錄');
     buildTurtleSelector();
     return;
   }
-  const f=selectedOri==='正位'?data.fortune.pos:data.fortune.neg;
+  const f=isReversed?data.fortune.neg:data.fortune.pos;
   currentFortune=f;
   const fc=document.getElementById('fortune-display');
   fc.innerHTML=`
     <div class="fortune-header">
-      <span class="fortune-card-name">《${cardName}》</span>
-      <span class="fortune-ori">${selectedOri}</span>
+      <span class="fortune-card-name">《${cleanName}》</span>
+      <span class="fortune-ori">${isReversed?'逆位':'正位'}</span>
     </div>
     <div class="fortune-section">
       <div class="fortune-lbl">⚡ 今日能量</div>
@@ -695,28 +699,31 @@ function generateFortune(){
     </div>
   `;
   fc.classList.add('visible');
-  document.getElementById('record-form').style.display='block';
   buildTurtleSelector();
 }
 
 function saveDailyRecord(){
   const card=document.getElementById('daily-card').value.trim();
+  const card2=document.getElementById('daily-card2').value.trim();
+  const card3=document.getElementById('daily-card3').value.trim();
+  const card4=document.getElementById('daily-card4').value.trim();
+  const card5=document.getElementById('daily-card5').value.trim();
+  const pandaCard=document.getElementById('panda-card').value.trim();
   const ev=document.getElementById('daily-event').value.trim();
-  if(!card){toast('請輸入偉特牌名');return}
-  if(!ev){toast('請描述今天發生的事');return}
-  const data=CARD_DATA[card];
-  const f=currentFortune||(data?(selectedOri==='正位'?data.fortune.pos:data.fortune.neg):null);
+  // 至少要有一個欄位有內容才儲存
+  if(!card&&!pandaCard&&!ev){toast('請至少填入一個欄位');return}
+  const data=card?CARD_DATA[card]:null;
+  const f=currentFortune||(data?data.fortune.pos:null);
   const record={
     id:Date.now(),
-    card,ori:selectedOri,
-    pandaCard:document.getElementById('panda-card').value.trim(),
+    card,card2,card3,card4,card5,
+    pandaCard,
     omenCard:document.getElementById('omen-card').value.trim(),
     lightCard:document.getElementById('light-card').value.trim(),
     lenCard:document.getElementById('len-card').value.trim(),
     turtle:selectedTurtle||'',
     event:ev,
     question:document.getElementById('daily-question').value.trim(),
-    aiAnswer:document.getElementById('daily-ai').value.trim(),
     energy:f?f.energy:'',note:f?f.note:'',mantra:f?f.mantra:'',
     date:new Date().toLocaleDateString('zh-TW'),
     time:new Date().toLocaleTimeString('zh-TW',{hour:'2-digit',minute:'2-digit'})
@@ -727,15 +734,13 @@ function saveDailyRecord(){
 }
 
 function clearDailyForm(){
-  ['daily-card','panda-card','omen-card','light-card','len-card','daily-event','daily-question','daily-ai'].forEach(id=>{
+  ['daily-card','daily-card2','daily-card3','daily-card4','daily-card5',
+   'panda-card','omen-card','light-card','len-card','daily-event','daily-question'].forEach(id=>{
     const el=document.getElementById(id);if(el)el.value='';
   });
   const fc=document.getElementById('fortune-display');fc.classList.remove('visible');fc.innerHTML='';
-  document.getElementById('record-form').style.display='none';
-  selectedOri='正位';
-  document.getElementById('ori-pos').classList.add('selected');
-  document.getElementById('ori-neg').classList.remove('selected');
   currentFortune=null;selectedTurtle=null;
+  document.querySelectorAll('.turtle-btn').forEach(b=>b.classList.remove('selected'));
   toast('表單已清除');
 }
 
@@ -833,7 +838,7 @@ function renderRecords(){
     <div class="note-header">
       <span class="note-name">
         ${d.pandaCard?`🐼${d.pandaCard} `:''}
-        ${d.card?`🃏${d.card} ${d.ori}`:''}
+        ${d.card?`🃏${d.card}`:''}
       </span>
       <span class="note-date">${d.date}</span>
     </div>
@@ -845,16 +850,17 @@ function renderRecords(){
 
 function openRecord(i){
   const d=dailyRecords[i];
-  let html=`<div class="modal-handle"></div><div class="modal-close-row"><h2>${d.card} ${d.ori} · ${d.date}</h2><button class="modal-close" onclick="document.getElementById('modal-overlay').classList.remove('open')">✕</button></div>`;
+  const weiteCards=[d.card,d.card2,d.card3,d.card4,d.card5].filter(Boolean).join('・');
+  let html=`<div class="modal-handle"></div><div class="modal-close-row"><h2>${d.pandaCard||d.card||'紀錄'} · ${d.date}</h2><button class="modal-close" onclick="document.getElementById('modal-overlay').classList.remove('open')">✕</button></div>`;
   if(d.pandaCard)html+=`<div class="m-section"><div class="m-label">🐼 熊貓之道</div><div class="m-value">${d.pandaCard}</div></div>`;
   if(d.omenCard)html+=`<div class="m-section"><div class="m-label">🌿 預兆神諭卡</div><div class="m-value">${d.omenCard}</div></div>`;
+  if(weiteCards)html+=`<div class="m-section"><div class="m-label">🃏 偉特塔羅</div><div class="m-value">${weiteCards}</div></div>`;
   if(d.lightCard)html+=`<div class="m-section"><div class="m-label">✨ 光能神諭卡</div><div class="m-value">${d.lightCard}</div></div>`;
   if(d.lenCard)html+=`<div class="m-section"><div class="m-label">🃏 雷諾曼</div><div class="m-value">${d.lenCard}</div></div>`;
   if(d.turtle)html+=`<div class="m-section"><div class="m-label">🐢 今日龍龜</div><div class="m-value">${d.turtle}</div></div>`;
   html+=`<div class="m-divider"></div>`;
-  html+=`<div class="m-section"><div class="m-label">📝 今日事件</div><div class="m-value">${d.event||''}</div></div>`;
+  if(d.event)html+=`<div class="m-section"><div class="m-label">📝 今日事件</div><div class="m-value">${d.event}</div></div>`;
   if(d.question)html+=`<div class="m-section"><div class="m-label">💬 占卜問題</div><div class="m-value">${d.question}</div></div>`;
-  if(d.aiAnswer)html+=`<div class="m-section"><div class="m-label">🤖 AI 解答</div><div class="m-value">${d.aiAnswer}</div></div>`;
   if(d.energy)html+=`<div class="m-divider"></div><div class="m-section"><div class="m-label">⚡ 今日能量</div><div class="m-value">${d.energy}</div></div>`;
   if(d.note)html+=`<div class="m-section"><div class="m-label">⚠️ 今日注意</div><div class="m-value">${d.note}</div></div>`;
   if(d.mantra)html+=`<div class="m-section" style="text-align:center"><div class="fortune-mantra">${d.mantra}</div></div>`;
