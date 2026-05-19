@@ -421,8 +421,12 @@ select option{background:#fff;color:var(--ink)}
   <div class="card-box" id="record-form">
     <h2>📝 今日紀錄</h2>
 
+    <!-- 日期 -->
+    <label>📅 紀錄日期（可補登過去的日期）</label>
+    <input type="date" id="record-date">
+
     <!-- 龍龜 -->
-    <label>🐢 今日攜帶龍龜</label>
+    <label style="margin-top:14px">🐢 今日攜帶龍龜</label>
     <div class="turtle-grid" id="turtle-selector"></div>
 
     <label style="margin-top:14px">今天發生了什麼？</label>
@@ -434,7 +438,7 @@ select option{background:#fff;color:var(--ink)}
       <textarea class="ta-sm" id="daily-question" placeholder="今天問了什麼問題…"></textarea>
     </div>
 
-    <button class="btn btn-sakura" onclick="saveDailyRecord()">💾 儲存今日紀錄</button>
+    <button class="btn btn-sakura" onclick="saveDailyRecord()">💾 儲存紀錄</button>
     <button class="btn btn-outline" style="margin-top:8px" onclick="clearDailyForm()">🗑 清除</button>
   </div>
 </div>
@@ -702,6 +706,20 @@ function generateFortune(){
   buildTurtleSelector();
 }
 
+function getTodayValue(){
+  const t=new Date();
+  return `${t.getFullYear()}-${String(t.getMonth()+1).padStart(2,'0')}-${String(t.getDate()).padStart(2,'0')}`;
+}
+function formatDateDisplay(val){
+  if(!val)return new Date().toLocaleDateString('zh-TW');
+  const [y,m,d]=val.split('-');
+  return `${y}/${m}/${d}`;
+}
+function initRecordDate(){
+  const el=document.getElementById('record-date');
+  if(el&&!el.value)el.value=getTodayValue();
+}
+
 function saveDailyRecord(){
   const card=document.getElementById('daily-card').value.trim();
   const card2=document.getElementById('daily-card2').value.trim();
@@ -710,9 +728,10 @@ function saveDailyRecord(){
   const card5=document.getElementById('daily-card5').value.trim();
   const pandaCard=document.getElementById('panda-card').value.trim();
   const ev=document.getElementById('daily-event').value.trim();
-  // 至少要有一個欄位有內容才儲存
   if(!card&&!pandaCard&&!ev){toast('請至少填入一個欄位');return}
-  const data=card?CARD_DATA[card]:null;
+  const dateVal=document.getElementById('record-date').value;
+  const dateDisplay=formatDateDisplay(dateVal);
+  const data=card?CARD_DATA[card.replace('逆','').trim()]:null;
   const f=currentFortune||(data?data.fortune.pos:null);
   const record={
     id:Date.now(),
@@ -725,12 +744,12 @@ function saveDailyRecord(){
     event:ev,
     question:document.getElementById('daily-question').value.trim(),
     energy:f?f.energy:'',note:f?f.note:'',mantra:f?f.mantra:'',
-    date:new Date().toLocaleDateString('zh-TW'),
+    date:dateDisplay,
     time:new Date().toLocaleTimeString('zh-TW',{hour:'2-digit',minute:'2-digit'})
   };
   dailyRecords.unshift(record);
   if(dailyRecords.length>120)dailyRecords=dailyRecords.slice(0,120);
-  saveRecords();toast('今日紀錄已儲存 ✓');
+  saveRecords();toast('紀錄已儲存 ✓');
 }
 
 function clearDailyForm(){
@@ -738,6 +757,8 @@ function clearDailyForm(){
    'panda-card','omen-card','light-card','len-card','daily-event','daily-question'].forEach(id=>{
     const el=document.getElementById(id);if(el)el.value='';
   });
+  const dateEl=document.getElementById('record-date');
+  if(dateEl)dateEl.value=getTodayValue();
   const fc=document.getElementById('fortune-display');fc.classList.remove('visible');fc.innerHTML='';
   currentFortune=null;selectedTurtle=null;
   document.querySelectorAll('.turtle-btn').forEach(b=>b.classList.remove('selected'));
@@ -845,6 +866,9 @@ function renderRecords(){
     ${d.turtle?`<div style="font-size:.7rem;color:var(--matcha2);margin-bottom:4px">🐢 ${d.turtle}</div>`:''}
     <div style="font-size:.76rem;color:var(--ink3);line-height:1.5">${(d.event||'').length>55?(d.event||'').slice(0,55)+'…':(d.event||'')}</div>
     ${d.mantra?`<div style="font-size:.72rem;color:var(--gold);font-style:italic;margin-top:5px">${d.mantra}</div>`:''}
+    <div style="margin-top:8px;display:flex;gap:7px" onclick="event.stopPropagation()">
+      <button class="btn btn-outline btn-sm" style="font-size:.7rem;padding:5px 10px" onclick="openSupplementModal(${dailyRecords.indexOf(d)})">✏️ 補充</button>
+    </div>
   </div>`).join('');
 }
 
@@ -869,6 +893,78 @@ function openRecord(i){
   document.getElementById('modal-overlay').classList.add('open');
 }
 function deleteRecord(i){if(!confirm('確定刪除這筆紀錄？'))return;dailyRecords.splice(i,1);saveRecords();document.getElementById('modal-overlay').classList.remove('open');renderRecords();toast('已刪除')}
+
+function openSupplementModal(i){
+  const d=dailyRecords[i];
+  const turtleOptions=TURTLES.map((t,ti)=>`<option value="${t.name}" ${d.turtle===t.name?'selected':''}>${t.reserved?'⏳':' 🐢'} ${t.name}${t.reserved?' (待入住)':''}</option>`).join('');
+  document.getElementById('modal-content').innerHTML=`
+    <div class="modal-handle"></div>
+    <div class="modal-close-row">
+      <h2>✏️ 補充紀錄 · ${d.date}</h2>
+      <button class="modal-close" onclick="document.getElementById('modal-overlay').classList.remove('open')">✕</button>
+    </div>
+    <div style="font-size:.72rem;color:var(--ink3);margin-bottom:12px">已有的內容會保留，只更新你填寫的欄位</div>
+
+    <label>🐼 熊貓之道</label>
+    <input type="text" id="sup-panda" value="${d.pandaCard||''}" placeholder="例：太陽">
+
+    <label>🌿 預兆神諭卡</label>
+    <input type="text" id="sup-omen" value="${d.omenCard||''}" placeholder="例：敵人">
+
+    <label>🃏 偉特牌1</label>
+    <input type="text" id="sup-card" value="${d.card||''}" placeholder="例：星星逆">
+    <label>偉特牌2</label>
+    <input type="text" id="sup-card2" value="${d.card2||''}" placeholder="">
+    <label>偉特牌3</label>
+    <input type="text" id="sup-card3" value="${d.card3||''}" placeholder="">
+    <label>偉特牌4（跳牌）</label>
+    <input type="text" id="sup-card4" value="${d.card4||''}" placeholder="">
+    <label>偉特牌5（角色牌）</label>
+    <input type="text" id="sup-card5" value="${d.card5||''}" placeholder="">
+
+    <label>✨ 光能神諭卡</label>
+    <input type="text" id="sup-light" value="${d.lightCard||''}" placeholder="">
+
+    <label>🃏 雷諾曼</label>
+    <input type="text" id="sup-len" value="${d.lenCard||''}" placeholder="">
+
+    <label>🐢 攜帶龍龜</label>
+    <select id="sup-turtle">
+      <option value="">未帶</option>
+      ${turtleOptions}
+    </select>
+
+    <label>📝 今日事件</label>
+    <textarea class="ta-md" id="sup-event">${d.event||''}</textarea>
+
+    <label>💬 占卜問題</label>
+    <textarea class="ta-sm" id="sup-question">${d.question||''}</textarea>
+
+    <button class="btn btn-sakura" style="margin-top:14px" onclick="saveSupplementRecord(${i})">💾 儲存補充</button>
+  `;
+  document.getElementById('modal-overlay').classList.add('open');
+}
+
+function saveSupplementRecord(i){
+  const d=dailyRecords[i];
+  d.pandaCard=document.getElementById('sup-panda').value.trim()||d.pandaCard||'';
+  d.omenCard=document.getElementById('sup-omen').value.trim()||d.omenCard||'';
+  d.card=document.getElementById('sup-card').value.trim()||d.card||'';
+  d.card2=document.getElementById('sup-card2').value.trim()||d.card2||'';
+  d.card3=document.getElementById('sup-card3').value.trim()||d.card3||'';
+  d.card4=document.getElementById('sup-card4').value.trim()||d.card4||'';
+  d.card5=document.getElementById('sup-card5').value.trim()||d.card5||'';
+  d.lightCard=document.getElementById('sup-light').value.trim()||d.lightCard||'';
+  d.lenCard=document.getElementById('sup-len').value.trim()||d.lenCard||'';
+  const turtle=document.getElementById('sup-turtle').value;
+  if(turtle)d.turtle=turtle;
+  d.event=document.getElementById('sup-event').value.trim()||d.event||'';
+  d.question=document.getElementById('sup-question').value.trim()||d.question||'';
+  saveRecords();
+  document.getElementById('modal-overlay').classList.remove('open');
+  renderRecords();
+  toast('補充已儲存 ✓');
+}
 
 // ===== 進度 =====
 function renderProgress(){
@@ -961,6 +1057,7 @@ function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t
 function closeModal(e){if(e.target===document.getElementById('modal-overlay'))document.getElementById('modal-overlay').classList.remove('open')}
 
 loadData();
+initRecordDate();
 </script>
 </body>
 </html>
