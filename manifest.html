@@ -659,9 +659,10 @@ function selectTurtle(i,name){
 
 // ===== 今日占卜 =====
 function onCardInput(){
+  // 只清除運勢顯示，不隱藏紀錄表單
   const fc=document.getElementById('fortune-display');
   fc.classList.remove('visible');fc.innerHTML='';
-  document.getElementById('record-form').style.display='none';
+  currentFortune=null;
 }
 function selectOri(ori){
   selectedOri=ori;
@@ -778,25 +779,26 @@ function renderCalendar(){
   const firstDay=new Date(calYear,calMonth,1).getDay();
   const daysInMonth=new Date(calYear,calMonth+1,0).getDate();
   const today=new Date();
+
+  // 統一日期格式比對：把所有紀錄日期標準化
   const recordMap={};
   dailyRecords.forEach(r=>{
-    const d=r.date;
-    if(!recordMap[d])recordMap[d]=[];
-    recordMap[d].push(r);
+    const normalized=normalizeDateStr(r.date);
+    if(!recordMap[normalized])recordMap[normalized]=[];
+    recordMap[normalized].push(r);
   });
 
   let cells='';
   for(let i=0;i<firstDay;i++)cells+=`<div class="cal-cell empty"></div>`;
   for(let d=1;d<=daysInMonth;d++){
-    const dateStr=`${calYear}/${String(calMonth+1).padStart(2,'0')}/${String(d).padStart(2,'0')}`;
-    const altDateStr=new Date(calYear,calMonth,d).toLocaleDateString('zh-TW');
-    const recs=recordMap[dateStr]||recordMap[altDateStr]||[];
+    const key=`${calYear}/${String(calMonth+1).padStart(2,'0')}/${String(d).padStart(2,'0')}`;
+    const recs=recordMap[key]||[];
     const isToday=today.getFullYear()===calYear&&today.getMonth()===calMonth&&today.getDate()===d;
     const hasRec=recs.length>0;
-    const pandaName=recs.length>0&&recs[0].pandaCard?recs[0].pandaCard.slice(0,2):'';
-    const weiteCard=recs.length>0&&recs[0].card?recs[0].card.slice(0,2):'';
-    const turtleName=recs.length>0&&recs[0].turtle?recs[0].turtle.slice(0,2):'';
-    cells+=`<div class="cal-cell ${isToday?'today':''} ${hasRec?'has-record':''}" onclick="openCalDay('${altDateStr}')">
+    const pandaName=hasRec&&recs[0].pandaCard?recs[0].pandaCard.slice(0,2):'';
+    const weiteCard=hasRec&&recs[0].card?recs[0].card.slice(0,2):'';
+    const turtleName=hasRec&&recs[0].turtle?recs[0].turtle.slice(0,2):'';
+    cells+=`<div class="cal-cell ${isToday?'today':''} ${hasRec?'has-record':''}" onclick="openCalDay('${key}')">
       <span class="cal-date">${d}</span>
       ${pandaName?`<span class="cal-card-label">🐼${pandaName}</span>`:''}
       ${weiteCard&&!pandaName?`<span class="cal-card-label">🃏${weiteCard}</span>`:''}
@@ -808,21 +810,35 @@ function renderCalendar(){
 function calPrev(){calMonth--;if(calMonth<0){calMonth=11;calYear--}renderCalendar()}
 function calNext(){calMonth++;if(calMonth>11){calMonth=0;calYear++}renderCalendar()}
 
-function openCalDay(dateStr){
-  const recs=dailyRecords.filter(r=>r.date===dateStr);
+// 統一日期格式為 yyyy/MM/dd
+function normalizeDateStr(dateStr){
+  if(!dateStr)return '';
+  // 已是 yyyy/MM/dd
+  if(/^\d{4}\/\d{2}\/\d{2}$/.test(dateStr))return dateStr;
+  // yyyy/M/d 補零
+  const m1=dateStr.match(/^(\d{4})\/(\d{1,2})\/(\d{1,2})$/);
+  if(m1)return `${m1[1]}/${m1[2].padStart(2,'0')}/${m1[3].padStart(2,'0')}`;
+  // 嘗試 Date parse
+  const d=new Date(dateStr);
+  if(!isNaN(d))return `${d.getFullYear()}/${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getDate()).padStart(2,'0')}`;
+  return dateStr;
+}
+
+function openCalDay(dateKey){
+  const recs=dailyRecords.filter(r=>normalizeDateStr(r.date)===dateKey);
   if(!recs.length){toast('這天沒有紀錄');return}
   const r=recs[0];
-  let html=`<div class="modal-handle"></div><div class="modal-close-row"><h2>📅 ${dateStr}</h2><button class="modal-close" onclick="document.getElementById('modal-overlay').classList.remove('open')">✕</button></div>`;
+  const weiteCards=[r.card,r.card2,r.card3,r.card4,r.card5].filter(Boolean).join('・');
+  let html=`<div class="modal-handle"></div><div class="modal-close-row"><h2>📅 ${dateKey}</h2><button class="modal-close" onclick="document.getElementById('modal-overlay').classList.remove('open')">✕</button></div>`;
   if(r.pandaCard)html+=`<div class="m-section"><div class="m-label">🐼 熊貓之道</div><div class="m-value">${r.pandaCard}</div></div>`;
   if(r.omenCard)html+=`<div class="m-section"><div class="m-label">🌿 預兆神諭卡</div><div class="m-value">${r.omenCard}</div></div>`;
-  if(r.card)html+=`<div class="m-section"><div class="m-label">🃏 偉特塔羅</div><div class="m-value">${r.card} ${r.ori}</div></div>`;
+  if(weiteCards)html+=`<div class="m-section"><div class="m-label">🃏 偉特塔羅</div><div class="m-value">${weiteCards}</div></div>`;
   if(r.lightCard)html+=`<div class="m-section"><div class="m-label">✨ 光能神諭卡</div><div class="m-value">${r.lightCard}</div></div>`;
   if(r.lenCard)html+=`<div class="m-section"><div class="m-label">🃏 雷諾曼</div><div class="m-value">${r.lenCard}</div></div>`;
   if(r.turtle)html+=`<div class="m-section"><div class="m-label">🐢 今日龍龜</div><div class="m-value">${r.turtle}</div></div>`;
   html+=`<div class="m-divider"></div>`;
   if(r.event)html+=`<div class="m-section"><div class="m-label">📝 今日事件</div><div class="m-value">${r.event}</div></div>`;
   if(r.question)html+=`<div class="m-section"><div class="m-label">💬 占卜問題</div><div class="m-value">${r.question}</div></div>`;
-  if(r.aiAnswer)html+=`<div class="m-section"><div class="m-label">🤖 AI 解答</div><div class="m-value">${r.aiAnswer}</div></div>`;
   if(r.mantra)html+=`<div class="m-section" style="text-align:center"><div class="fortune-mantra">${r.mantra}</div></div>`;
   document.getElementById('modal-content').innerHTML=html;
   document.getElementById('modal-overlay').classList.add('open');
@@ -1058,6 +1074,7 @@ function closeModal(e){if(e.target===document.getElementById('modal-overlay'))do
 
 loadData();
 initRecordDate();
+buildTurtleSelector();
 </script>
 </body>
 </html>
