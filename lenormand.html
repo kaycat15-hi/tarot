@@ -1,1 +1,488 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>雷諾曼占卜庫 🔮</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  body { background: #0f0a1e; font-family: -apple-system, 'Noto Sans TC', sans-serif; color: #e8e0f0; min-height: 100vh; padding-bottom: 90px; font-size: 15px; }
 
+  .header { background: #1a1030; padding: 28px 24px 20px; border-bottom: 1px solid #2d1f4e; position: sticky; top: 0; z-index: 100; }
+  .header h1 { font-size: 22px; font-weight: 900; letter-spacing: -0.5px; color: #e8d5ff; }
+  .header p  { font-size: 11px; font-weight: 700; color: #9b6dff; letter-spacing: 3px; margin-top: 3px; }
+
+  .nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(26,16,48,0.97); backdrop-filter: blur(12px); border-top: 1px solid #2d1f4e; display: flex; justify-content: space-around; align-items: center; padding: 12px 32px 20px; z-index: 100; }
+  .nav-btn { background: none; border: none; color: #4a3570; cursor: pointer; padding: 8px; border-radius: 12px; transition: color .2s; display: flex; align-items: center; justify-content: center; }
+  .nav-btn.active { color: #9b6dff; }
+  .nav-add { background: #7c3aed; border: none; color: #fff; width: 52px; height: 52px; border-radius: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 16px rgba(124,58,237,.4); font-size: 28px; font-weight: 300; line-height: 1; transition: background .2s; }
+  .nav-add:hover { background: #6d28d9; }
+
+  .page { display: none; padding: 20px 16px; }
+  .page.active { display: block; }
+
+  .card { background: #1a1030; border-radius: 28px; padding: 20px; border: 1px solid #2d1f4e; margin-bottom: 16px; }
+
+  input[type=date], input[type=text], select, textarea {
+    width: 100%; border: 1px solid #2d1f4e; border-radius: 14px;
+    padding: 13px 15px; font-size: 15px; font-family: inherit;
+    background: #110827; color: #e8e0f0; appearance: none; outline: none;
+  }
+  input[type=date]:focus, input[type=text]:focus, select:focus, textarea:focus { border-color: #7c3aed; }
+  textarea { resize: none; min-height: 100px; line-height: 1.7; }
+  select option { background: #1a1030; }
+
+  .label { font-size: 11px; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 5px; display: block; }
+  .label.purple { color: #9b6dff; }
+  .label.teal   { color: #2dd4bf; }
+  .label.green  { color: #4ade80; }
+  .label.rose   { color: #fb7185; }
+  .label.amber  { color: #fbbf24; }
+  .sublabel { font-size: 10px; color: #4a3570; margin-bottom: 6px; display: block; }
+
+  .divider { border: none; border-top: 1px solid #2d1f4e; margin: 16px 0; }
+
+  /* 三張牌區 */
+  .cards-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+  .card-slot { display: flex; flex-direction: column; gap: 6px; }
+  .card-slot-label { font-size: 10px; font-weight: 900; text-align: center; letter-spacing: 1px; }
+  .card-slot-label.left   { color: #9b6dff; }
+  .card-slot-label.center { color: #e8d5ff; }
+  .card-slot-label.right  { color: #9b6dff; }
+  .card-slot select { font-size: 13px; padding: 10px 10px; text-align: center; }
+
+  /* 牌義展開 */
+  .meaning-wrap { margin-top: 10px; }
+  .meaning-item { background: #110827; border: 1px solid #2d1f4e; border-radius: 16px; padding: 12px 14px; margin-bottom: 8px; }
+  .meaning-card-name { font-size: 12px; font-weight: 900; color: #9b6dff; margin-bottom: 6px; }
+  .meaning-keywords { font-size: 12px; color: #c4b5fd; line-height: 1.6; }
+  .meaning-pos { font-size: 11px; color: #4ade80; margin-top: 4px; }
+  .meaning-neg { font-size: 11px; color: #fb7185; margin-top: 2px; }
+
+  /* 按鈕 */
+  .btn-main { width: 100%; background: #7c3aed; color: #fff; border: none; border-radius: 14px; padding: 16px; font-size: 15px; font-weight: 900; cursor: pointer; letter-spacing: 1px; transition: background .2s; }
+  .btn-main:hover { background: #6d28d9; }
+
+  /* 月曆 */
+  .cal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+  .cal-header h2 { font-size: 17px; font-weight: 900; color: #e8d5ff; }
+  .cal-nav { background: none; border: none; cursor: pointer; padding: 8px; border-radius: 10px; font-size: 20px; color: #9b6dff; }
+  .cal-nav:hover { background: #2d1f4e; }
+  .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+  .cal-dow { font-size: 11px; font-weight: 900; color: #4a3570; text-align: center; padding: 4px 0; }
+  .cal-day { aspect-ratio: 1; border-radius: 10px; border: none; cursor: pointer; font-size: 12px; font-weight: 700; color: #4a3570; background: #110827; position: relative; display: flex; align-items: center; justify-content: center; transition: all .15s; }
+  .cal-day:hover { background: #2d1f4e; }
+  .cal-day.has-record { background: #7c3aed; color: #fff; box-shadow: 0 2px 8px rgba(124,58,237,.4); }
+  .cal-day.has-record:hover { background: #6d28d9; }
+  .cal-day.today-mark { outline: 2px solid #7c3aed; }
+  .cal-day.cal-empty { background: transparent !important; cursor: default !important; }
+  .cal-dot { position: absolute; top: 3px; right: 3px; width: 5px; height: 5px; background: #4ade80; border-radius: 50%; }
+
+  /* 記錄列表 */
+  .record-list { margin-top: 4px; }
+  .record-item { background: #1a1030; border: 1px solid #2d1f4e; border-radius: 20px; padding: 16px; margin-bottom: 10px; cursor: pointer; transition: border-color .2s; }
+  .record-item:hover { border-color: #7c3aed; }
+  .record-item-date { font-size: 11px; color: #9b6dff; font-weight: 900; margin-bottom: 6px; }
+  .record-item-q { font-size: 14px; font-weight: 700; color: #e8d5ff; margin-bottom: 8px; }
+  .record-item-cards { display: flex; gap: 6px; flex-wrap: wrap; }
+  .record-item-card { background: #2d1f4e; border-radius: 99px; padding: 4px 10px; font-size: 11px; font-weight: 700; color: #c4b5fd; }
+  .record-item-verify { font-size: 11px; color: #4ade80; margin-top: 8px; }
+  .verified-dot { display: inline-block; width: 6px; height: 6px; background: #4ade80; border-radius: 50%; margin-right: 4px; }
+
+  /* 牌義庫 */
+  .lib-card { background: #1a1030; border-radius: 20px; padding: 16px; border: 1px solid #2d1f4e; margin-bottom: 10px; }
+  .lib-num { font-size: 10px; font-weight: 900; color: #9b6dff; letter-spacing: 2px; }
+  .lib-name { font-size: 18px; font-weight: 900; color: #e8d5ff; margin: 3px 0 8px; }
+  .lib-keywords { font-size: 13px; color: #c4b5fd; line-height: 1.6; margin-bottom: 8px; }
+  .lib-pn { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .lib-pos { background: #052e16; border-radius: 12px; padding: 10px; font-size: 12px; color: #4ade80; }
+  .lib-neg { background: #2d0a14; border-radius: 12px; padding: 10px; font-size: 12px; color: #fb7185; }
+  .lib-pn-label { font-size: 10px; font-weight: 900; letter-spacing: 1px; margin-bottom: 4px; display: block; }
+
+  .save-indicator { font-size: 11px; color: #4a3570; text-align: center; padding: 8px; }
+  .save-indicator.saved { color: #4ade80; }
+  .toast { position: fixed; top: 80px; left: 50%; transform: translateX(-50%); background: #2d1f4e; color: #e8d5ff; padding: 10px 22px; border-radius: 99px; font-size: 13px; font-weight: 700; z-index: 999; opacity: 0; transition: opacity .3s; pointer-events: none; white-space: nowrap; }
+  .toast.show { opacity: 1; }
+  .mt12 { margin-top: 12px; }
+  .mt8  { margin-top: 8px; }
+  .empty { text-align: center; padding: 48px 0; color: #4a3570; }
+  .empty p:first-child { font-size: 15px; font-weight: 700; }
+  .empty p:last-child  { font-size: 12px; margin-top: 6px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>雷諾曼占卜庫 🔮</h1>
+  <p>LENORMAND READING LOG</p>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- 占卜記錄頁 -->
+<div class="page" id="page-today">
+  <div class="card">
+
+    <!-- 日期 -->
+    <input type="date" id="inp-date" />
+
+    <!-- 問題 -->
+    <div class="mt12">
+      <span class="label purple">占卜問題 🔮</span>
+      <input type="text" id="inp-question" placeholder="你想問什麼？" />
+    </div>
+
+    <hr class="divider">
+
+    <!-- 三張牌 -->
+    <div>
+      <span class="label teal">牌面 ✦ 三張牌陣</span>
+      <span class="sublabel">左：過去／背景　中：核心　右：結果／建議</span>
+      <div class="cards-row">
+        <div class="card-slot">
+          <div class="card-slot-label left">左</div>
+          <select id="sel-card1" onchange="onCardChange()"><option value="">選牌</option></select>
+        </div>
+        <div class="card-slot">
+          <div class="card-slot-label center">中</div>
+          <select id="sel-card2" onchange="onCardChange()"><option value="">選牌</option></select>
+        </div>
+        <div class="card-slot">
+          <div class="card-slot-label right">右</div>
+          <select id="sel-card3" onchange="onCardChange()"><option value="">選牌</option></select>
+        </div>
+      </div>
+
+      <!-- 牌義參考自動帶出 -->
+      <div class="meaning-wrap" id="meaning-wrap" style="display:none">
+        <div class="mt8" style="font-size:11px;color:#4a3570;font-weight:700;letter-spacing:1px;margin-bottom:8px;">✦ 牌義參考</div>
+        <div id="meaning-items"></div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- 解析備註 -->
+    <div>
+      <span class="label rose">解析備註 ✨</span>
+      <span class="sublabel">從 Claude 對話貼入</span>
+      <textarea id="inp-analysis" placeholder="把 Claude 的解析貼在這裡…"></textarea>
+    </div>
+
+    <hr class="divider">
+
+    <!-- 預計驗證時間 -->
+    <div>
+      <span class="label amber">預計驗證時間 🕒</span>
+      <input type="text" id="inp-verify-time" placeholder="例：當天、三天內、下週、一個月後…" />
+    </div>
+
+    <hr class="divider">
+
+    <!-- 驗證紀錄 -->
+    <div>
+      <span class="label green">驗證紀錄 ✅</span>
+      <span class="sublabel">事後回來填，準不準？怎麼顯現？</span>
+      <textarea id="inp-verify" placeholder="結果如何？牌面能量怎麼對應到現實？" style="min-height:90px"></textarea>
+    </div>
+
+    <div class="mt12">
+      <button class="btn-main" onclick="saveRecord()">💾 儲存紀錄</button>
+    </div>
+    <div class="save-indicator" id="save-indicator"></div>
+  </div>
+</div>
+
+<!-- 月曆 / 記錄列表 -->
+<div class="page active" id="page-calendar">
+  <div class="card">
+    <div class="cal-header">
+      <button class="cal-nav" onclick="changeMonth(-1)">‹</button>
+      <h2 id="cal-title"></h2>
+      <button class="cal-nav" onclick="changeMonth(1)">›</button>
+    </div>
+    <div class="cal-grid" id="cal-dow"></div>
+    <div class="cal-grid mt8" id="cal-days"></div>
+  </div>
+
+  <div class="record-list" id="record-list"></div>
+
+  <div class="empty" id="cal-empty">
+    <p>還沒有占卜記錄</p>
+    <p>點下方 ＋ 開始第一筆</p>
+  </div>
+</div>
+
+<!-- 牌義庫 -->
+<div class="page" id="page-lib">
+  <div id="lib-list"></div>
+</div>
+
+<nav class="nav">
+  <button class="nav-btn active" id="nav-calendar" onclick="goPage('calendar')">
+    <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+  </button>
+  <button class="nav-add" onclick="newEntry()">＋</button>
+  <button class="nav-btn" id="nav-lib" onclick="goPage('lib')">
+    <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+  </button>
+</nav>
+
+<script>
+const STORAGE_KEY = 'lenormand-records-v1';
+
+// ── 36 張雷諾曼牌義 ──────────────────────────────────────────
+const LENO = [
+  { id:1,  name:"騎士",   sym:"🐎", keywords:"消息、速度、來訪者、行動快速", pos:"好消息快速到來、行動力強", neg:"衝動魯莽、壞消息快速傳來" },
+  { id:2,  name:"苜蓿",   sym:"🍀", keywords:"小幸運、機會、短暫的好運", pos:"小確幸、把握眼前機會", neg:"運氣不穩定、機會稍縱即逝" },
+  { id:3,  name:"船",     sym:"⛵", keywords:"旅行、遠方、商業、出發", pos:"出發旅行、遠距離機會、拓展", neg:"漂泊不定、方向不明、延遲" },
+  { id:4,  name:"房子",   sym:"🏠", keywords:"家庭、穩定、安全感、傳統", pos:"家庭和諧、安定踏實", neg:"家庭問題、過於保守封閉" },
+  { id:5,  name:"樹",     sym:"🌳", keywords:"健康、生命力、成長、根基", pos:"身體健康、緩慢但穩定成長", neg:"健康問題、成長緩慢、根基動搖" },
+  { id:6,  name:"雲",     sym:"☁️", keywords:"不確定、混亂、疑慮、變化", pos:"暫時的困惑即將消散", neg:"混亂持續、疑慮加深、障礙" },
+  { id:7,  name:"蛇",     sym:"🐍", keywords:"誘惑、複雜、欲望、謀略", pos:"智慧、轉化、吸引力強", neg:"背叛、謊言、危險的誘惑" },
+  { id:8,  name:"棺材",   sym:"⬛", keywords:"結束、轉化、放下、死亡（象徵）", pos:"舊事物結束帶來新開始", neg:"失落、疾病、強迫性結束" },
+  { id:9,  name:"花束",   sym:"💐", keywords:"禮物、驚喜、美好、感謝", pos:"收到好意、關係和諧、喜悅", neg:"表面功夫、虛偽的讚美" },
+  { id:10, name:"鐮刀",   sym:"⚔️", keywords:"突然、切斷、決定、危險", pos:"果斷決定、切斷不好的連結", neg:"突然的意外或傷害、衝突" },
+  { id:11, name:"鞭子",   sym:"🪢", keywords:"衝突、重複、爭論、紀律", pos:"透過磨練成長、紀律帶來進步", neg:"爭吵不斷、反覆的問題" },
+  { id:12, name:"鳥",     sym:"🐦", keywords:"對話、溝通、焦慮、一對", pos:"愉快的交流、消息傳遞", neg:"閒言閒語、神經緊張、謠言" },
+  { id:13, name:"小孩",   sym:"👶", keywords:"新開始、純真、小事、幼稚", pos:"新鮮的開始、天真無邪的關係", neg:"不成熟、輕率、小問題" },
+  { id:14, name:"狐狸",   sym:"🦊", keywords:"謀略、自保、工作、懷疑", pos:"聰明應對、工作上的靈活", neg:"欺騙、不誠實、被誤導" },
+  { id:15, name:"熊",     sym:"🐻", keywords:"力量、保護、財務、權威", pos:"強大的支持、財務穩健", neg:"霸道、過度控制、財務壓力" },
+  { id:16, name:"星星",   sym:"⭐", keywords:"希望、指引、靈感、夢想", pos:"光明前景、夢想實現、靈感湧現", neg:"不切實際、夢想遙遠" },
+  { id:17, name:"鸛鳥",   sym:"🦢", keywords:"變化、移動、新階段、搬遷", pos:"正向的改變、進入新階段", neg:"強迫性的改變、不穩定" },
+  { id:18, name:"狗",     sym:"🐕", keywords:"友誼、忠誠、信任、支持", pos:"可靠的朋友、忠誠的關係", neg:"盲目的忠誠、依賴他人" },
+  { id:19, name:"塔",     sym:"🏛️", keywords:"機構、孤獨、官方、界線", pos:"自我保護、官方認可、穩固", neg:"孤立、官僚阻礙、疏離感" },
+  { id:20, name:"花園",   sym:"🌷", keywords:"社交、公眾、聚會、網絡", pos:"社交活躍、公眾認可", neg:"暴露在公眾眼光下、流言" },
+  { id:21, name:"山",     sym:"⛰️", keywords:"阻礙、挑戰、延遲、困難", pos:"克服困難後的成就感", neg:"重大阻礙、長期挑戰、停滯" },
+  { id:22, name:"十字路", sym:"🔀", keywords:"選擇、方向、自由意志、岔路", pos:"有選擇的自由、找到方向", neg:"選擇困難、迷失方向" },
+  { id:23, name:"老鼠",   sym:"🐀", keywords:"損失、消耗、壓力、偷竊", pos:"找出消耗源並處理", neg:"資源流失、壓力累積、小偷" },
+  { id:24, name:"心",     sym:"❤️", keywords:"愛情、感情、喜悅、熱情", pos:"真心的愛、感情順利", neg:"感情創傷、過於感情用事" },
+  { id:25, name:"戒指",   sym:"💍", keywords:"承諾、合約、循環、關係", pos:"承諾兌現、合約順利、關係穩固", neg:"束縛、無法結束的循環" },
+  { id:26, name:"書",     sym:"📖", keywords:"秘密、知識、學習、隱藏", pos:"學習成長、重要知識待發現", neg:"隱瞞、秘密被藏起來" },
+  { id:27, name:"信件",   sym:"✉️", keywords:"消息、文件、溝通、書面", pos:"重要消息到來、文件順利", neg:"壞消息、文件問題、溝通不良" },
+  { id:28, name:"男人",   sym:"👨", keywords:"男性人物、主體（男）、陽性能量", pos:"重要男性帶來幫助", neg:"男性帶來麻煩或壓力" },
+  { id:29, name:"女人",   sym:"👩", keywords:"女性人物、主體（女）、陰性能量", pos:"重要女性帶來幫助", neg:"女性帶來麻煩或壓力" },
+  { id:30, name:"百合",   sym:"🌸", keywords:"純潔、和諧、成熟、家庭", pos:"和平、純潔的關係、老年安穩", neg:"壓抑的情感、道德束縛" },
+  { id:31, name:"太陽",   sym:"☀️", keywords:"成功、活力、正面、清晰", pos:"事情順利、充滿能量、勝利", neg:"驕傲自大、過於耀眼" },
+  { id:32, name:"月亮",   sym:"🌙", keywords:"情感、直覺、名聲、夜晚", pos:"直覺準確、情感豐富、得到認可", neg:"情緒化、幻想過多、名聲受損" },
+  { id:33, name:"鑰匙",   sym:"🗝️", keywords:"解答、開啟、確定、成功", pos:"找到答案、事情確定、成功開啟", neg:"答案被隱藏、無法突破" },
+  { id:34, name:"魚",     sym:"🐟", keywords:"金錢、財務、豐盛、流動", pos:"財務順利、收入增加、豐盛流動", neg:"財務流失、過度消費" },
+  { id:35, name:"錨",     sym:"⚓", keywords:"穩定、堅持、工作、長期", pos:"穩固長期的成果、堅定不移", neg:"停滯不前、過於固執" },
+  { id:36, name:"十字",   sym:"✝️", keywords:"命運、負擔、業力、必然", pos:"接受命運、業力清償", neg:"沉重的負擔、無法避免的困難" },
+];
+
+let records = [];
+let calYear = new Date().getFullYear();
+let calMon  = new Date().getMonth();
+
+// ── localStorage ─────────────────────────────────────────────
+function loadFromStorage() {
+  try { const r = localStorage.getItem(STORAGE_KEY); return r ? JSON.parse(r) : []; }
+  catch(e) { return []; }
+}
+function saveToStorage() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+    const el = document.getElementById('save-indicator');
+    if (el) { el.textContent = '✓ 已自動儲存'; el.className = 'save-indicator saved'; setTimeout(() => { el.textContent = ''; el.className = 'save-indicator'; }, 2000); }
+  } catch(e) {}
+}
+
+// ── 初始化 ───────────────────────────────────────────────────
+function init() {
+  records = loadFromStorage();
+  document.getElementById('inp-date').value = todayStr();
+
+  // 填選單
+  ['sel-card1','sel-card2','sel-card3'].forEach(id => {
+    const sel = document.getElementById(id);
+    LENO.forEach(c => sel.innerHTML += `<option value="${c.name}">${c.id}. ${c.sym} ${c.name}</option>`);
+  });
+
+  // 月曆週標
+  const dow = document.getElementById('cal-dow');
+  ['日','一','二','三','四','五','六'].forEach(d => dow.innerHTML += `<div class="cal-dow">${d}</div>`);
+
+  // 牌義庫
+  const lib = document.getElementById('lib-list');
+  LENO.forEach(c => {
+    lib.innerHTML += `
+    <div class="lib-card">
+      <div class="lib-num">#${c.id} LENORMAND</div>
+      <div class="lib-name">${c.sym} ${c.name}</div>
+      <div class="lib-keywords">${c.keywords}</div>
+      <div class="lib-pn">
+        <div class="lib-pos"><span class="lib-pn-label">▲ 正向</span>${c.pos}</div>
+        <div class="lib-neg"><span class="lib-pn-label">▼ 留意</span>${c.neg}</div>
+      </div>
+    </div>`;
+  });
+
+  renderCalendar();
+}
+
+function todayStr() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 2000);
+}
+
+// ── 牌義自動帶出 ─────────────────────────────────────────────
+function onCardChange() {
+  const names = [
+    document.getElementById('sel-card1').value,
+    document.getElementById('sel-card2').value,
+    document.getElementById('sel-card3').value,
+  ].filter(Boolean);
+
+  const wrap = document.getElementById('meaning-wrap');
+  const items = document.getElementById('meaning-items');
+  if (names.length === 0) { wrap.style.display = 'none'; return; }
+
+  wrap.style.display = 'block';
+  items.innerHTML = '';
+  const positions = ['左（背景）','中（核心）','右（結果）'];
+  names.forEach((name, idx) => {
+    const info = LENO.find(c => c.name === name);
+    if (!info) return;
+    items.innerHTML += `
+    <div class="meaning-item">
+      <div class="meaning-card-name">${positions[idx]}　${info.sym} ${info.name}</div>
+      <div class="meaning-keywords">${info.keywords}</div>
+      <div class="meaning-pos">▲ ${info.pos}</div>
+      <div class="meaning-neg">▼ ${info.neg}</div>
+    </div>`;
+  });
+}
+
+// ── 頁面切換 ─────────────────────────────────────────────────
+function goPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  const nb = document.getElementById('nav-'+name);
+  if (nb) nb.classList.add('active');
+  if (name === 'calendar') renderCalendar();
+}
+function newEntry() {
+  document.getElementById('inp-date').value        = todayStr();
+  document.getElementById('inp-question').value    = '';
+  document.getElementById('sel-card1').value       = '';
+  document.getElementById('sel-card2').value       = '';
+  document.getElementById('sel-card3').value       = '';
+  document.getElementById('inp-analysis').value    = '';
+  document.getElementById('inp-verify-time').value = '';
+  document.getElementById('inp-verify').value      = '';
+  document.getElementById('meaning-wrap').style.display = 'none';
+  goPage('today');
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+}
+
+// ── 儲存 ─────────────────────────────────────────────────────
+function saveRecord() {
+  const date = document.getElementById('inp-date').value;
+  if (!date) { toast('請選擇日期'); return; }
+  const record = {
+    date,
+    question   : document.getElementById('inp-question').value,
+    cards      : [
+      document.getElementById('sel-card1').value,
+      document.getElementById('sel-card2').value,
+      document.getElementById('sel-card3').value,
+    ].filter(Boolean),
+    analysis   : document.getElementById('inp-analysis').value,
+    verifyTime : document.getElementById('inp-verify-time').value,
+    verify     : document.getElementById('inp-verify').value,
+  };
+  // 同一天同一個問題才覆蓋，不同問題可以多筆
+  const sameIdx = records.findIndex(r => r.date === date && r.question === record.question);
+  if (sameIdx >= 0) records[sameIdx] = record;
+  else records.unshift(record);
+  saveToStorage();
+  renderCalendar();
+  toast('✓ 已儲存');
+  setTimeout(() => goPage('calendar'), 600);
+}
+
+// ── 載入紀錄 ─────────────────────────────────────────────────
+function loadRecord(idx) {
+  const record = records[idx];
+  if (!record) return;
+  document.getElementById('inp-date').value        = record.date;
+  document.getElementById('inp-question').value    = record.question    || '';
+  document.getElementById('sel-card1').value       = record.cards?.[0]  || '';
+  document.getElementById('sel-card2').value       = record.cards?.[1]  || '';
+  document.getElementById('sel-card3').value       = record.cards?.[2]  || '';
+  document.getElementById('inp-analysis').value    = record.analysis    || '';
+  document.getElementById('inp-verify-time').value = record.verifyTime  || '';
+  document.getElementById('inp-verify').value      = record.verify      || '';
+  onCardChange();
+  goPage('today');
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+}
+
+// ── 月曆 ─────────────────────────────────────────────────────
+function changeMonth(dir) {
+  calMon += dir;
+  if (calMon < 0)  { calMon = 11; calYear--; }
+  if (calMon > 11) { calMon = 0;  calYear++; }
+  renderCalendar();
+}
+function renderCalendar() {
+  document.getElementById('cal-title').textContent = `${calYear} 年 ${calMon+1} 月`;
+  const firstDay  = new Date(calYear, calMon, 1).getDay();
+  const daysTotal = new Date(calYear, calMon+1, 0).getDate();
+  const today     = todayStr();
+  const monthRecords = records.filter(r => { const [y,m] = r.date.split('-').map(Number); return y===calYear && m===calMon+1; });
+
+  // 月曆格子（有記錄的日期亮起）
+  const datesWithRecords = [...new Set(monthRecords.map(r => r.date))];
+  let html = '';
+  for (let i = 0; i < firstDay; i++) html += `<div class="cal-day cal-empty"></div>`;
+  for (let i = 1; i <= daysTotal; i++) {
+    const ds  = `${calYear}-${String(calMon+1).padStart(2,'0')}-${String(i).padStart(2,'0')}`;
+    const hasRec = datesWithRecords.includes(ds);
+    const hasVerify = monthRecords.filter(r=>r.date===ds).some(r=>r.verify);
+    let cls = 'cal-day';
+    if (hasRec) cls += ' has-record';
+    if (ds === today && !hasRec) cls += ' today-mark';
+    const dot   = hasVerify ? '<span class="cal-dot"></span>' : '';
+    html += `<button class="${cls}">${i}${dot}</button>`;
+  }
+  document.getElementById('cal-days').innerHTML = html;
+
+  // 本月記錄列表
+  const listEl = document.getElementById('record-list');
+  const empty  = document.getElementById('cal-empty');
+  if (records.length === 0) {
+    empty.style.display = 'block'; listEl.innerHTML = ''; return;
+  }
+  empty.style.display = 'none';
+
+  // 顯示所有記錄（最新在前）
+  let listHTML = '';
+  records.forEach((r, idx) => {
+    const cardTags = (r.cards||[]).map(c => {
+      const info = LENO.find(x => x.name === c);
+      return `<span class="record-item-card">${info ? info.sym : ''} ${c}</span>`;
+    }).join('');
+    const verifiedBadge = r.verify ? `<div class="record-item-verify"><span class="verified-dot"></span>已驗證</div>` : '';
+    listHTML += `
+    <div class="record-item" onclick="loadRecord(${idx})">
+      <div class="record-item-date">${r.date}${r.verifyTime ? `　🕒 ${r.verifyTime}` : ''}</div>
+      <div class="record-item-q">${r.question || '（無問題記錄）'}</div>
+      <div class="record-item-cards">${cardTags}</div>
+      ${verifiedBadge}
+    </div>`;
+  });
+  listEl.innerHTML = listHTML;
+}
+
+init();
+</script>
+</body>
+</html>
