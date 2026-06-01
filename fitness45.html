@@ -1,0 +1,1264 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>45天減脂計畫</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&family=DM+Mono:wght@400;500&family=Playfair+Display:ital,wght@1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #FAF6F0;
+    --warm: #F0E8DC;
+    --blush: #E8C4A8;
+    --clay: #C4896A;
+    --bark: #8B5E47;
+    --dark: #2C1F17;
+    --moss: #6B8C6E;
+    --moss-light: #A8C4AA;
+    --red: #C44A3A;
+    --gold: #C4A44A;
+    --shadow: rgba(44,31,23,0.1);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--cream);
+    color: var(--dark);
+    font-family: 'Noto Serif TC', serif;
+    min-height: 100vh;
+    padding-bottom: 70px;
+  }
+  .header {
+    background: var(--dark);
+    padding: 20px 20px 16px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -40px; left: -40px;
+    width: 160px; height: 160px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(196,137,106,0.3), transparent 70%);
+  }
+  .header-subtitle {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--blush);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .header-title {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 26px;
+    color: var(--cream);
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+  }
+  .header-date {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--blush);
+    opacity: 0.7;
+  }
+  .progress-section {
+    background: var(--dark);
+    padding: 0 20px 20px;
+  }
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  .progress-label span {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--blush);
+    letter-spacing: 1px;
+  }
+  .progress-bar-bg {
+    background: rgba(255,255,255,0.1);
+    border-radius: 20px;
+    height: 8px;
+    overflow: hidden;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    border-radius: 20px;
+    background: linear-gradient(90deg, var(--clay), var(--gold));
+    transition: width 0.8s ease;
+  }
+  .phase-badge {
+    display: inline-block;
+    background: var(--clay);
+    color: var(--cream);
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    margin-top: 10px;
+  }
+  .day-row {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+    padding: 12px 10px 0;
+    flex-wrap: wrap;
+  }
+  .day-dot {
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    font-family: 'DM Mono', monospace;
+    font-size: 7px;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(255,255,255,0.08);
+    color: var(--blush);
+    opacity: 0.45;
+  }
+  .day-dot.done { background: var(--clay); color: var(--cream); opacity: 1; }
+  .day-dot.today { background: var(--gold); color: var(--dark); opacity: 1; font-weight: 700; }
+  .alert-banner {
+    margin: 14px 16px 0;
+    padding: 14px 16px;
+    border-radius: 12px;
+    font-size: 13px;
+    line-height: 1.6;
+    display: none;
+    animation: slideDown 0.4s ease;
+  }
+  .alert-banner.show { display: block; }
+  @keyframes slideDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .alert-warning { background: #FFF0EE; border: 1.5px solid var(--red); color: var(--red); }
+  .alert-success { background: #EEF5EE; border: 1.5px solid var(--moss); color: #3D6B40; }
+  .alert-gold { background: #FDF6E3; border: 1.5px solid var(--gold); color: #7A6020; }
+  .alert-info { background: #EEF3FF; border: 1.5px solid #7090C4; color: #3A5490; }
+  .alert-banner .alert-title { font-weight: 700; font-size: 14px; margin-bottom: 4px; }
+  .section {
+    margin: 14px 16px 0;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 2px 12px var(--shadow);
+    overflow: hidden;
+  }
+  .section-header {
+    background: var(--warm);
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid var(--blush);
+  }
+  .section-icon { font-size: 16px; }
+  .section-title {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--bark);
+    text-transform: uppercase;
+  }
+  .section-body { padding: 16px; }
+  label {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: var(--bark);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+  }
+  input[type="text"], input[type="number"], input[type="time"], textarea, select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1.5px solid var(--warm);
+    border-radius: 10px;
+    font-family: 'Noto Serif TC', serif;
+    font-size: 13px;
+    color: var(--dark);
+    background: var(--cream);
+    outline: none;
+    transition: border-color 0.2s;
+    -webkit-appearance: none;
+  }
+  input:focus, textarea:focus, select:focus { border-color: var(--clay); }
+  textarea { resize: none; height: 60px; }
+  .form-row { margin-bottom: 12px; }
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .toggle-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--warm);
+  }
+  .toggle-row:last-child { border-bottom: none; }
+  .toggle-label { font-size: 13px; color: var(--dark); line-height: 1.4; }
+  .toggle-label small { display: block; font-size: 10px; color: var(--clay); margin-top: 2px; }
+  .toggle {
+    width: 44px; height: 24px;
+    background: #D8C8BC;
+    border-radius: 12px;
+    position: relative;
+    cursor: pointer;
+    transition: background 0.3s;
+    flex-shrink: 0;
+    margin-left: 12px;
+  }
+  .toggle.on { background: var(--moss); }
+  .toggle.warning.on { background: var(--red); }
+  .toggle::after {
+    content: '';
+    position: absolute;
+    width: 18px; height: 18px;
+    background: white;
+    border-radius: 50%;
+    top: 3px; left: 3px;
+    transition: left 0.3s;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+  }
+  .toggle.on::after { left: 23px; }
+
+  /* Workout card */
+  .workout-card {
+    background: var(--cream);
+    border: 1.5px solid var(--warm);
+    border-radius: 12px;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+  }
+  .workout-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  .workout-card-name {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--bark);
+  }
+  .workout-card-badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    background: var(--clay);
+    color: white;
+    padding: 2px 8px;
+    border-radius: 10px;
+  }
+  .workout-detail-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .workout-chip {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    background: var(--warm);
+    color: var(--bark);
+    padding: 3px 8px;
+    border-radius: 8px;
+  }
+
+  /* Body metrics for Sunday */
+  .measure-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .measure-box {
+    background: var(--cream);
+    border: 1.5px solid var(--blush);
+    border-radius: 12px;
+    padding: 12px;
+    text-align: center;
+  }
+  .measure-box label { margin-bottom: 6px; font-size: 10px; text-align: center; }
+  .measure-val {
+    font-family: 'DM Mono', monospace;
+    font-size: 22px;
+    color: var(--clay);
+    line-height: 1;
+  }
+  .measure-unit {
+    font-size: 10px;
+    color: var(--bark);
+    margin-top: 2px;
+  }
+
+  /* Score */
+  .score-display {
+    text-align: center;
+    padding: 10px 0;
+  }
+  .score-number {
+    font-family: 'DM Mono', monospace;
+    font-size: 56px;
+    font-weight: 500;
+    line-height: 1;
+    color: var(--clay);
+    margin-bottom: 4px;
+  }
+  .score-number.great { color: var(--moss); }
+  .score-number.poor { color: var(--red); }
+  .score-label {
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--bark);
+    text-transform: uppercase;
+  }
+  .deduct-list { margin-top: 14px; }
+  .deduct-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 7px 12px;
+    border-radius: 8px;
+    margin-bottom: 5px;
+    font-size: 12px;
+  }
+  .deduct-item.deduct { background: #FFF0EE; color: var(--red); }
+  .deduct-item.ok { background: #EEF5EE; color: #3D6B40; }
+
+  /* Chart */
+  .chart-wrap {
+    position: relative;
+    height: 120px;
+    margin: 8px 0;
+  }
+  canvas { width: 100% !important; }
+
+  .btn-save {
+    width: calc(100% - 32px);
+    margin: 14px 16px 0;
+    padding: 16px;
+    background: var(--dark);
+    color: var(--cream);
+    border: none;
+    border-radius: 14px;
+    font-family: 'Noto Serif TC', serif;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-save:active { transform: scale(0.98); background: var(--bark); }
+
+  .archive-item {
+    border-bottom: 1px solid var(--warm);
+    padding: 12px 0;
+  }
+  .archive-item:last-child { border-bottom: none; }
+  .archive-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+  }
+  .archive-date { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--clay); }
+  .archive-score { font-family: 'DM Mono', monospace; font-size: 13px; font-weight: 500; }
+  .archive-preview { font-size: 12px; color: #888; }
+
+  .tab-nav {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: var(--dark);
+    display: flex;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    z-index: 100;
+  }
+  .tab-btn {
+    flex: 1;
+    padding: 10px 4px 8px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .tab-btn .tab-icon { font-size: 18px; display: block; }
+  .tab-btn .tab-text {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 1px;
+    color: rgba(250,246,240,0.4);
+    display: block;
+    margin-top: 2px;
+  }
+  .tab-btn.active .tab-text { color: var(--blush); }
+  .page { display: none; }
+  .page.active { display: block; }
+  .spacer14 { height: 14px; }
+
+  /* Sunday measure hint banner */
+  .sunday-banner {
+    margin: 14px 16px 0;
+    padding: 14px 16px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #2C1F17, #5A3A28);
+    color: var(--blush);
+    display: none;
+  }
+  .sunday-banner.show { display: block; }
+  .sunday-banner .sb-title { font-size: 15px; font-weight: 700; margin-bottom: 4px; color: var(--cream); }
+  .sunday-banner .sb-sub { font-size: 11px; opacity: 0.8; letter-spacing: 1px; }
+
+  /* Modal */
+  .modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.6);
+    z-index: 200;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .modal-overlay.show { display: flex; }
+  .modal-box {
+    background: var(--cream);
+    border-radius: 20px;
+    padding: 28px 24px;
+    max-width: 340px;
+    width: 100%;
+    text-align: center;
+    animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+  @keyframes popIn {
+    from { transform: scale(0.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+  .modal-emoji { font-size: 44px; margin-bottom: 12px; }
+  .modal-title { font-size: 18px; font-weight: 700; color: var(--red); margin-bottom: 8px; }
+  .modal-body { font-size: 13px; color: var(--dark); line-height: 1.7; margin-bottom: 20px; }
+  .modal-btn {
+    background: var(--dark);
+    color: var(--cream);
+    border: none;
+    padding: 12px 32px;
+    border-radius: 10px;
+    font-family: 'Noto Serif TC', serif;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  /* Luwei tip box */
+  .luwei-tip {
+    background: var(--warm);
+    border-left: 3px solid var(--clay);
+    border-radius: 0 10px 10px 0;
+    padding: 10px 12px;
+    font-size: 12px;
+    color: var(--bark);
+    line-height: 1.7;
+    margin-top: 8px;
+  }
+  .luwei-tip strong { color: var(--clay); }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-subtitle">45-Day Fat Loss Program</div>
+  <div class="header-title">我的減脂計畫</div>
+  <div class="header-date" id="headerDate"></div>
+</div>
+
+<div class="progress-section">
+  <div class="day-row" id="dayDots"></div>
+  <div style="padding:12px 0 0; text-align:center;">
+    <span class="phase-badge" id="phaseBadge">載入中...</span>
+  </div>
+  <div style="height:14px"></div>
+  <div class="progress-label">
+    <span id="progressLabel">第 — 天</span>
+    <span id="progressPct">—%</span>
+  </div>
+  <div class="progress-bar-bg">
+    <div class="progress-bar-fill" id="progressFill" style="width:0%"></div>
+  </div>
+</div>
+
+<!-- Modals -->
+<div class="modal-overlay" id="forbidModal">
+  <div class="modal-box">
+    <div class="modal-emoji">🚫</div>
+    <div class="modal-title">不准調皮！</div>
+    <div class="modal-body">這是妳討厭的食物！<br>回去修改餐點記錄，老實吃！</div>
+    <button class="modal-btn" onclick="document.getElementById('forbidModal').classList.remove('show')">知道了，我改！</button>
+  </div>
+</div>
+<div class="modal-overlay" id="compModal">
+  <div class="modal-box">
+    <div class="modal-emoji">💪</div>
+    <div class="modal-title">代償日提醒！</div>
+    <div class="modal-body">昨天享受大餐了，今天一定要補做肌力訓練！不做完不行！</div>
+    <button class="modal-btn" onclick="document.getElementById('compModal').classList.remove('show')">我知道了！</button>
+  </div>
+</div>
+
+<!-- ===== PAGE: TODAY ===== -->
+<div class="page active" id="pageTODAY">
+
+  <!-- Sunday measure banner -->
+  <div class="sunday-banner" id="sundayBanner">
+    <div class="sb-title">🌿 今天是量體週日！</div>
+    <div class="sb-sub">請記錄本週體重與體脂肪，追蹤進度</div>
+  </div>
+
+  <!-- Alert Banners -->
+  <div class="alert-banner alert-warning" id="alertCarbs">
+    <div class="alert-title">⚠️ 內臟脂肪在哭泣！</div>
+    晚餐不碰澱粉是鐵律，快去修改記錄！
+  </div>
+  <div class="alert-banner alert-gold" id="alertCelebDay">
+    <div class="alert-title">🎂 今天是聚餐日！</div>
+    <span id="alertCelebText">早午餐澱粉再減半，晚餐先吃兩碗菜再吃肉，不碰澱粉。</span>
+  </div>
+  <div class="alert-banner alert-warning" id="alertComp">
+    <div class="alert-title">🔥 代償日！今天必須補做訓練！</div>
+    昨天吃了大餐，訓練是代價，加油！
+  </div>
+
+  <!-- Body Metrics (always visible, Sunday banner highlights it) -->
+  <div class="section" id="sectionBodyMetrics">
+    <div class="section-header">
+      <span class="section-icon">⚖️</span>
+      <span class="section-title">本週量測</span>
+    </div>
+    <div class="section-body">
+      <div class="measure-grid">
+        <div class="measure-box">
+          <label>體重</label>
+          <input type="number" id="inputWeight" placeholder="62.0" step="0.1" min="40" max="120" style="text-align:center;font-size:18px;font-family:'DM Mono',monospace;">
+          <div class="measure-unit">kg</div>
+        </div>
+        <div class="measure-box">
+          <label>體脂率</label>
+          <input type="number" id="inputBodyFat" placeholder="32.0" step="0.1" min="10" max="60" style="text-align:center;font-size:18px;font-family:'DM Mono',monospace;">
+          <div class="measure-unit">%</div>
+        </div>
+      </div>
+      <div class="form-grid">
+        <div class="form-row">
+          <label>內臟脂肪</label>
+          <input type="number" id="inputVisceralFat" placeholder="6.5" step="0.5" min="1">
+        </div>
+        <div class="form-row">
+          <label>量測時間</label>
+          <input type="time" id="inputMeasureTime" value="07:30">
+        </div>
+      </div>
+      <div style="font-size:11px;color:var(--clay);line-height:1.6;padding-top:4px;">
+        📌 建議早上起床後、空腹量測，每週同一時間
+      </div>
+    </div>
+  </div>
+
+  <!-- METRICS -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-icon">📊</span>
+      <span class="section-title">今日數據</span>
+    </div>
+    <div class="section-body">
+      <div class="form-grid">
+        <div class="form-row">
+          <label>步數</label>
+          <input type="number" id="inputSteps" placeholder="8000" min="0" oninput="updateAlerts()">
+        </div>
+        <div class="form-row">
+          <label>喝水 (ml)</label>
+          <input type="number" id="inputWater" placeholder="2000" min="0">
+        </div>
+      </div>
+      <div class="form-row">
+        <label>入睡時間</label>
+        <input type="time" id="inputSleep" value="00:00">
+      </div>
+    </div>
+  </div>
+
+  <!-- MEALS -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-icon">🍱</span>
+      <span class="section-title">今日飲食</span>
+    </div>
+    <div class="section-body">
+      <div style="font-size:11px;color:var(--clay);margin-bottom:12px;line-height:1.7;">
+        進食順序：<strong>蔬菜 → 蛋白質 → 澱粉（午餐）</strong><br>
+        進食窗口：09:30 — 20:00
+      </div>
+      <div class="form-row">
+        <label>早餐</label>
+        <input type="text" id="inputBreakfast" placeholder="例：無糖豆漿、毛豆" oninput="checkForbidden(this)">
+      </div>
+      <div class="form-row">
+        <label>午餐</label>
+        <input type="text" id="inputLunch" placeholder="例：便當（飯減半）" oninput="checkForbidden(this)">
+      </div>
+      <div class="form-row">
+        <label>晚餐</label>
+        <input type="text" id="inputDinner" placeholder="例：滷牛腱＋青菜＋豆腐" oninput="checkForbidden(this)">
+      </div>
+
+      <!-- Luwei tip (always visible) -->
+      <div class="luwei-tip">
+        <strong>🥘 偶爾晚餐可吃清淡滷味規格：</strong><br>
+        牛腱・青菜・金針・生豆皮（第五週起去豆皮）<br>
+        不加蒜・清淡小辣・不喝湯
+      </div>
+
+      <div style="height:12px"></div>
+      <div class="toggle-row">
+        <div class="toggle-label">
+          晚餐有吃澱粉？
+          <small>飯、麵、麵包等</small>
+        </div>
+        <div class="toggle warning" id="toggleCarbs" onclick="toggleSwitch('toggleCarbs'); updateAlerts()"></div>
+      </div>
+      <div class="toggle-row">
+        <div class="toggle-label">
+          今天有聚餐？
+          <small>生日/特殊場合</small>
+        </div>
+        <div class="toggle" id="toggleCelebration" onclick="toggleSwitch('toggleCelebration'); updateAlerts()"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WORKOUT -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-icon">🏋️</span>
+      <span class="section-title">今日訓練</span>
+    </div>
+    <div class="section-body">
+      <div style="font-size:11px;color:var(--clay);margin-bottom:12px;" id="workoutDayHint">訓練日：週二・週四・週六</div>
+
+      <div style="font-size:11px;font-weight:700;letter-spacing:1px;color:var(--bark);text-transform:uppercase;margin-bottom:10px;" id="workoutPhaseLabel"></div>
+      <div id="workoutCards"></div>
+
+      <div class="toggle-row" style="margin-top:4px;">
+        <div class="toggle-label">
+          今天有做訓練？
+          <small>勾選即記錄完成</small>
+        </div>
+        <div class="toggle" id="toggleWorkoutDone" onclick="toggleSwitch('toggleWorkoutDone'); updateAlerts()"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCORE -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-icon">⭐</span>
+      <span class="section-title">今日評分</span>
+    </div>
+    <div class="section-body">
+      <div class="score-display">
+        <div class="score-number" id="scoreNum">—</div>
+        <div class="score-label">/ 100 分</div>
+      </div>
+      <div class="deduct-list" id="deductList"></div>
+      <div style="padding-top:12px">
+        <label>今日備注 / 心情</label>
+        <textarea id="inputNote" placeholder="記錄今天的心情、特別的事…"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <button class="btn-save" onclick="saveToday()">儲 存 今 日 記 錄</button>
+  <div class="spacer14"></div>
+
+</div>
+
+<!-- ===== PAGE: ARCHIVE ===== -->
+<div class="page" id="pageARCHIVE">
+  <div class="spacer14"></div>
+  <div class="section">
+    <div class="section-header">
+      <span class="section-icon">📓</span>
+      <span class="section-title">歷史紀錄</span>
+    </div>
+    <div class="section-body" id="archiveList">
+      <div style="text-align:center;color:#AAA;font-size:13px;padding:20px 0;">尚無紀錄</div>
+    </div>
+  </div>
+  <div class="spacer14"></div>
+</div>
+
+<!-- ===== PAGE: STATS ===== -->
+<div class="page" id="pageSTATS">
+  <div class="spacer14"></div>
+
+  <!-- Body weight chart -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-icon">⚖️</span>
+      <span class="section-title">體重 · 體脂趨勢</span>
+    </div>
+    <div class="section-body">
+      <div id="chartPlaceholder" style="text-align:center;color:#AAA;font-size:12px;padding:16px 0;">尚無量測資料（每週日量測後顯示）</div>
+      <div id="chartArea" style="display:none;">
+        <div style="font-size:10px;color:var(--bark);margin-bottom:6px;letter-spacing:1px;">體重 (kg)</div>
+        <div class="chart-wrap"><canvas id="chartWeight"></canvas></div>
+        <div style="font-size:10px;color:var(--bark);margin:12px 0 6px;letter-spacing:1px;">體脂率 (%)</div>
+        <div class="chart-wrap"><canvas id="chartFat"></canvas></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- General stats -->
+  <div class="section" style="margin-top:14px;">
+    <div class="section-header">
+      <span class="section-icon">📈</span>
+      <span class="section-title">45天統計</span>
+    </div>
+    <div class="section-body" id="statsBody">
+      <div style="text-align:center;color:#AAA;font-size:13px;padding:20px 0;">記錄越多，統計越準確！</div>
+    </div>
+  </div>
+  <div class="spacer14"></div>
+</div>
+
+<!-- TAB NAV -->
+<div class="tab-nav">
+  <div class="tab-btn active" onclick="switchTab('TODAY', this)">
+    <span class="tab-icon">☀️</span>
+    <span class="tab-text">TODAY</span>
+  </div>
+  <div class="tab-btn" onclick="switchTab('ARCHIVE', this)">
+    <span class="tab-icon">📓</span>
+    <span class="tab-text">ARCHIVE</span>
+  </div>
+  <div class="tab-btn" onclick="switchTab('STATS', this)">
+    <span class="tab-icon">📈</span>
+    <span class="tab-text">STATS</span>
+  </div>
+</div>
+
+<script>
+// =====================
+// CONSTANTS
+// =====================
+const START_DATE = new Date('2025-06-01');
+const TOTAL_DAYS = 45;
+const FORBIDDEN = ['魚', '雞胸肉', '水煮蛋', '茶葉蛋'];
+const CELEBRATION_DATES = ['2025-06-05', '2025-06-27'];
+
+const PHASE1_WORKOUTS = [
+  { name: '靠牆深蹲', sets: 4, reps: '30秒撐牆', rest: '30秒', note: '背貼牆，膝蓋不超腳尖' },
+  { name: '扶牆伏地挺身', sets: 3, reps: '10–12下', rest: '45秒', note: '手扶牆壁，身體打直' },
+  { name: '椅子核心抬腿', sets: 3, reps: '15下/邊', rest: '30秒', note: '坐椅邊，交替抬膝' }
+];
+const PHASE2_WORKOUTS = [
+  { name: '箱式深蹲', sets: 4, reps: '12–15下', rest: '45秒', note: '蹲至椅面輕碰即起' },
+  { name: 'Kneeling Push-up', sets: 3, reps: '10–12下', rest: '45秒', note: '跪姿，手比肩略寬' },
+  { name: '無跳躍波比跳', sets: 3, reps: '8–10下', rest: '60秒', note: '走步取代跳躍，保護膝蓋' }
+];
+
+// =====================
+// UTILS
+// =====================
+function todayStr() {
+  const d = new Date();
+  return d.toISOString().slice(0,10);
+}
+function getDayNum(dateStr) {
+  const d = new Date(dateStr + 'T12:00:00');
+  return Math.floor((d - START_DATE) / 86400000) + 1;
+}
+function getPhase(dayNum) {
+  if (dayNum <= 0) return { label: '計畫尚未開始', short: 'WAITING', workouts: [] };
+  if (dayNum <= 15) return { label: '第一階段 · 基礎期', short: 'FOUNDATION', workouts: PHASE1_WORKOUTS };
+  if (dayNum <= 45) {
+    const sprint = dayNum >= 29;
+    return {
+      label: sprint ? '第三階段 · 衝刺期 🔥' : '第二階段 · 進階期',
+      short: sprint ? 'SPRINT' : 'ADVANCED',
+      workouts: PHASE2_WORKOUTS,
+      sprint
+    };
+  }
+  return { label: '計畫已完成 🎉', short: 'DONE', workouts: [] };
+}
+function isWorkoutDay(dateStr) {
+  const dow = new Date(dateStr + 'T12:00:00').getDay();
+  return dow === 2 || dow === 4 || dow === 6;
+}
+function isSunday(dateStr) {
+  return new Date(dateStr + 'T12:00:00').getDay() === 0;
+}
+function isCelebrationDay(dateStr) {
+  return CELEBRATION_DATES.includes(dateStr);
+}
+function getCompensationDay(dateStr) {
+  const d = new Date(dateStr + 'T12:00:00');
+  d.setDate(d.getDate() - 1);
+  const yest = d.toISOString().slice(0,10);
+  const yr = getRecord(yest);
+  if (yr && yr.meals && yr.meals.is_celebration_day) return true;
+  return CELEBRATION_DATES.includes(yest);
+}
+function formatDateCN(dateStr) {
+  const d = new Date(dateStr + 'T12:00:00');
+  const days = ['日','一','二','三','四','五','六'];
+  return `${d.getMonth()+1}月${d.getDate()}日（週${days[d.getDay()]}）`;
+}
+
+// =====================
+// STORAGE
+// =====================
+function getRecord(dateStr) {
+  try { return JSON.parse(localStorage.getItem('fit45_' + dateStr)) || null; } catch { return null; }
+}
+function saveRecord(dateStr, data) {
+  localStorage.setItem('fit45_' + dateStr, JSON.stringify(data));
+}
+function getAllRecords() {
+  const records = [];
+  for (let i = 0; i < TOTAL_DAYS; i++) {
+    const d = new Date(START_DATE);
+    d.setDate(d.getDate() + i);
+    const str = d.toISOString().slice(0,10);
+    const rec = getRecord(str);
+    if (rec) records.push({ date: str, ...rec });
+  }
+  return records;
+}
+function getBodyMeasurements() {
+  const results = [];
+  for (let i = 0; i < TOTAL_DAYS; i++) {
+    const d = new Date(START_DATE);
+    d.setDate(d.getDate() + i);
+    const str = d.toISOString().slice(0,10);
+    if (new Date(str + 'T12:00:00').getDay() === 0) {
+      const rec = getRecord(str);
+      if (rec && rec.body) {
+        results.push({ date: str, week: Math.ceil((i+1)/7), ...rec.body });
+      }
+    }
+  }
+  return results;
+}
+
+// =====================
+// TOGGLE
+// =====================
+function toggleSwitch(id) {
+  document.getElementById(id).classList.toggle('on');
+}
+function toggleVal(id) { return document.getElementById(id).classList.contains('on'); }
+
+// =====================
+// FORBIDDEN FOOD
+// =====================
+function checkForbidden(input) {
+  for (const f of FORBIDDEN) {
+    if (input.value.includes(f)) {
+      document.getElementById('forbidModal').classList.add('show');
+      input.style.borderColor = 'var(--red)';
+      setTimeout(() => { input.style.borderColor = ''; }, 3000);
+      break;
+    }
+  }
+}
+
+// =====================
+// SCORE
+// =====================
+function calcScore() {
+  let score = 100;
+  const deducts = [];
+  const steps = parseInt(document.getElementById('inputSteps').value) || 0;
+  const water = parseInt(document.getElementById('inputWater').value) || 0;
+  const hasCarbs = toggleVal('toggleCarbs');
+  const workoutDone = toggleVal('toggleWorkoutDone');
+  const today = todayStr();
+  const workoutDay = isWorkoutDay(today);
+  const breakfast = document.getElementById('inputBreakfast').value.trim();
+  const lunch = document.getElementById('inputLunch').value.trim();
+  const dinner = document.getElementById('inputDinner').value.trim();
+
+  if (steps < 8000) { score -= 15; deducts.push({ text: `步數不足 8,000（${steps}步）`, pts: -15, ok: false }); }
+  else { deducts.push({ text: `步數達標（${steps}步）`, pts: 0, ok: true }); }
+
+  if (water < 2000) { score -= 10; deducts.push({ text: `飲水不足 2,000ml（${water}ml）`, pts: -10, ok: false }); }
+  else { deducts.push({ text: `飲水達標（${water}ml）`, pts: 0, ok: true }); }
+
+  if (hasCarbs) { score -= 20; deducts.push({ text: '晚餐吃了澱粉', pts: -20, ok: false }); }
+  else { deducts.push({ text: '晚餐無澱粉 ✓', pts: 0, ok: true }); }
+
+  if (!breakfast && !lunch && !dinner) { score -= 10; deducts.push({ text: '餐點未記錄', pts: -10, ok: false }); }
+
+  if (workoutDay && !workoutDone) { score -= 15; deducts.push({ text: '訓練日未完成', pts: -15, ok: false }); }
+  else if (workoutDay && workoutDone) { deducts.push({ text: '訓練完成 ✓', pts: 0, ok: true }); }
+
+  return { score: Math.max(score, 0), deducts };
+}
+
+// =====================
+// UPDATE ALERTS
+// =====================
+function updateAlerts() {
+  const today = todayStr();
+  const dow = new Date(today + 'T12:00:00').getDay();
+  const hasCarbs = toggleVal('toggleCarbs');
+  const celebToggle = toggleVal('toggleCelebration');
+
+  document.getElementById('alertCarbs').classList.toggle('show', hasCarbs);
+
+  const isCeleb = isCelebrationDay(today) || celebToggle;
+  if (isCeleb) {
+    document.getElementById('alertCelebDay').classList.add('show');
+    document.getElementById('alertCelebText').textContent =
+      (dow === 5) ? '早午餐澱粉再減半！晚上先吃兩碗蔬菜再吃肉，不碰澱粉。' : '白天繼續控糖，晚上先吃菜再吃肉，不碰澱粉。';
+  } else {
+    document.getElementById('alertCelebDay').classList.remove('show');
+  }
+
+  document.getElementById('alertComp').classList.toggle('show', getCompensationDay(today));
+
+  const { score, deducts } = calcScore();
+  const scoreEl = document.getElementById('scoreNum');
+  scoreEl.textContent = score;
+  scoreEl.className = 'score-number' + (score >= 85 ? ' great' : score < 60 ? ' poor' : '');
+  document.getElementById('deductList').innerHTML = deducts.map(d =>
+    `<div class="deduct-item ${d.ok ? 'ok' : 'deduct'}"><span>${d.text}</span><span>${d.pts ? d.pts : '✓'}</span></div>`
+  ).join('');
+}
+
+// =====================
+// WORKOUT CARDS
+// =====================
+function renderWorkoutCards(phase) {
+  const container = document.getElementById('workoutCards');
+  const phaseLabel = document.getElementById('workoutPhaseLabel');
+  const today = todayStr();
+  const isToday = isWorkoutDay(today);
+
+  if (!phase.workouts || !phase.workouts.length) {
+    if (phaseLabel) phaseLabel.textContent = '';
+    container.innerHTML = '<div style="color:#AAA;font-size:12px;padding:8px 0;">計畫尚未開始或已結束</div>';
+    return;
+  }
+
+  if (phaseLabel) phaseLabel.textContent = phase.label + ' · 訓練菜單';
+
+  // Hint for non-workout days
+  const hint = !isToday
+    ? `<div style="background:#FDF6E3;border-radius:8px;padding:8px 12px;font-size:11px;color:#7A6020;margin-bottom:10px;">今天非訓練日，菜單僅供參考。訓練日：週二・週四・週六</div>`
+    : `<div style="background:#EEF5EE;border-radius:8px;padding:8px 12px;font-size:11px;color:#3D6B40;margin-bottom:10px;">💪 今天是訓練日！完成後記得勾選下方</div>`;
+
+  container.innerHTML = hint + phase.workouts.map(w => `
+    <div class="workout-card">
+      <div class="workout-card-header">
+        <span class="workout-card-name">${w.name}</span>
+        <span class="workout-card-badge">${w.sets} 組</span>
+      </div>
+      <div class="workout-detail-row">
+        <span class="workout-chip">🔄 ${w.reps}</span>
+        <span class="workout-chip">⏱ 休息 ${w.rest}</span>
+      </div>
+      <div style="font-size:11px;color:var(--clay);margin-top:7px;">💡 ${w.note}</div>
+    </div>
+  `).join('');
+}
+
+// =====================
+// SAVE TODAY
+// =====================
+function saveToday() {
+  const today = todayStr();
+  const data = {
+    date: today,
+    metrics: {
+      steps: parseInt(document.getElementById('inputSteps').value) || 0,
+      water_ml: parseInt(document.getElementById('inputWater').value) || 0,
+      sleep_time: document.getElementById('inputSleep').value
+    },
+    meals: {
+      breakfast: document.getElementById('inputBreakfast').value.trim(),
+      lunch: document.getElementById('inputLunch').value.trim(),
+      dinner: document.getElementById('inputDinner').value.trim(),
+      has_carbs_at_dinner: toggleVal('toggleCarbs'),
+      is_celebration_day: toggleVal('toggleCelebration')
+    },
+    workout: {
+      is_workout_day: isWorkoutDay(today),
+      completed: toggleVal('toggleWorkoutDone')
+    },
+    note: document.getElementById('inputNote').value.trim(),
+    score: calcScore().score
+  };
+
+  // Sunday body measurements
+  if (isSunday(today)) {
+    const w = parseFloat(document.getElementById('inputWeight').value);
+    const f = parseFloat(document.getElementById('inputBodyFat').value);
+    const v = parseFloat(document.getElementById('inputVisceralFat').value);
+    if (w || f) {
+      data.body = {
+        weight: w || null,
+        body_fat: f || null,
+        visceral_fat: v || null,
+        time: document.getElementById('inputMeasureTime').value
+      };
+    }
+  }
+
+  saveRecord(today, data);
+
+  const btn = document.querySelector('.btn-save');
+  btn.textContent = '✓ 儲存成功！';
+  btn.style.background = 'var(--moss)';
+  setTimeout(() => { btn.textContent = '儲 存 今 日 記 錄'; btn.style.background = ''; }, 2000);
+
+  renderArchive();
+  renderStats();
+}
+
+// =====================
+// RENDER HEADER
+// =====================
+function renderHeader() {
+  const today = todayStr();
+  const dayNum = getDayNum(today);
+  const phase = getPhase(dayNum);
+  const clamped = Math.max(0, Math.min(dayNum, TOTAL_DAYS));
+  const pct = Math.round((clamped / TOTAL_DAYS) * 100);
+
+  document.getElementById('headerDate').textContent = formatDateCN(today);
+  document.getElementById('phaseBadge').textContent = phase.label;
+  document.getElementById('progressLabel').textContent =
+    dayNum > 0 && dayNum <= TOTAL_DAYS ? `第 ${dayNum} 天` : dayNum <= 0 ? '計畫尚未開始' : '計畫已完成';
+  document.getElementById('progressPct').textContent = `${pct}%`;
+  document.getElementById('progressFill').style.width = `${pct}%`;
+
+  const dotContainer = document.getElementById('dayDots');
+  dotContainer.innerHTML = '';
+  for (let i = 1; i <= TOTAL_DAYS; i++) {
+    const dot = document.createElement('div');
+    dot.className = 'day-dot' + (i < dayNum ? ' done' : i === dayNum ? ' today' : '');
+    dot.textContent = i;
+    dotContainer.appendChild(dot);
+  }
+
+  renderWorkoutCards(phase);
+
+  // Workout hint
+  const hint = document.getElementById('workoutDayHint');
+  if (hint) hint.textContent = isWorkoutDay(today) ? '💪 今天是訓練日！' : '訓練日：週二・週四・週六';
+
+  // Sunday body metrics banner
+  if (isSunday(today)) {
+    document.getElementById('sundayBanner').classList.add('show');
+  }
+
+  if (getCompensationDay(today)) {
+    document.getElementById('compModal').classList.add('show');
+  }
+
+  updateAlerts();
+}
+
+// =====================
+// LOAD TODAY DATA
+// =====================
+function loadTodayData() {
+  const rec = getRecord(todayStr());
+  if (!rec) return;
+  if (rec.metrics?.steps) document.getElementById('inputSteps').value = rec.metrics.steps;
+  if (rec.metrics?.water_ml) document.getElementById('inputWater').value = rec.metrics.water_ml;
+  if (rec.metrics?.sleep_time) document.getElementById('inputSleep').value = rec.metrics.sleep_time;
+  if (rec.meals?.breakfast) document.getElementById('inputBreakfast').value = rec.meals.breakfast;
+  if (rec.meals?.lunch) document.getElementById('inputLunch').value = rec.meals.lunch;
+  if (rec.meals?.dinner) document.getElementById('inputDinner').value = rec.meals.dinner;
+  if (rec.note) document.getElementById('inputNote').value = rec.note;
+  if (rec.meals?.has_carbs_at_dinner) document.getElementById('toggleCarbs').classList.add('on');
+  if (rec.meals?.is_celebration_day) document.getElementById('toggleCelebration').classList.add('on');
+  if (rec.workout?.completed) document.getElementById('toggleWorkoutDone').classList.add('on');
+  if (rec.body) {
+    if (rec.body.weight) document.getElementById('inputWeight').value = rec.body.weight;
+    if (rec.body.body_fat) document.getElementById('inputBodyFat').value = rec.body.body_fat;
+    if (rec.body.visceral_fat) document.getElementById('inputVisceralFat').value = rec.body.visceral_fat;
+    if (rec.body.time) document.getElementById('inputMeasureTime').value = rec.body.time;
+  }
+}
+
+// =====================
+// ARCHIVE
+// =====================
+function renderArchive() {
+  const records = getAllRecords().reverse();
+  const el = document.getElementById('archiveList');
+  if (!records.length) {
+    el.innerHTML = '<div style="text-align:center;color:#AAA;font-size:13px;padding:20px 0;">尚無紀錄</div>';
+    return;
+  }
+  el.innerHTML = records.map(r => {
+    const sc = r.score != null ? r.score : '—';
+    const scColor = sc >= 85 ? 'var(--moss)' : sc < 60 ? 'var(--red)' : 'var(--clay)';
+    const preview = [r.meals?.breakfast, r.meals?.lunch, r.meals?.dinner].filter(Boolean).join('｜') || '無餐點記錄';
+    const dayNum = getDayNum(r.date);
+    const bodyTag = r.body ? `<div style="font-size:10px;color:#7090C4;margin-top:3px;">⚖️ ${r.body.weight ? r.body.weight+'kg' : ''} ${r.body.body_fat ? '/ '+r.body.body_fat+'%' : ''}</div>` : '';
+    return `<div class="archive-item">
+      <div class="archive-item-header">
+        <span class="archive-date">第${dayNum}天 · ${formatDateCN(r.date)}</span>
+        <span class="archive-score" style="color:${scColor}">${sc}分</span>
+      </div>
+      <div class="archive-preview">${preview}</div>
+      ${r.workout?.completed ? '<div style="font-size:10px;color:var(--moss);margin-top:3px;">💪 訓練完成</div>' : ''}
+      ${bodyTag}
+    </div>`;
+  }).join('');
+}
+
+// =====================
+// STATS + CHART
+// =====================
+function renderStats() {
+  const records = getAllRecords();
+  const measurements = getBodyMeasurements();
+
+  // Chart
+  if (measurements.length >= 1) {
+    document.getElementById('chartPlaceholder').style.display = 'none';
+    document.getElementById('chartArea').style.display = 'block';
+    drawLineChart('chartWeight', measurements.map(m => `W${m.week}`), measurements.map(m => m.weight), 'var(--clay)', 40, 70);
+    drawLineChart('chartFat', measurements.map(m => `W${m.week}`), measurements.map(m => m.body_fat), '#7090C4', 20, 40);
+  }
+
+  if (!records.length) return;
+  const total = records.length;
+  const avgScore = Math.round(records.reduce((a,r) => a + (r.score||0), 0) / total);
+  const workoutCount = records.filter(r => r.workout?.completed).length;
+  const noCarbDinner = records.filter(r => !r.meals?.has_carbs_at_dinner).length;
+  const avgSteps = Math.round(records.reduce((a,r) => a + (r.metrics?.steps||0), 0) / total);
+
+  document.getElementById('statsBody').innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      ${statCard('已記錄', total + ' 天', '共45天')}
+      ${statCard('平均分數', avgScore + ' 分', '100分制')}
+      ${statCard('訓練完成', workoutCount + ' 次', '每週3次')}
+      ${statCard('晚餐無澱粉', noCarbDinner + ' 天', Math.round(noCarbDinner/total*100) + '%')}
+      ${statCard('平均步數', avgSteps.toLocaleString(), '目標 8,000+')}
+      ${measurements.length ? statCard('已量測', measurements.length + ' 週', '每週日') : ''}
+    </div>
+  `;
+}
+
+function statCard(title, val, sub) {
+  return `<div style="background:var(--warm);border-radius:12px;padding:14px;text-align:center;">
+    <div style="font-family:'DM Mono',monospace;font-size:22px;color:var(--clay);margin-bottom:2px;">${val}</div>
+    <div style="font-size:10px;font-weight:700;letter-spacing:1px;color:var(--bark);text-transform:uppercase;">${title}</div>
+    <div style="font-size:10px;color:#AAA;margin-top:2px;">${sub}</div>
+  </div>`;
+}
+
+function drawLineChart(canvasId, labels, values, color, yMin, yMax) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  const dpr = window.devicePixelRatio || 1;
+  const W = canvas.parentElement.clientWidth;
+  const H = 110;
+  canvas.width = W * dpr;
+  canvas.height = H * dpr;
+  canvas.style.width = W + 'px';
+  canvas.style.height = H + 'px';
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+
+  const pad = { top: 10, right: 16, bottom: 24, left: 36 };
+  const cw = W - pad.left - pad.right;
+  const ch = H - pad.top - pad.bottom;
+
+  ctx.clearRect(0, 0, W, H);
+
+  // Grid lines
+  ctx.strokeStyle = '#E8DDD4';
+  ctx.lineWidth = 1;
+  const steps = 3;
+  for (let i = 0; i <= steps; i++) {
+    const y = pad.top + (ch / steps) * i;
+    ctx.beginPath(); ctx.moveTo(pad.left, y); ctx.lineTo(W - pad.right, y); ctx.stroke();
+    const val = yMax - ((yMax - yMin) / steps) * i;
+    ctx.fillStyle = '#AAA'; ctx.font = `${9 * dpr / dpr}px DM Mono,monospace`; ctx.textAlign = 'right';
+    ctx.fillText(val.toFixed(1), pad.left - 4, y + 3);
+  }
+
+  if (values.filter(v => v != null).length < 1) return;
+
+  // Points mapping
+  const pts = values.map((v, i) => ({
+    x: pad.left + (labels.length === 1 ? cw / 2 : (cw / (labels.length - 1)) * i),
+    y: pad.top + ch - ((v - yMin) / (yMax - yMin)) * ch,
+    v, label: labels[i]
+  }));
+
+  // Line
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 2;
+  ctx.lineJoin = 'round';
+  ctx.beginPath();
+  pts.forEach((p, i) => { if (p.v != null) { i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y); } });
+  ctx.stroke();
+
+  // Fill under
+  ctx.save();
+  ctx.globalAlpha = 0.12;
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  pts.forEach((p, i) => { if (p.v != null) { i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y); } });
+  ctx.lineTo(pts[pts.length - 1].x, pad.top + ch);
+  ctx.lineTo(pts[0].x, pad.top + ch);
+  ctx.fill();
+  ctx.restore();
+
+  // Dots + labels
+  pts.forEach(p => {
+    if (p.v == null) return;
+    ctx.fillStyle = color;
+    ctx.beginPath(); ctx.arc(p.x, p.y, 4, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = 'white';
+    ctx.beginPath(); ctx.arc(p.x, p.y, 2, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = '#555';
+    ctx.font = `${9}px DM Mono,monospace`;
+    ctx.textAlign = 'center';
+    ctx.fillText(p.label, p.x, pad.top + ch + 16);
+    ctx.fillStyle = color;
+    ctx.font = `bold ${10}px DM Mono,monospace`;
+    ctx.fillText(p.v, p.x, p.y - 8);
+  });
+}
+
+// =====================
+// TAB NAV
+// =====================
+function switchTab(name, el) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('page' + name).classList.add('active');
+  el.classList.add('active');
+  if (name === 'ARCHIVE') renderArchive();
+  if (name === 'STATS') renderStats();
+  window.scrollTo(0, 0);
+}
+
+// =====================
+// INIT
+// =====================
+renderHeader();
+loadTodayData();
+updateAlerts();
+</script>
+</body>
+</html>
