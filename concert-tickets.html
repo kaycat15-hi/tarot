@@ -1,0 +1,1319 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎫 Concert Ticket Vault</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&family=Noto+Serif+TC:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f7f4ef;
+    --surface: #fefcf8;
+    --surface2: #f0ece4;
+    --border: #e2ddd5;
+    --border2: #ccc5b8;
+    --text: #2c2820;
+    --text2: #6b6358;
+    --text3: #9e9488;
+    --accent: #8b6f47;
+    --accent2: #c4956a;
+    --accent-light: #f0e6d8;
+    --seen: #5a7a5a;
+    --seen-bg: #eef4ee;
+    --seen-border: #b8d4b8;
+    --unseen: #7a5a3a;
+    --unseen-bg: #fdf5ec;
+    --unseen-border: #e4c99a;
+    --upcoming: #4a6a8a;
+    --upcoming-bg: #eef2f7;
+    --upcoming-border: #b8cce0;
+    --warn: #9a6a2a;
+    --warn-bg: #fef8ec;
+    --radius: 12px;
+    --shadow: 0 2px 12px rgba(44,40,32,0.08);
+    --shadow2: 0 4px 24px rgba(44,40,32,0.12);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', 'Noto Serif TC', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    font-size: 14px;
+  }
+
+  /* ── Header ── */
+  header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    position: sticky; top: 0; z-index: 100;
+    display: flex; align-items: center; gap: 16px;
+    height: 56px;
+  }
+  .logo {
+    font-family: 'DM Serif Display', serif;
+    font-size: 20px;
+    color: var(--accent);
+    white-space: nowrap;
+    letter-spacing: -0.3px;
+  }
+  .header-search {
+    flex: 1; max-width: 320px;
+    position: relative;
+  }
+  .header-search input {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 6px 12px 6px 32px;
+    font-size: 13px;
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .header-search input:focus { border-color: var(--accent2); }
+  .header-search .search-icon {
+    position: absolute; left: 10px; top: 50%; transform: translateY(-50%);
+    color: var(--text3); font-size: 13px; pointer-events: none;
+  }
+  .header-actions { display: flex; gap: 8px; margin-left: auto; }
+  .btn {
+    border: none; cursor: pointer; font-family: inherit;
+    display: inline-flex; align-items: center; gap: 5px;
+    border-radius: 8px; font-size: 13px; font-weight: 500;
+    transition: all 0.15s;
+  }
+  .btn-primary {
+    background: var(--accent); color: #fff;
+    padding: 7px 14px;
+  }
+  .btn-primary:hover { background: var(--accent2); }
+  .btn-ghost {
+    background: transparent; color: var(--text2);
+    padding: 7px 10px;
+    border: 1px solid var(--border);
+  }
+  .btn-ghost:hover { background: var(--surface2); border-color: var(--border2); }
+  .btn-ghost.active { background: var(--accent-light); border-color: var(--accent2); color: var(--accent); }
+
+  /* ── Main layout ── */
+  .app-body { display: flex; min-height: calc(100vh - 56px); }
+
+  /* ── Sidebar ── */
+  .sidebar {
+    width: 220px; min-width: 220px;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    padding: 20px 0;
+    position: sticky; top: 56px;
+    height: calc(100vh - 56px);
+    overflow-y: auto;
+  }
+  .sidebar-section { padding: 0 16px 16px; }
+  .sidebar-label {
+    font-size: 10px; font-weight: 500; letter-spacing: 1px;
+    text-transform: uppercase; color: var(--text3);
+    padding: 8px 0 6px;
+  }
+  .sidebar-link {
+    display: flex; align-items: center; gap: 8px;
+    padding: 7px 10px; border-radius: 8px;
+    color: var(--text2); font-size: 13px;
+    cursor: pointer; transition: all 0.15s;
+    border: none; background: none; width: 100%; text-align: left;
+  }
+  .sidebar-link:hover { background: var(--surface2); color: var(--text); }
+  .sidebar-link.active { background: var(--accent-light); color: var(--accent); font-weight: 500; }
+  .sidebar-link .icon { width: 16px; text-align: center; font-size: 14px; }
+  .sidebar-count {
+    margin-left: auto; background: var(--surface2);
+    color: var(--text3); font-size: 11px; padding: 1px 6px;
+    border-radius: 10px;
+  }
+  .sidebar-divider { height: 1px; background: var(--border); margin: 8px 16px; }
+
+  /* ── Content ── */
+  .content { flex: 1; padding: 24px; overflow: hidden; }
+  .content-header {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 20px; flex-wrap: wrap;
+  }
+  .content-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: 22px; color: var(--text);
+  }
+  .view-toggle { display: flex; gap: 2px; background: var(--surface2); padding: 3px; border-radius: 8px; }
+  .view-btn {
+    border: none; background: none; cursor: pointer;
+    padding: 5px 10px; border-radius: 6px; font-size: 13px; color: var(--text2);
+    transition: all 0.15s;
+  }
+  .view-btn.active { background: var(--surface); color: var(--accent); box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+  .filter-bar { display: flex; gap: 6px; flex-wrap: wrap; }
+  .filter-chip {
+    border: 1px solid var(--border); background: var(--surface);
+    border-radius: 16px; padding: 4px 12px;
+    font-size: 12px; color: var(--text2); cursor: pointer;
+    transition: all 0.15s;
+  }
+  .filter-chip:hover { border-color: var(--accent2); color: var(--accent); }
+  .filter-chip.active { background: var(--accent-light); border-color: var(--accent2); color: var(--accent); font-weight: 500; }
+
+  /* ── Reminder banner ── */
+  .reminder-banner {
+    background: var(--warn-bg); border: 1px solid #e8c97a;
+    border-radius: var(--radius); padding: 10px 14px;
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 16px; font-size: 13px; color: var(--warn);
+  }
+  .reminder-banner strong { font-weight: 500; }
+
+  /* ── LIST VIEW ── */
+  .list-view { display: flex; flex-direction: column; gap: 10px; }
+  .ticket-row {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 18px;
+    display: flex; align-items: center; gap: 16px;
+    cursor: pointer; transition: all 0.2s;
+    position: relative;
+  }
+  .ticket-row:hover { box-shadow: var(--shadow2); border-color: var(--border2); transform: translateY(-1px); }
+  .ticket-row.seen { border-left: 3px solid var(--seen); }
+  .ticket-row.unseen { border-left: 3px solid var(--unseen-border); }
+  .ticket-row.upcoming { border-left: 3px solid var(--upcoming); }
+  .ticket-date-col { min-width: 72px; text-align: center; }
+  .ticket-date-month { font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.5px; }
+  .ticket-date-day { font-family: 'DM Serif Display', serif; font-size: 26px; line-height: 1; color: var(--accent); }
+  .ticket-date-year { font-size: 11px; color: var(--text3); }
+  .ticket-info { flex: 1; min-width: 0; }
+  .ticket-artist { font-family: 'DM Serif Display', serif; font-size: 16px; }
+  .ticket-title { font-size: 12px; color: var(--text2); margin-top: 2px; }
+  .ticket-venue { font-size: 12px; color: var(--text3); margin-top: 3px; }
+  .ticket-meta { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+  .badge {
+    font-size: 11px; padding: 2px 8px; border-radius: 10px;
+    display: inline-flex; align-items: center; gap: 3px;
+  }
+  .badge-seen { background: var(--seen-bg); color: var(--seen); border: 1px solid var(--seen-border); }
+  .badge-unseen { background: var(--unseen-bg); color: var(--unseen); border: 1px solid var(--unseen-border); }
+  .badge-upcoming { background: var(--upcoming-bg); color: var(--upcoming); border: 1px solid var(--upcoming-border); }
+  .badge-warn { background: var(--warn-bg); color: var(--warn); border: 1px solid #e8c97a; }
+  .badge-neutral { background: var(--surface2); color: var(--text2); border: 1px solid var(--border); }
+  .ticket-price-col { text-align: right; min-width: 80px; }
+  .ticket-price { font-size: 15px; font-weight: 500; color: var(--accent); }
+  .ticket-currency { font-size: 11px; color: var(--text3); }
+  .ticket-thumb {
+    width: 52px; height: 52px; object-fit: cover;
+    border-radius: 8px; background: var(--surface2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; overflow: hidden; flex-shrink: 0;
+  }
+  .ticket-thumb img { width: 100%; height: 100%; object-fit: cover; }
+
+  /* ── CARD/GRID VIEW ── */
+  .grid-view {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 16px;
+  }
+  .ticket-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    cursor: pointer; transition: all 0.2s;
+    position: relative;
+  }
+  .ticket-card:hover { box-shadow: var(--shadow2); transform: translateY(-2px); }
+  .card-img {
+    height: 140px; background: var(--surface2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 40px; position: relative; overflow: hidden;
+  }
+  .card-img img { width: 100%; height: 100%; object-fit: cover; }
+  .card-status-dot {
+    position: absolute; top: 10px; right: 10px;
+    width: 10px; height: 10px; border-radius: 50%;
+    border: 2px solid #fff;
+  }
+  .dot-seen { background: var(--seen); }
+  .dot-unseen { background: var(--unseen-border); }
+  .dot-upcoming { background: var(--upcoming); }
+  .card-body { padding: 14px; }
+  .card-artist { font-family: 'DM Serif Display', serif; font-size: 16px; }
+  .card-meta { font-size: 12px; color: var(--text2); margin-top: 4px; }
+  .card-date { font-size: 12px; color: var(--text3); margin-top: 3px; }
+  .card-footer {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 14px; border-top: 1px solid var(--border);
+    background: var(--bg);
+  }
+  .card-price { font-size: 14px; font-weight: 500; color: var(--accent); }
+
+  /* ── STUB/TICKET VIEW ── */
+  .stub-view { display: flex; flex-direction: column; gap: 20px; }
+  .ticket-stub {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    display: flex;
+    cursor: pointer; transition: all 0.2s;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+  }
+  .ticket-stub:hover { box-shadow: var(--shadow2); transform: translateY(-2px); }
+  .stub-left {
+    width: 120px; min-width: 120px;
+    background: linear-gradient(135deg, var(--accent-light), #ede0ce);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 16px 10px;
+    border-right: 2px dashed var(--border2);
+    position: relative;
+  }
+  .stub-left::before, .stub-left::after {
+    content: '';
+    position: absolute;
+    width: 16px; height: 16px;
+    background: var(--bg);
+    border-radius: 50%;
+    right: -9px;
+  }
+  .stub-left::before { top: -8px; }
+  .stub-left::after { bottom: -8px; }
+  .stub-date-d { font-family: 'DM Serif Display', serif; font-size: 36px; color: var(--accent); line-height: 1; }
+  .stub-date-m { font-size: 11px; color: var(--accent2); text-transform: uppercase; letter-spacing: 1px; margin-top: 2px; }
+  .stub-date-y { font-size: 11px; color: var(--text3); }
+  .stub-img { width: 56px; height: 56px; border-radius: 50%; object-fit: cover; margin-top: 10px; background: var(--border); display: flex; align-items: center; justify-content: center; font-size: 22px; overflow: hidden; }
+  .stub-img img { width: 100%; height: 100%; object-fit: cover; }
+  .stub-main { flex: 1; padding: 16px 20px; }
+  .stub-title-line { font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+  .stub-artist { font-family: 'DM Serif Display', serif; font-size: 20px; }
+  .stub-subtitle { font-size: 12px; color: var(--text2); margin-top: 2px; }
+  .stub-details {
+    display: grid; grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px; margin-top: 12px;
+  }
+  .stub-detail-label { font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.5px; }
+  .stub-detail-val { font-size: 13px; color: var(--text); font-weight: 500; margin-top: 2px; }
+  .stub-right {
+    width: 90px; min-width: 90px;
+    border-left: 2px dashed var(--border2);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 16px 8px; gap: 6px;
+    position: relative;
+    background: var(--bg);
+  }
+  .stub-right::before, .stub-right::after {
+    content: '';
+    position: absolute;
+    width: 16px; height: 16px;
+    background: var(--bg);
+    border-radius: 50%;
+    left: -9px;
+  }
+  .stub-right::before { top: -8px; }
+  .stub-right::after { bottom: -8px; }
+  .stub-price { font-size: 16px; font-weight: 500; color: var(--accent); }
+  .stub-seat { font-size: 11px; color: var(--text2); text-align: center; }
+
+  /* ── CALENDAR VIEW ── */
+  .calendar-view { }
+  .cal-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+  .cal-title { font-family: 'DM Serif Display', serif; font-size: 20px; }
+  .cal-nav { border: none; background: none; cursor: pointer; color: var(--text2); font-size: 18px; padding: 4px 8px; border-radius: 6px; }
+  .cal-nav:hover { background: var(--surface2); }
+  .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+  .cal-dow { text-align: center; font-size: 11px; color: var(--text3); padding: 6px 0; text-transform: uppercase; letter-spacing: 0.5px; }
+  .cal-day {
+    min-height: 80px; background: var(--surface);
+    border: 1px solid var(--border); border-radius: 8px;
+    padding: 6px; font-size: 12px; color: var(--text2);
+  }
+  .cal-day.other-month { background: var(--bg); color: var(--text3); }
+  .cal-day.today { border-color: var(--accent2); background: var(--accent-light); }
+  .cal-day-num { font-weight: 500; margin-bottom: 4px; }
+  .cal-event {
+    font-size: 10px; padding: 2px 5px; border-radius: 4px;
+    margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    cursor: pointer;
+  }
+  .cal-event.seen { background: var(--seen-bg); color: var(--seen); }
+  .cal-event.unseen { background: var(--unseen-bg); color: var(--unseen); }
+  .cal-event.upcoming { background: var(--upcoming-bg); color: var(--upcoming); }
+
+  /* ── MODAL ── */
+  .modal-backdrop {
+    position: fixed; inset: 0;
+    background: rgba(44,40,32,0.4);
+    backdrop-filter: blur(2px);
+    z-index: 200;
+    display: flex; align-items: center; justify-content: center;
+    padding: 20px;
+  }
+  .modal {
+    background: var(--surface);
+    border-radius: 16px;
+    width: 100%; max-width: 700px;
+    max-height: 90vh; overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(44,40,32,0.2);
+  }
+  .modal-header {
+    padding: 20px 24px 0;
+    display: flex; align-items: flex-start; justify-content: space-between;
+  }
+  .modal-title { font-family: 'DM Serif Display', serif; font-size: 22px; }
+  .modal-close {
+    border: none; background: none; cursor: pointer;
+    color: var(--text3); font-size: 20px; padding: 4px; line-height: 1;
+    border-radius: 6px; transition: all 0.15s;
+  }
+  .modal-close:hover { background: var(--surface2); color: var(--text); }
+  .modal-body { padding: 20px 24px 24px; }
+  .modal-section { margin-bottom: 20px; }
+  .modal-section-title {
+    font-size: 11px; text-transform: uppercase; letter-spacing: 1px;
+    color: var(--text3); font-weight: 500; margin-bottom: 10px;
+    padding-bottom: 6px; border-bottom: 1px solid var(--border);
+  }
+  .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .detail-item label { font-size: 11px; color: var(--text3); display: block; margin-bottom: 3px; }
+  .detail-item input, .detail-item select, .detail-item textarea {
+    width: 100%; background: var(--bg);
+    border: 1px solid var(--border); border-radius: 8px;
+    padding: 7px 10px; font-size: 13px; color: var(--text);
+    font-family: inherit; outline: none; transition: border-color 0.2s;
+  }
+  .detail-item input:focus, .detail-item select:focus, .detail-item textarea:focus {
+    border-color: var(--accent2);
+  }
+  .detail-item textarea { resize: vertical; min-height: 80px; }
+  .detail-full { grid-column: 1/-1; }
+  .seat-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+
+  /* Image upload area */
+  .img-upload-area {
+    border: 2px dashed var(--border2);
+    border-radius: var(--radius); padding: 20px;
+    text-align: center; cursor: pointer;
+    transition: all 0.2s; background: var(--bg);
+  }
+  .img-upload-area:hover { border-color: var(--accent2); background: var(--accent-light); }
+  .img-upload-area input { display: none; }
+  .img-upload-area .up-icon { font-size: 28px; margin-bottom: 6px; }
+  .img-upload-area p { font-size: 12px; color: var(--text3); }
+  .img-preview-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+  .img-preview-item {
+    width: 70px; height: 70px; border-radius: 8px;
+    object-fit: cover; background: var(--surface2);
+    position: relative; overflow: hidden;
+  }
+  .img-preview-item img { width: 100%; height: 100%; object-fit: cover; }
+  .img-del-btn {
+    position: absolute; top: 2px; right: 2px;
+    width: 18px; height: 18px; border-radius: 50%;
+    background: rgba(44,40,32,0.7); color: #fff;
+    border: none; cursor: pointer; font-size: 10px;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  /* Setlist */
+  .setlist-row { display: flex; gap: 6px; margin-bottom: 6px; align-items: center; }
+  .setlist-num { font-size: 11px; color: var(--text3); min-width: 18px; }
+  .setlist-input {
+    flex: 1; background: var(--bg);
+    border: 1px solid var(--border); border-radius: 6px;
+    padding: 5px 8px; font-size: 13px; color: var(--text);
+    font-family: inherit; outline: none;
+  }
+  .setlist-input:focus { border-color: var(--accent2); }
+  .setlist-del { border: none; background: none; cursor: pointer; color: var(--text3); font-size: 14px; }
+  .setlist-del:hover { color: #c0392b; }
+
+  /* Detail view (read) */
+  .dv-hero {
+    height: 200px; background: linear-gradient(135deg, var(--accent-light), #ede0ce);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 60px; position: relative; overflow: hidden; border-radius: 12px 12px 0 0;
+  }
+  .dv-hero img { width: 100%; height: 100%; object-fit: cover; }
+  .dv-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+  .dv-item { }
+  .dv-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text3); }
+  .dv-val { font-size: 13px; color: var(--text); margin-top: 3px; font-weight: 500; }
+  .dv-section-title { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--text3); margin-bottom: 8px; padding-bottom: 5px; border-bottom: 1px solid var(--border); }
+  .dv-review { font-size: 13px; color: var(--text); line-height: 1.6; white-space: pre-wrap; }
+  .setlist-ol { list-style: decimal; padding-left: 20px; }
+  .setlist-ol li { font-size: 13px; color: var(--text); padding: 3px 0; }
+  .img-gallery { display: flex; gap: 8px; flex-wrap: wrap; }
+  .img-gallery-item { width: 80px; height: 80px; border-radius: 8px; object-fit: cover; cursor: pointer; }
+
+  /* Reminder toggle */
+  .toggle-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .toggle-row label { font-size: 12px; color: var(--text2); flex: 1; }
+  .toggle {
+    position: relative; width: 36px; height: 20px;
+  }
+  .toggle input { display: none; }
+  .toggle-slider {
+    position: absolute; inset: 0;
+    background: var(--border2); border-radius: 10px; cursor: pointer;
+    transition: background 0.2s;
+  }
+  .toggle-slider::before {
+    content: '';
+    position: absolute; width: 14px; height: 14px;
+    background: #fff; border-radius: 50%;
+    left: 3px; top: 3px; transition: transform 0.2s;
+  }
+  .toggle input:checked + .toggle-slider { background: var(--accent2); }
+  .toggle input:checked + .toggle-slider::before { transform: translateX(16px); }
+
+  .stats-bar {
+    display: flex; gap: 16px; margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px 18px;
+    flex: 1; min-width: 100px;
+  }
+  .stat-val { font-family: 'DM Serif Display', serif; font-size: 24px; color: var(--accent); }
+  .stat-lbl { font-size: 11px; color: var(--text3); margin-top: 2px; }
+
+  .empty-state {
+    text-align: center; padding: 60px 20px; color: var(--text3);
+  }
+  .empty-state .empty-icon { font-size: 48px; margin-bottom: 12px; }
+  .empty-state p { font-size: 14px; }
+
+  .hidden { display: none !important; }
+
+  @media (max-width: 700px) {
+    .sidebar { display: none; }
+    .stub-details { grid-template-columns: 1fr 1fr; }
+    .detail-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <span class="logo">🎫 Concert Vault</span>
+  <div class="header-search">
+    <span class="search-icon">🔍</span>
+    <input type="text" id="globalSearch" placeholder="搜尋藝人、場地、活動…" oninput="doSearch()">
+  </div>
+  <div class="header-actions">
+    <button class="btn btn-primary" onclick="openAdd()">＋ 新增</button>
+  </div>
+</header>
+
+<div class="app-body">
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-label">瀏覽</div>
+      <button class="sidebar-link active" id="nav-all" onclick="setNav('all')"><span class="icon">🗂</span> 全部 <span class="sidebar-count" id="cnt-all">0</span></button>
+      <button class="sidebar-link" id="nav-upcoming" onclick="setNav('upcoming')"><span class="icon">📅</span> 即將到來 <span class="sidebar-count" id="cnt-upcoming">0</span></button>
+      <button class="sidebar-link" id="nav-seen" onclick="setNav('seen')"><span class="icon">✅</span> 已看 <span class="sidebar-count" id="cnt-seen">0</span></button>
+      <button class="sidebar-link" id="nav-unseen" onclick="setNav('unseen')"><span class="icon">🎟</span> 未看 <span class="sidebar-count" id="cnt-unseen">0</span></button>
+      <div class="sidebar-divider"></div>
+      <button class="sidebar-link" id="nav-cal" onclick="setNav('cal')"><span class="icon">🗓</span> 日曆</button>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">藝人</div>
+      <div id="artist-nav"></div>
+    </div>
+  </aside>
+
+  <main class="content">
+    <div id="reminder-area"></div>
+
+    <div class="stats-bar" id="stats-bar"></div>
+
+    <div class="content-header">
+      <h1 class="content-title" id="page-title">全部演唱會</h1>
+      <div class="view-toggle">
+        <button class="view-btn active" id="vb-list" onclick="setView('list')" title="條狀">☰</button>
+        <button class="view-btn" id="vb-grid" onclick="setView('grid')" title="圖片">⊞</button>
+        <button class="view-btn" id="vb-stub" onclick="setView('stub')" title="票根">🎫</button>
+        <button class="view-btn" id="vb-cal" onclick="setView('cal')" title="日曆">🗓</button>
+      </div>
+      <div class="filter-bar">
+        <span class="filter-chip active" data-filter="all" onclick="setFilter('all')">全部</span>
+        <span class="filter-chip" data-filter="upcoming" onclick="setFilter('upcoming')">即將</span>
+        <span class="filter-chip" data-filter="seen" onclick="setFilter('seen')">已看</span>
+        <span class="filter-chip" data-filter="unseen" onclick="setFilter('unseen')">未看</span>
+      </div>
+    </div>
+
+    <div id="list-area" class="list-view"></div>
+    <div id="grid-area" class="grid-view hidden"></div>
+    <div id="stub-area" class="stub-view hidden"></div>
+    <div id="cal-area" class="calendar-view hidden"></div>
+  </main>
+</div>
+
+<!-- ADD/EDIT MODAL -->
+<div class="modal-backdrop hidden" id="add-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="modal-mode-title">新增演唱會</div>
+      <button class="modal-close" onclick="closeModal('add-modal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <!-- basic -->
+      <div class="modal-section">
+        <div class="modal-section-title">基本資訊</div>
+        <div class="detail-grid">
+          <div class="detail-item detail-full">
+            <label>活動抬頭 *</label>
+            <input id="f-headline" type="text" placeholder="例：YAMADA RYOSUKE LIVE TOUR 2025">
+          </div>
+          <div class="detail-item">
+            <label>藝人 *</label>
+            <input id="f-artist" type="text" placeholder="山田涼介">
+          </div>
+          <div class="detail-item">
+            <label>演唱會日期 *</label>
+            <input id="f-date" type="date">
+          </div>
+          <div class="detail-item">
+            <label>開演時間</label>
+            <input id="f-time" type="time">
+          </div>
+          <div class="detail-item">
+            <label>開場時間</label>
+            <input id="f-opentime" type="time">
+          </div>
+          <div class="detail-item detail-full">
+            <label>場地</label>
+            <input id="f-venue" type="text" placeholder="台北小巨蛋">
+          </div>
+          <div class="detail-item">
+            <label>主辦單位</label>
+            <input id="f-organizer" type="text" placeholder="IMC">
+          </div>
+          <div class="detail-item">
+            <label>售票平台</label>
+            <input id="f-ticketing" type="text" placeholder="KKTIX, 年代, ibon…">
+          </div>
+          <div class="detail-item">
+            <label>狀態</label>
+            <select id="f-status">
+              <option value="upcoming">即將到來</option>
+              <option value="seen">已看</option>
+              <option value="unseen">已購未看</option>
+            </select>
+          </div>
+          <div class="detail-item">
+            <label>是否中籤 / 購買方式</label>
+            <input id="f-how" type="text" placeholder="抽籤中籤 / 一般購票 / 黃牛…">
+          </div>
+        </div>
+      </div>
+      <!-- ticket & seat -->
+      <div class="modal-section">
+        <div class="modal-section-title">票價與座位</div>
+        <div class="detail-grid">
+          <div class="detail-item">
+            <label>幣別</label>
+            <select id="f-currency">
+              <option value="TWD">TWD 新台幣</option>
+              <option value="JPY">JPY 日圓</option>
+              <option value="USD">USD 美元</option>
+              <option value="KRW">KRW 韓元</option>
+              <option value="HKD">HKD 港幣</option>
+              <option value="CNY">CNY 人民幣</option>
+            </select>
+          </div>
+          <div class="detail-item">
+            <label>票價</label>
+            <input id="f-price" type="number" placeholder="2800">
+          </div>
+          <div class="detail-item">
+            <label>票種</label>
+            <input id="f-tickettype" type="text" placeholder="VIP / 一般 / 搖滾區">
+          </div>
+          <div class="detail-item">
+            <label>售票日期</label>
+            <input id="f-saledate" type="date">
+          </div>
+        </div>
+        <div style="margin-top:12px">
+          <div style="font-size:11px;color:var(--text3);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.5px">座位資訊</div>
+          <div class="seat-grid">
+            <div class="detail-item">
+              <label>區域</label>
+              <input id="f-sec" type="text" placeholder="A區 / VIP">
+            </div>
+            <div class="detail-item">
+              <label>排</label>
+              <input id="f-row" type="text" placeholder="10">
+            </div>
+            <div class="detail-item">
+              <label>號</label>
+              <input id="f-seat" type="text" placeholder="25">
+            </div>
+          </div>
+          <div class="detail-item" style="margin-top:8px">
+            <label>站位序號（無座）</label>
+            <input id="f-standing" type="text" placeholder="S-1234">
+          </div>
+        </div>
+      </div>
+      <!-- reminders -->
+      <div class="modal-section">
+        <div class="modal-section-title">提醒設定</div>
+        <div class="toggle-row">
+          <label>📣 預售提醒（售票前一天通知）</label>
+          <label class="toggle"><input type="checkbox" id="f-remind-sale"><span class="toggle-slider"></span></label>
+        </div>
+        <div class="toggle-row">
+          <label>🔔 開演提醒（演出當天通知）</label>
+          <label class="toggle"><input type="checkbox" id="f-remind-show"><span class="toggle-slider"></span></label>
+        </div>
+        <div class="toggle-row">
+          <label>⏰ 預售日提醒（售票當天早上）</label>
+          <label class="toggle"><input type="checkbox" id="f-remind-saledaywarn"><span class="toggle-slider"></span></label>
+        </div>
+      </div>
+      <!-- review / setlist -->
+      <div class="modal-section">
+        <div class="modal-section-title">心得 & 曲目</div>
+        <div class="detail-item" style="margin-bottom:12px">
+          <label>心得筆記</label>
+          <textarea id="f-review" placeholder="記錄這場演唱會的感受、印象深刻的瞬間…"></textarea>
+        </div>
+        <div>
+          <div style="font-size:11px;color:var(--text3);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.5px">曲目列表</div>
+          <div id="setlist-edit"></div>
+          <button class="btn btn-ghost" style="margin-top:6px;font-size:12px" onclick="addSong()">＋ 新增歌曲</button>
+        </div>
+      </div>
+      <!-- images -->
+      <div class="modal-section">
+        <div class="modal-section-title">圖片</div>
+        <label class="img-upload-area" for="f-imgs">
+          <input type="file" id="f-imgs" accept="image/*" multiple onchange="handleImgs(event)">
+          <div class="up-icon">🖼</div>
+          <p>點擊上傳票根、現場照片（可多張）</p>
+        </label>
+        <div class="img-preview-row" id="img-preview-row"></div>
+      </div>
+      <!-- extra -->
+      <div class="modal-section">
+        <div class="modal-section-title">其他資訊</div>
+        <div class="detail-grid">
+          <div class="detail-item">
+            <label>演出國家 / 城市</label>
+            <input id="f-city" type="text" placeholder="台北, 台灣">
+          </div>
+          <div class="detail-item">
+            <label>巡演名稱</label>
+            <input id="f-tourname" type="text" placeholder="LIVE TOUR 2025 名稱">
+          </div>
+          <div class="detail-item">
+            <label>同行人</label>
+            <input id="f-companions" type="text" placeholder="小明、小美">
+          </div>
+          <div class="detail-item">
+            <label>周邊消費 (同幣別)</label>
+            <input id="f-merch" type="number" placeholder="500">
+          </div>
+          <div class="detail-item detail-full">
+            <label>官網 / 票務連結</label>
+            <input id="f-url" type="url" placeholder="https://...">
+          </div>
+          <div class="detail-item detail-full">
+            <label>個人標籤（逗號分隔）</label>
+            <input id="f-tags" type="text" placeholder="日本演出, 抽籤中, VIP">
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:8px">
+        <button class="btn btn-ghost" onclick="closeModal('add-modal')">取消</button>
+        <button class="btn btn-primary" onclick="saveTicket()">儲存</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DETAIL MODAL -->
+<div class="modal-backdrop hidden" id="detail-modal">
+  <div class="modal">
+    <div class="modal-header" style="padding-bottom:16px">
+      <div>
+        <div class="modal-title" id="dm-artist"></div>
+        <div style="font-size:13px;color:var(--text2);margin-top:3px" id="dm-headline"></div>
+      </div>
+      <div style="display:flex;gap:6px">
+        <button class="btn btn-ghost" id="dm-edit-btn" onclick="editCurrent()" style="font-size:12px">✏️ 編輯</button>
+        <button class="btn btn-ghost" id="dm-del-btn" onclick="deleteCurrent()" style="font-size:12px;color:#c0392b">🗑 刪除</button>
+        <button class="modal-close" onclick="closeModal('detail-modal')">✕</button>
+      </div>
+    </div>
+    <div class="modal-body" id="detail-body" style="padding-top:0"></div>
+  </div>
+</div>
+
+<script>
+// ── DATA ──
+let tickets = JSON.parse(localStorage.getItem('cv_tickets') || '[]');
+let editId = null;
+let currentNav = 'all';
+let currentView = 'list';
+let currentFilter = 'all';
+let searchQ = '';
+let songCount = 0;
+let pendingImgs = []; // {name, data}
+let calYear, calMonth;
+
+const now = new Date();
+calYear = now.getFullYear();
+calMonth = now.getMonth();
+
+function save() { localStorage.setItem('cv_tickets', JSON.stringify(tickets)); }
+
+// ── STATUS LOGIC ──
+function statusOf(t) {
+  if (t.status === 'seen') return 'seen';
+  const d = new Date(t.date);
+  d.setHours(23,59,59);
+  if (d < now) return 'seen'; // auto past
+  return t.status === 'upcoming' ? 'upcoming' : 'unseen';
+}
+
+// ── SEARCH & FILTER ──
+function filteredTickets() {
+  let list = [...tickets];
+  // nav filter
+  if (currentNav === 'upcoming') list = list.filter(t => statusOf(t) === 'upcoming');
+  else if (currentNav === 'seen') list = list.filter(t => statusOf(t) === 'seen');
+  else if (currentNav === 'unseen') list = list.filter(t => statusOf(t) === 'unseen');
+  // chip filter
+  if (currentFilter !== 'all') list = list.filter(t => statusOf(t) === currentFilter);
+  // search
+  if (searchQ) {
+    const q = searchQ.toLowerCase();
+    list = list.filter(t => [t.artist,t.headline,t.venue,t.city,t.tourname,t.ticketing,t.organizer,(t.tags||'')].some(v => (v||'').toLowerCase().includes(q)));
+  }
+  return list.sort((a,b) => new Date(b.date)-new Date(a.date));
+}
+
+function doSearch() {
+  searchQ = document.getElementById('globalSearch').value.trim();
+  render();
+}
+
+function setNav(n) {
+  currentNav = n;
+  document.querySelectorAll('.sidebar-link').forEach(el => el.classList.remove('active'));
+  document.getElementById('nav-'+n)?.classList.add('active');
+  if (n === 'cal') setView('cal');
+  render();
+}
+
+function setView(v) {
+  currentView = v;
+  ['list','grid','stub','cal'].forEach(x => {
+    document.getElementById(x+'-area').classList.toggle('hidden', x !== v);
+    document.getElementById('vb-'+x)?.classList.toggle('active', x === v);
+  });
+  if (v === 'cal') renderCal();
+  else render();
+}
+
+function setFilter(f) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-chip').forEach(el => el.classList.toggle('active', el.dataset.filter === f));
+  render();
+}
+
+// ── RENDER ──
+function render() {
+  updateCounts();
+  renderReminders();
+  renderStats();
+  renderArtistNav();
+  const list = filteredTickets();
+  if (currentView === 'list') renderList(list);
+  else if (currentView === 'grid') renderGrid(list);
+  else if (currentView === 'stub') renderStub(list);
+  else if (currentView === 'cal') renderCal();
+}
+
+function updateCounts() {
+  document.getElementById('cnt-all').textContent = tickets.length;
+  document.getElementById('cnt-upcoming').textContent = tickets.filter(t=>statusOf(t)==='upcoming').length;
+  document.getElementById('cnt-seen').textContent = tickets.filter(t=>statusOf(t)==='seen').length;
+  document.getElementById('cnt-unseen').textContent = tickets.filter(t=>statusOf(t)==='unseen').length;
+}
+
+function renderReminders() {
+  const area = document.getElementById('reminder-area');
+  const today = new Date(); today.setHours(0,0,0,0);
+  const tomorrow = new Date(today); tomorrow.setDate(today.getDate()+1);
+  const in7 = new Date(today); in7.setDate(today.getDate()+7);
+  const msgs = [];
+  tickets.forEach(t => {
+    const sd = t.saledate ? new Date(t.saledate) : null;
+    const cd = t.date ? new Date(t.date) : null;
+    if (sd) {
+      const sdD = new Date(sd); sdD.setHours(0,0,0,0);
+      if (t.remindSale && sdD.getTime() === tomorrow.getTime()) msgs.push(`🎟 <strong>${t.artist}</strong> 預售票明天開搶！(${t.saledate}) — ${t.ticketing||''}`);
+      if (t.remindSaledaywarn && sdD.getTime() === today.getTime()) msgs.push(`⚡ <strong>${t.artist}</strong> 預售票今天開始！趕快搶票！`);
+    }
+    if (cd) {
+      const cdD = new Date(cd); cdD.setHours(0,0,0,0);
+      if (t.remindShow && cdD.getTime() === today.getTime()) msgs.push(`🎤 <strong>${t.artist}</strong> 今天開演！${t.time||''} @ ${t.venue||''}`);
+      if (t.remindShow && cdD.getTime() === tomorrow.getTime()) msgs.push(`📅 <strong>${t.artist}</strong> 明天開演！${t.time||''} @ ${t.venue||''}`);
+    }
+  });
+  area.innerHTML = msgs.map(m=>`<div class="reminder-banner">🔔 ${m}</div>`).join('');
+}
+
+function renderStats() {
+  const list = tickets;
+  const total = list.length;
+  const seen = list.filter(t=>statusOf(t)==='seen').length;
+  const upcoming = list.filter(t=>statusOf(t)==='upcoming').length;
+  const totalSpend = list.reduce((s,t)=>s+(t.currency==='TWD'?parseFloat(t.price||0):0),0);
+  document.getElementById('stats-bar').innerHTML = `
+    <div class="stat-card"><div class="stat-val">${total}</div><div class="stat-lbl">總場次</div></div>
+    <div class="stat-card"><div class="stat-val">${seen}</div><div class="stat-lbl">已看</div></div>
+    <div class="stat-card"><div class="stat-val">${upcoming}</div><div class="stat-lbl">即將到來</div></div>
+    <div class="stat-card"><div class="stat-val">${totalSpend>0?'NT$'+totalSpend.toLocaleString():'—'}</div><div class="stat-lbl">台幣票價合計</div></div>
+  `;
+}
+
+function renderArtistNav() {
+  const artists = [...new Set(tickets.map(t=>t.artist).filter(Boolean))];
+  document.getElementById('artist-nav').innerHTML = artists.map(a=>`<button class="sidebar-link" onclick="searchArtist('${a.replace(/'/g,"\\'")}')"><span class="icon">🎤</span>${a} <span class="sidebar-count">${tickets.filter(t=>t.artist===a).length}</span></button>`).join('');
+}
+
+function searchArtist(a) {
+  document.getElementById('globalSearch').value = a;
+  searchQ = a;
+  currentNav = 'all';
+  document.querySelectorAll('.sidebar-link').forEach(el=>el.classList.remove('active'));
+  document.getElementById('nav-all').classList.add('active');
+  render();
+}
+
+function imgEl(t, cls='', size='') {
+  if (t.images && t.images.length) return `<div class="${cls}" ${size}><img src="${t.images[0].data}" alt=""></div>`;
+  return `<div class="${cls}" ${size} style="display:flex;align-items:center;justify-content:center;font-size:${size?'32px':'18px'}">🎤</div>`;
+}
+
+function statusBadge(t) {
+  const s = statusOf(t);
+  if (s==='seen') return `<span class="badge badge-seen">✓ 已看</span>`;
+  if (s==='upcoming') return `<span class="badge badge-upcoming">📅 即將</span>`;
+  return `<span class="badge badge-unseen">🎟 已購</span>`;
+}
+
+function renderList(list) {
+  const area = document.getElementById('list-area');
+  if (!list.length) { area.innerHTML=`<div class="empty-state"><div class="empty-icon">🎫</div><p>沒有符合的演唱會記錄</p></div>`; return; }
+  area.innerHTML = list.map(t=>{
+    const s = statusOf(t);
+    const d = t.date ? new Date(t.date) : null;
+    const months=['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+    const today = new Date(); today.setHours(0,0,0,0);
+    const cd = d ? new Date(t.date) : null; if(cd) cd.setHours(0,0,0,0);
+    const daysLeft = cd ? Math.round((cd-today)/(86400000)) : null;
+    let warnBadge = '';
+    if (daysLeft !== null && daysLeft >= 0 && daysLeft <= 7 && s!=='seen') warnBadge = `<span class="badge badge-warn">⚡ 還有 ${daysLeft} 天</span>`;
+    return `<div class="ticket-row ${s}" onclick="openDetail('${t.id}')">
+      ${imgEl(t,'ticket-thumb')}
+      <div class="ticket-date-col">
+        ${d?`<div class="ticket-date-month">${months[d.getMonth()]}</div><div class="ticket-date-day">${d.getDate()}</div><div class="ticket-date-year">${d.getFullYear()}</div>`:'<div style="font-size:12px;color:var(--text3)">—</div>'}
+      </div>
+      <div class="ticket-info">
+        <div class="ticket-artist">${t.artist||'—'}</div>
+        <div class="ticket-title">${t.headline||''}</div>
+        <div class="ticket-venue">${[t.venue,t.city].filter(Boolean).join(' · ')}</div>
+        <div class="ticket-meta">
+          ${statusBadge(t)}
+          ${warnBadge}
+          ${t.section||t.row||t.seat ? `<span class="badge badge-neutral">💺 ${[t.section,t.row&&'排'+t.row,t.seat&&t.seat+'號'].filter(Boolean).join(' ')}</span>`:''}
+          ${t.standing?`<span class="badge badge-neutral">🚶 ${t.standing}</span>`:''}
+          ${(t.tags||'').split(',').filter(Boolean).map(g=>`<span class="badge badge-neutral">${g.trim()}</span>`).join('')}
+        </div>
+      </div>
+      <div class="ticket-price-col">
+        ${t.price?`<div class="ticket-price">${parseFloat(t.price).toLocaleString()}</div><div class="ticket-currency">${t.currency||'TWD'}</div>`:'<div class="ticket-currency">—</div>'}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderGrid(list) {
+  const area = document.getElementById('grid-area');
+  if (!list.length) { area.innerHTML=`<div class="empty-state" style="grid-column:1/-1"><div class="empty-icon">🎫</div><p>沒有符合的演唱會記錄</p></div>`; return; }
+  area.innerHTML = list.map(t=>{
+    const s = statusOf(t); const d = t.date?new Date(t.date):null;
+    const dotCls = {seen:'dot-seen',unseen:'dot-unseen',upcoming:'dot-upcoming'}[s]||'dot-unseen';
+    const imgContent = t.images&&t.images.length ? `<img src="${t.images[0].data}" alt="">` : '🎤';
+    return `<div class="ticket-card" onclick="openDetail('${t.id}')">
+      <div class="card-img">${imgContent}<span class="card-status-dot ${dotCls}"></span></div>
+      <div class="card-body">
+        <div class="card-artist">${t.artist||'—'}</div>
+        <div class="card-meta">${t.headline||''}</div>
+        <div class="card-date">${t.venue||''}${d?' · '+d.getFullYear()+'/'+(d.getMonth()+1)+'/'+d.getDate():''}</div>
+      </div>
+      <div class="card-footer">
+        ${statusBadge(t)}
+        <span class="card-price">${t.price?t.currency+' '+parseFloat(t.price).toLocaleString():'—'}</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderStub(list) {
+  const area = document.getElementById('stub-area');
+  if (!list.length) { area.innerHTML=`<div class="empty-state"><div class="empty-icon">🎫</div><p>沒有符合的演唱會記錄</p></div>`; return; }
+  const months=['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
+  area.innerHTML = list.map(t=>{
+    const d = t.date?new Date(t.date):null;
+    const imgContent = t.images&&t.images.length?`<img src="${t.images[0].data}" alt="">`:'🎤';
+    const seatStr = [t.section,t.row&&'排'+t.row,t.seat&&t.seat+'號'].filter(Boolean).join(' ')||t.standing||'—';
+    return `<div class="ticket-stub" onclick="openDetail('${t.id}')">
+      <div class="stub-left">
+        ${d?`<div class="stub-date-d">${d.getDate()}</div><div class="stub-date-m">${months[d.getMonth()]}</div><div class="stub-date-y">${d.getFullYear()}</div>`:'<div style="font-size:28px;color:var(--text3)">—</div>'}
+        <div class="stub-img">${imgContent}</div>
+      </div>
+      <div class="stub-main">
+        <div class="stub-title-line">Artist</div>
+        <div class="stub-artist">${t.artist||'—'}</div>
+        <div class="stub-subtitle">${t.headline||''}</div>
+        <div class="stub-details">
+          <div><div class="stub-detail-label">場地</div><div class="stub-detail-val">${t.venue||'—'}</div></div>
+          <div><div class="stub-detail-label">開演</div><div class="stub-detail-val">${t.time||'—'}</div></div>
+          <div><div class="stub-detail-label">票種</div><div class="stub-detail-val">${t.tickettype||'—'}</div></div>
+        </div>
+      </div>
+      <div class="stub-right">
+        ${statusBadge(t)}
+        <div class="stub-price">${t.price?parseFloat(t.price).toLocaleString():'—'}</div>
+        <div class="stub-seat">${seatStr}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── CALENDAR ──
+function renderCal() {
+  const area = document.getElementById('cal-area');
+  const months=['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'];
+  const dows=['日','一','二','三','四','五','六'];
+  const first = new Date(calYear, calMonth, 1);
+  const last = new Date(calYear, calMonth+1, 0);
+  const startDow = first.getDay();
+  const today = new Date(); today.setHours(0,0,0,0);
+
+  // build event map
+  const evMap = {};
+  tickets.forEach(t => {
+    if (!t.date) return;
+    const d = new Date(t.date);
+    if (d.getFullYear()===calYear && d.getMonth()===calMonth) {
+      const k = d.getDate();
+      if (!evMap[k]) evMap[k]=[];
+      evMap[k].push(t);
+    }
+  });
+
+  let cells = '';
+  // empty leading
+  for (let i=0;i<startDow;i++) cells+=`<div class="cal-day other-month"></div>`;
+  for (let d=1;d<=last.getDate();d++) {
+    const thisDay = new Date(calYear,calMonth,d);
+    const isToday = thisDay.getTime()===today.getTime();
+    const evs = evMap[d]||[];
+    cells+=`<div class="cal-day ${isToday?'today':''}">
+      <div class="cal-day-num">${d}</div>
+      ${evs.map(t=>`<div class="cal-event ${statusOf(t)}" onclick="openDetail('${t.id}');event.stopPropagation()">${t.artist||'—'}</div>`).join('')}
+    </div>`;
+  }
+  // trailing
+  const trailing = 7 - ((startDow+last.getDate())%7||7);
+  if (trailing<7) for(let i=0;i<trailing;i++) cells+=`<div class="cal-day other-month"></div>`;
+
+  area.innerHTML = `
+    <div class="cal-header">
+      <button class="cal-nav" onclick="calPrev()">‹</button>
+      <div class="cal-title">${calYear} ${months[calMonth]}</div>
+      <button class="cal-nav" onclick="calNext()">›</button>
+    </div>
+    <div class="cal-grid">
+      ${dows.map(d=>`<div class="cal-dow">${d}</div>`).join('')}
+      ${cells}
+    </div>`;
+}
+function calPrev(){calMonth--;if(calMonth<0){calMonth=11;calYear--;}renderCal();}
+function calNext(){calMonth++;if(calMonth>11){calMonth=0;calYear++;}renderCal();}
+
+// ── DETAIL MODAL ──
+let currentId = null;
+function openDetail(id) {
+  currentId = id;
+  const t = tickets.find(x=>x.id===id);
+  if (!t) return;
+  document.getElementById('dm-artist').textContent = t.artist||'—';
+  document.getElementById('dm-headline').textContent = t.headline||'';
+  const s = statusOf(t);
+  const body = document.getElementById('detail-body');
+  const imgHero = t.images&&t.images.length ? `<img src="${t.images[0].data}" alt="" style="width:100%;height:200px;object-fit:cover;border-radius:12px 12px 0 0;">` : `<div class="dv-hero">🎤</div>`;
+  const galleryExtra = t.images&&t.images.length>1 ? `<div class="img-gallery">${t.images.slice(1).map(img=>`<img class="img-gallery-item" src="${img.data}" alt="">`).join('')}</div>` : '';
+  const seatStr = [t.section&&'區：'+t.section, t.row&&'排：'+t.row, t.seat&&'號：'+t.seat].filter(Boolean).join('　')||t.standing||'—';
+  const setlistHtml = t.setlist&&t.setlist.length ? `<ol class="setlist-ol">${t.setlist.map(s=>`<li>${s}</li>`).join('')}</ol>` : '<p style="font-size:13px;color:var(--text3)">尚無曲目記錄</p>';
+  const tagsHtml = (t.tags||'').split(',').filter(Boolean).map(g=>`<span class="badge badge-neutral">${g.trim()}</span>`).join(' ');
+
+  body.innerHTML = `
+    ${imgHero}
+    <div style="padding-top:16px">
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px">
+        ${statusBadge(t)}
+        ${t.tickettype?`<span class="badge badge-neutral">🎫 ${t.tickettype}</span>`:''}
+        ${tagsHtml}
+      </div>
+      <div class="dv-section-title">演出資訊</div>
+      <div class="dv-grid" style="margin-bottom:16px">
+        <div class="dv-item"><div class="dv-label">演唱會日期</div><div class="dv-val">${t.date||'—'}</div></div>
+        <div class="dv-item"><div class="dv-label">開場 / 開演</div><div class="dv-val">${t.opentime||'—'} / ${t.time||'—'}</div></div>
+        <div class="dv-item"><div class="dv-label">場地</div><div class="dv-val">${t.venue||'—'}</div></div>
+        <div class="dv-item"><div class="dv-label">城市</div><div class="dv-val">${t.city||'—'}</div></div>
+        <div class="dv-item"><div class="dv-label">主辦</div><div class="dv-val">${t.organizer||'—'}</div></div>
+        <div class="dv-item"><div class="dv-label">售票平台</div><div class="dv-val">${t.ticketing||'—'}</div></div>
+        <div class="dv-item"><div class="dv-label">售票日</div><div class="dv-val">${t.saledate||'—'}</div></div>
+        <div class="dv-item"><div class="dv-label">巡演名稱</div><div class="dv-val">${t.tourname||'—'}</div></div>
+        <div class="dv-item"><div class="dv-label">購買方式</div><div class="dv-val">${t.how||'—'}</div></div>
+      </div>
+      <div class="dv-section-title">票價與座位</div>
+      <div class="dv-grid" style="margin-bottom:16px">
+        <div class="dv-item"><div class="dv-label">票價</div><div class="dv-val">${t.price?t.currency+' '+parseFloat(t.price).toLocaleString():'—'}</div></div>
+        <div class="dv-item"><div class="dv-label">座位</div><div class="dv-val">${seatStr}</div></div>
+        <div class="dv-item"><div class="dv-label">周邊消費</div><div class="dv-val">${t.merch?t.currency+' '+parseFloat(t.merch).toLocaleString():'—'}</div></div>
+        <div class="dv-item"><div class="dv-label">同行人</div><div class="dv-val">${t.companions||'—'}</div></div>
+      </div>
+      ${t.review?`<div class="dv-section-title">心得</div><div class="dv-review" style="margin-bottom:16px">${t.review}</div>`:''}
+      <div class="dv-section-title">曲目</div>
+      <div style="margin-bottom:16px">${setlistHtml}</div>
+      ${galleryExtra ? `<div class="dv-section-title">更多圖片</div><div style="margin-bottom:16px">${galleryExtra}</div>` : ''}
+      ${t.url?`<div style="margin-top:8px"><a href="${t.url}" target="_blank" style="font-size:13px;color:var(--accent)">🔗 官網/票務連結</a></div>`:''}
+    </div>`;
+  document.getElementById('detail-modal').classList.remove('hidden');
+}
+
+function editCurrent() {
+  closeModal('detail-modal');
+  openEdit(currentId);
+}
+
+function deleteCurrent() {
+  if (!confirm('確定要刪除這筆記錄嗎？')) return;
+  tickets = tickets.filter(t=>t.id!==currentId);
+  save(); render();
+  closeModal('detail-modal');
+}
+
+// ── ADD/EDIT MODAL ──
+function openAdd() {
+  editId = null; pendingImgs = [];
+  document.getElementById('modal-mode-title').textContent = '新增演唱會';
+  clearForm();
+  document.getElementById('add-modal').classList.remove('hidden');
+}
+
+function openEdit(id) {
+  editId = id;
+  const t = tickets.find(x=>x.id===id);
+  if (!t) return;
+  document.getElementById('modal-mode-title').textContent = '編輯演唱會';
+  clearForm();
+  document.getElementById('f-headline').value = t.headline||'';
+  document.getElementById('f-artist').value = t.artist||'';
+  document.getElementById('f-date').value = t.date||'';
+  document.getElementById('f-time').value = t.time||'';
+  document.getElementById('f-opentime').value = t.opentime||'';
+  document.getElementById('f-venue').value = t.venue||'';
+  document.getElementById('f-organizer').value = t.organizer||'';
+  document.getElementById('f-ticketing').value = t.ticketing||'';
+  document.getElementById('f-status').value = t.status||'upcoming';
+  document.getElementById('f-how').value = t.how||'';
+  document.getElementById('f-currency').value = t.currency||'TWD';
+  document.getElementById('f-price').value = t.price||'';
+  document.getElementById('f-tickettype').value = t.tickettype||'';
+  document.getElementById('f-saledate').value = t.saledate||'';
+  document.getElementById('f-sec').value = t.section||'';
+  document.getElementById('f-row').value = t.row||'';
+  document.getElementById('f-seat').value = t.seat||'';
+  document.getElementById('f-standing').value = t.standing||'';
+  document.getElementById('f-remind-sale').checked = !!t.remindSale;
+  document.getElementById('f-remind-show').checked = !!t.remindShow;
+  document.getElementById('f-remind-saledaywarn').checked = !!t.remindSaledaywarn;
+  document.getElementById('f-review').value = t.review||'';
+  document.getElementById('f-city').value = t.city||'';
+  document.getElementById('f-tourname').value = t.tourname||'';
+  document.getElementById('f-companions').value = t.companions||'';
+  document.getElementById('f-merch').value = t.merch||'';
+  document.getElementById('f-url').value = t.url||'';
+  document.getElementById('f-tags').value = t.tags||'';
+  // setlist
+  (t.setlist||[]).forEach(s=>addSong(s));
+  // imgs
+  pendingImgs = (t.images||[]).map(i=>({...i}));
+  renderImgPreview();
+  document.getElementById('add-modal').classList.remove('hidden');
+}
+
+function clearForm() {
+  ['f-headline','f-artist','f-date','f-time','f-opentime','f-venue','f-organizer','f-ticketing','f-how','f-price','f-tickettype','f-saledate','f-sec','f-row','f-seat','f-standing','f-review','f-city','f-tourname','f-companions','f-merch','f-url','f-tags'].forEach(id=>{
+    const el = document.getElementById(id); if(el) el.value='';
+  });
+  document.getElementById('f-status').value='upcoming';
+  document.getElementById('f-currency').value='TWD';
+  document.getElementById('f-remind-sale').checked=false;
+  document.getElementById('f-remind-show').checked=false;
+  document.getElementById('f-remind-saledaywarn').checked=false;
+  document.getElementById('setlist-edit').innerHTML='';
+  songCount=0;
+  pendingImgs=[];
+  renderImgPreview();
+}
+
+function addSong(val='') {
+  songCount++;
+  const row = document.createElement('div');
+  row.className='setlist-row';
+  row.id='song-row-'+songCount;
+  row.innerHTML=`<span class="setlist-num">${songCount}.</span><input class="setlist-input" type="text" placeholder="曲目名稱" value="${val.replace(/"/g,'&quot;')}"><button class="setlist-del" onclick="removeSong('song-row-${songCount}')">✕</button>`;
+  document.getElementById('setlist-edit').appendChild(row);
+}
+function removeSong(id){document.getElementById(id)?.remove(); renumberSongs();}
+function renumberSongs(){document.querySelectorAll('#setlist-edit .setlist-num').forEach((el,i)=>el.textContent=(i+1)+'.');}
+
+function handleImgs(e) {
+  Array.from(e.target.files).forEach(file=>{
+    const reader = new FileReader();
+    reader.onload = ev => {
+      pendingImgs.push({name:file.name, data:ev.target.result});
+      renderImgPreview();
+    };
+    reader.readAsDataURL(file);
+  });
+  e.target.value='';
+}
+
+function renderImgPreview() {
+  document.getElementById('img-preview-row').innerHTML = pendingImgs.map((img,i)=>`
+    <div class="img-preview-item"><img src="${img.data}" alt="${img.name}"><button class="img-del-btn" onclick="delImg(${i})">✕</button></div>
+  `).join('');
+}
+function delImg(i){pendingImgs.splice(i,1); renderImgPreview();}
+
+function saveTicket() {
+  const artist = document.getElementById('f-artist').value.trim();
+  const date = document.getElementById('f-date').value;
+  if (!artist) { alert('請輸入藝人名稱'); return; }
+
+  const setlist = Array.from(document.querySelectorAll('#setlist-edit .setlist-input')).map(i=>i.value.trim()).filter(Boolean);
+
+  const t = {
+    id: editId || Date.now().toString(),
+    headline: document.getElementById('f-headline').value.trim(),
+    artist,
+    date,
+    time: document.getElementById('f-time').value,
+    opentime: document.getElementById('f-opentime').value,
+    venue: document.getElementById('f-venue').value.trim(),
+    organizer: document.getElementById('f-organizer').value.trim(),
+    ticketing: document.getElementById('f-ticketing').value.trim(),
+    status: document.getElementById('f-status').value,
+    how: document.getElementById('f-how').value.trim(),
+    currency: document.getElementById('f-currency').value,
+    price: document.getElementById('f-price').value,
+    tickettype: document.getElementById('f-tickettype').value.trim(),
+    saledate: document.getElementById('f-saledate').value,
+    section: document.getElementById('f-sec').value.trim(),
+    row: document.getElementById('f-row').value.trim(),
+    seat: document.getElementById('f-seat').value.trim(),
+    standing: document.getElementById('f-standing').value.trim(),
+    remindSale: document.getElementById('f-remind-sale').checked,
+    remindShow: document.getElementById('f-remind-show').checked,
+    remindSaledaywarn: document.getElementById('f-remind-saledaywarn').checked,
+    review: document.getElementById('f-review').value.trim(),
+    city: document.getElementById('f-city').value.trim(),
+    tourname: document.getElementById('f-tourname').value.trim(),
+    companions: document.getElementById('f-companions').value.trim(),
+    merch: document.getElementById('f-merch').value,
+    url: document.getElementById('f-url').value.trim(),
+    tags: document.getElementById('f-tags').value.trim(),
+    setlist,
+    images: pendingImgs.map(i=>({...i})),
+    createdAt: editId ? (tickets.find(x=>x.id===editId)?.createdAt||Date.now()) : Date.now()
+  };
+
+  if (editId) tickets = tickets.map(x=>x.id===editId?t:x);
+  else tickets.unshift(t);
+  save(); render();
+  closeModal('add-modal');
+}
+
+function closeModal(id) {
+  document.getElementById(id).classList.add('hidden');
+}
+
+// close on backdrop click
+document.querySelectorAll('.modal-backdrop').forEach(el=>{
+  el.addEventListener('click', e=>{if(e.target===el) el.classList.add('hidden');});
+});
+
+// ── INIT + DEMO DATA ──
+function initDemo() {
+  if (tickets.length) return;
+  tickets = [
+    {
+      id:'demo1', headline:'YAMADA RYOSUKE LIVE TOUR 2025 in Taipei',
+      artist:'山田涼介', date:'2025-08-15', time:'18:30', opentime:'17:30',
+      venue:'台北小巨蛋', city:'台北, 台灣', organizer:'IMC娛樂', ticketing:'KKTIX',
+      status:'upcoming', how:'抽籤中籤', currency:'TWD', price:'3800', tickettype:'VIP區',
+      saledate:'2025-03-01', section:'VIP', row:'3', seat:'12', standing:'',
+      remindSale:true, remindShow:true, remindSaledaywarn:true,
+      review:'', city2:'台北', tourname:'HELLO HELLO TOUR 2025',
+      companions:'小美', merch:'1200', url:'https://kktix.com',
+      tags:'日本演出, 抽籤中, VIP', setlist:[], images:[], createdAt:Date.now()
+    },
+    {
+      id:'demo2', headline:'Hey! Say! JUMP LIVE TOUR 2024',
+      artist:'Hey! Say! JUMP', date:'2024-11-20', time:'19:00', opentime:'18:00',
+      venue:'台北國際會議中心', city:'台北, 台灣', organizer:'好好音樂', ticketing:'年代售票',
+      status:'seen', how:'一般購票', currency:'TWD', price:'2800', tickettype:'B區',
+      saledate:'2024-08-15', section:'B', row:'15', seat:'28', standing:'',
+      remindSale:false, remindShow:false, remindSaledaywarn:false,
+      review:'這場太感動了！整個Arena都沸騰！山ちゃん的solo超級好聽，整個人都融化了✨ 第一次看日本偶像演唱會，比想像中還要專業，燈光和舞台設計都很精緻。',
+      tourname:'', companions:'小明、阿花', merch:'800',
+      url:'', tags:'日本偶像, 已看, 感動',
+      setlist:['Ultra Music Power','週邊人情味','Your Song','BOUNCE','Ai no Hana','Hey! Say!','Endless Dream'],
+      images:[], createdAt:Date.now()-86400000*30
+    }
+  ];
+  save();
+}
+
+initDemo();
+render();
+</script>
+</body>
+</html>
