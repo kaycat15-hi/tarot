@@ -959,14 +959,19 @@ function pasteCloud(){
 }
 
 // ══ DEMO ══
+// Only inject demo data on very first ever visit (flag never set before).
+// Once user has interacted (saved or deleted), flag is set and demo never re-appears.
 function initDemo(){
-  if(tickets.length) return;
+  if(localStorage.getItem('cv_inited')) return; // already seen
+  if(tickets.length) return; // user has own data
   tickets=[
     {id:'demo1',headline:'Ryosuke Yamada ASIA TOUR 2026 Red.Y in Taipei',artist:'山田涼介',date:'2026-09-05',time:'18:30',opentime:'17:30','time-jp':'','opentime-jp':'',venue:'台北流行音樂中心',city:'台北, 台灣',organizer:'IMC娛樂',ticketing:'KKTIX',status:'upcoming',how:'抽籤中籤',currency:'TWD',price:'3800',saledate:'2026-03-01',section:'A',row:'5',seat:'20',standing:'',remindSale:'day',remindConcert:'before',review:'',setlist:[],images:[],tags:'山田涼介, Red.Y, 抽籤中',url:'',createdAt:Date.now()},
     {id:'demo2',headline:'Hey! Say! JUMP LIVE TOUR 2024 in Taipei',artist:'Hey! Say! JUMP',date:'2024-11-20',time:'19:00',opentime:'18:00','time-jp':'','opentime-jp':'',venue:'台北國際會議中心',city:'台北, 台灣',organizer:'好好音樂',ticketing:'年代售票',status:'seen',how:'一般購票',currency:'TWD',price:'2800',saledate:'2024-08-15',section:'B',row:'15',seat:'28',standing:'',remindSale:'off',remindConcert:'off',review:'這場太感動了！整個Arena都沸騰！山ちゃん的solo超級好聽，整個人都融化了✨\n第一次看日本偶像演唱會，比想像中還要專業，燈光和舞台設計都很精緻。',setlist:['Ultra Music Power','週邊人情味','Your Song','BOUNCE','Ai no Hana','Hey! Say!','Endless Dream'],images:[],tags:'日本偶像, 感動',url:'',createdAt:Date.now()-86400000*30}
   ];
   save();
 }
+
+function markInited(){ localStorage.setItem('cv_inited','1'); }
 
 loadTickets();
 initDemo();
