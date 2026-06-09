@@ -87,21 +87,20 @@ header{background:var(--surface);border-bottom:1px solid var(--border);padding:0
 .ticket-row.seen{border-left:3px solid var(--seen);}
 .ticket-row.unseen{border-left:3px solid var(--unseen-border);}
 .ticket-row.upcoming{border-left:3px solid var(--upcoming);}
-/* wider thumbnail, 3:4-ish proportional fill */
 .ticket-thumb{width:90px;min-width:90px;flex-shrink:0;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:28px;overflow:hidden;}
 .ticket-thumb img{width:100%;height:100%;object-fit:cover;}
-.ticket-date-col{min-width:48px;text-align:center;padding:12px 0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
-.ticket-date-month{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;}
-.ticket-date-day{font-family:'DM Serif Display',serif;font-size:24px;line-height:1;color:var(--accent);}
-.ticket-date-year{font-size:10px;color:var(--text3);}
 .ticket-info{flex:1;min-width:0;padding:12px 10px;}
 .ticket-artist{font-family:'DM Serif Display',serif;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .ticket-title{font-size:12px;color:var(--text2);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .ticket-venue{font-size:12px;color:var(--text3);margin-top:2px;}
-.ticket-right{padding:12px 14px 12px 0;text-align:right;display:flex;flex-direction:column;align-items:flex-end;justify-content:center;gap:2px;flex-shrink:0;min-width:48px;}
-.ticket-days{font-family:'DM Serif Display',serif;font-size:20px;color:var(--accent);line-height:1;}
-.ticket-days-lbl{font-size:10px;color:var(--text3);}
-.ticket-price{font-size:13px;font-weight:500;color:var(--accent2);}
+/* right column: date on top, days-left small below */
+.ticket-right{padding:12px 14px;text-align:right;display:flex;flex-direction:column;align-items:flex-end;justify-content:center;gap:3px;flex-shrink:0;min-width:60px;}
+.ticket-date-block{text-align:right;}
+.ticket-date-month{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;}
+.ticket-date-day{font-family:'DM Serif Display',serif;font-size:22px;line-height:1;color:var(--accent);}
+.ticket-date-year{font-size:10px;color:var(--text3);}
+.ticket-days-small{font-size:10px;color:var(--upcoming);font-weight:500;margin-top:2px;}
+.ticket-days-small.today{color:var(--warn);}
 
 /* ── GRID VIEW ── */
 .grid-view{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;}
@@ -776,20 +775,21 @@ function renderList(list){
   function rowHtml(t){
     const s=statusOf(t),d=t.date?new Date(t.date):null;
     const dl=daysUntil(t.date);
-    // right col: upcoming → days countdown; seen → nothing (already in group header)
-    const rightCol = s!=='seen'&&dl!==null&&dl>=0
-      ? `<div class="ticket-days">${dl===0?'今天':dl}</div><div class="ticket-days-lbl">${dl===0?'開演':'天後'}</div>`
+    const daysSmall = s!=='seen'&&dl!==null&&dl>=0
+      ? `<div class="ticket-days-small${dl===0?' today':''}">${dl===0?'今天開演':dl+'天後'}</div>`
       : '';
+    const dateBlock = d
+      ? `<div class="ticket-date-block"><div class="ticket-date-month">${MN[d.getMonth()]}</div><div class="ticket-date-day">${d.getDate()}</div><div class="ticket-date-year">${d.getFullYear()}</div>${daysSmall}</div>`
+      : `<div style="font-size:12px;color:var(--text3)">—</div>`;
     const imgContent=t.images&&t.images.length?`<img src="${t.images[0].data}" alt="">`:'🎤';
     return `<div class="ticket-row ${s}" onclick="openDetail('${t.id}')">
       <div class="ticket-thumb">${imgContent}</div>
-      <div class="ticket-date-col">${d?`<div class="ticket-date-month">${MN[d.getMonth()]}</div><div class="ticket-date-day">${d.getDate()}</div><div class="ticket-date-year">${d.getFullYear()}</div>`:'<div style="color:var(--text3);font-size:12px">—</div>'}</div>
       <div class="ticket-info">
-        <div class="ticket-artist">${t.artist||'—'}</div>
+        <div class="ticket-artist">${t.artist||'（未填藝人）'}</div>
         <div class="ticket-title">${t.headline||''}</div>
         <div class="ticket-venue">📍 ${[t.venue,t.city].filter(Boolean).join(' · ')||'—'}</div>
       </div>
-      <div class="ticket-right">${rightCol}</div>
+      <div class="ticket-right">${dateBlock}</div>
     </div>`;
   }
 
@@ -1008,7 +1008,6 @@ function delImg(i){pendingImgs.splice(i,1);renderImgPreview();}
 
 function saveTicket(){
   const artist=document.getElementById('f-artist').value.trim();
-  if(!artist){alert('請輸入藝人名稱');return;}
   const setlistRaw=document.getElementById('f-setlist').value.trim();
   const setlist=setlistRaw?setlistRaw.split('\n').map(s=>s.trim()).filter(Boolean):[];
   const t={
