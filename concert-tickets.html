@@ -87,13 +87,13 @@ header{background:var(--surface);border-bottom:1px solid var(--border);padding:0
 .ticket-row.seen{border-left:3px solid var(--seen);}
 .ticket-row.unseen{border-left:3px solid var(--unseen-border);}
 .ticket-row.upcoming{border-left:3px solid var(--upcoming);}
-.ticket-thumb{width:33%;flex-shrink:0;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:32px;overflow:hidden;}
+.ticket-thumb{width:38%;flex-shrink:0;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:32px;overflow:hidden;}
 .ticket-thumb img{width:100%;height:100%;object-fit:cover;}
 .ticket-info{flex:1;min-width:0;padding:14px 10px;display:flex;flex-direction:column;justify-content:center;}
 .ticket-artist{font-family:'DM Serif Display',serif;font-size:18px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.2;}
 .ticket-title{font-size:11px;color:var(--text2);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .ticket-venue{font-size:11px;color:var(--text3);margin-top:3px;}
-.ticket-right{width:33%;flex-shrink:0;padding:12px 14px;text-align:right;display:flex;flex-direction:column;align-items:flex-end;justify-content:center;gap:3px;}
+.ticket-right{width:24%;flex-shrink:0;padding:12px 12px;text-align:right;display:flex;flex-direction:column;align-items:flex-end;justify-content:center;gap:3px;}
 .ticket-date-block{text-align:right;}
 .ticket-date-month{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;}
 .ticket-date-day{font-family:'DM Serif Display',serif;font-size:26px;line-height:1;color:var(--accent);}
@@ -237,11 +237,10 @@ header{background:var(--surface);border-bottom:1px solid var(--border);padding:0
 
 /* Time picker */
 .time-picker-row{display:flex;gap:6px;align-items:center;}
-.time-ampm,.time-h,.time-m{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 6px;font-size:15px;color:var(--text);font-family:inherit;outline:none;-webkit-appearance:none;appearance:none;text-align:center;}
-.time-ampm{width:72px;flex-shrink:0;}
-.time-h{width:58px;flex-shrink:0;}
-.time-m{width:58px;flex-shrink:0;}
-.time-colon{color:var(--text3);font-size:18px;align-self:center;flex-shrink:0;}
+.time-ampm{width:80px;flex-shrink:0;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 8px;font-size:16px;color:var(--text);font-family:inherit;outline:none;-webkit-appearance:none;appearance:none;text-align:center;}
+.time-h{width:66px;flex-shrink:0;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 8px;font-size:16px;color:var(--text);font-family:inherit;outline:none;-webkit-appearance:none;appearance:none;text-align:center;}
+.time-m{width:66px;flex-shrink:0;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 8px;font-size:16px;color:var(--text);font-family:inherit;outline:none;-webkit-appearance:none;appearance:none;text-align:center;}
+.time-colon{color:var(--text3);font-size:20px;align-self:center;flex-shrink:0;font-weight:300;}
 
 /* 2-page form modal — fixed, no scroll on backdrop */
 .modal-form{display:flex;flex-direction:column;max-height:92vh;}
@@ -458,16 +457,14 @@ header{background:var(--surface);border-bottom:1px solid var(--border);padding:0
           <div class="fgl">
             <div class="fi">
               <label>時區</label>
-              <select id="f-timezone">
-                <option value="Asia/Taipei">🇹🇼 台灣 (UTC+8)</option>
-                <option value="Asia/Tokyo">🇯🇵 日本 (UTC+9)</option>
-                <option value="Asia/Seoul">🇰🇷 韓國 (UTC+9)</option>
-                <option value="Asia/Hong_Kong">🇭🇰 香港 (UTC+8)</option>
-                <option value="Asia/Shanghai">🇨🇳 中國 (UTC+8)</option>
-                <option value="America/Los_Angeles">🇺🇸 美西</option>
-                <option value="America/New_York">🇺🇸 美東</option>
-                <option value="Europe/London">🇬🇧 英國</option>
-              </select>
+              <div class="fi-row" style="gap:8px">
+                <select id="f-timezone" style="flex:1" onchange="toggleTzOther()">
+                  <option value="Asia/Taipei">🇹🇼 台灣 (UTC+8)</option>
+                  <option value="Asia/Tokyo">🇯🇵 日本 (UTC+9)</option>
+                  <option value="other">🌐 其他</option>
+                </select>
+                <input id="f-timezone-other" type="text" placeholder="輸入時區" style="flex:1;display:none">
+              </div>
             </div>
             <div class="fi">
               <label>入場時間</label>
@@ -517,7 +514,7 @@ header{background:var(--surface);border-bottom:1px solid var(--border);padding:0
                 <option>轉售購入</option><option>贈票</option><option>兌換票</option><option>媒體票</option><option>其他</option>
               </select>
             </div>
-            <!-- 幣別+票價左右並排 -->
+            <!-- 幣別、票價、手續費並排 -->
             <div class="fi-row">
               <div class="fi" style="flex:1"><label>幣別</label>
                 <select id="f-currency">
@@ -530,8 +527,9 @@ header{background:var(--surface);border-bottom:1px solid var(--border);padding:0
                 </select>
               </div>
               <div class="fi" style="flex:2"><label>票價</label><input id="f-price" type="number" placeholder="3800"></div>
+              <div class="fi" style="flex:2"><label>手續費</label><input id="f-fee" type="number" placeholder="100"></div>
             </div>
-            <div class="fi"><label>手續費</label><input id="f-fee" type="number" placeholder="100"></div>
+            <!-- 售票日期獨立一行 -->
             <div class="fi"><label>售票日期</label><input id="f-saledate" type="date"></div>
           </div>
         </div>
@@ -783,8 +781,31 @@ function writeTimeField(ampmId,hId,mId,stored){
   }
 }
 
-// timezone label helper
-function tzLabel(tz){
+// timezone other toggle
+function toggleTzOther(){
+  const sel=document.getElementById('f-timezone');
+  const other=document.getElementById('f-timezone-other');
+  if(sel&&other) other.style.display=sel.value==='other'?'block':'none';
+}
+function getTzValue(){
+  const sel=document.getElementById('f-timezone');
+  if(!sel) return 'Asia/Taipei';
+  if(sel.value==='other'){
+    return document.getElementById('f-timezone-other')?.value.trim()||'其他';
+  }
+  return sel.value;
+}
+function setTzValue(val){
+  const sel=document.getElementById('f-timezone');
+  const other=document.getElementById('f-timezone-other');
+  if(!sel) return;
+  const knownVals=['Asia/Taipei','Asia/Tokyo'];
+  if(knownVals.includes(val)){
+    sel.value=val; if(other) other.style.display='none';
+  } else if(val){
+    sel.value='other'; if(other){other.style.display='block';other.value=val;}
+  }
+}
   const map={'Asia/Taipei':'🇹🇼','Asia/Tokyo':'🇯🇵','Asia/Seoul':'🇰🇷','Asia/Hong_Kong':'🇭🇰','Asia/Shanghai':'🇨🇳','America/Los_Angeles':'🇺🇸','America/New_York':'🇺🇸','Europe/London':'🇬🇧'};
   return map[tz]||'🌐';
 }
@@ -1113,10 +1134,10 @@ function openDetail(id){
   document.getElementById('dm-headline').textContent=t.headline||'';
   const setlistHtml=t.setlist&&t.setlist.length?`<ol class="setlist-ol">${t.setlist.map(s=>`<li>${s}</li>`).join('')}</ol>`:'<p style="font-size:13px;color:var(--text3)">尚無曲目記錄</p>';
   const tagsHtml=(t.tags||'').split(',').filter(Boolean).map(g=>`<span class="badge badge-neutral">${g.trim()}</span>`).join(' ');
-  // Hero image: proportional, not cropped
+  // Hero image: fully proportional, never cropped
   const heroHtml=t.images&&t.images.length
-    ?`<div style="border-radius:var(--radius);overflow:hidden;margin-bottom:14px;background:#1a1612;display:flex;align-items:center;justify-content:center;max-height:400px"><img src="${t.images[0].data}" alt="" style="max-width:100%;max-height:400px;object-fit:contain;display:block;margin:0 auto"></div>`
-    :`<div style="height:120px;background:linear-gradient(135deg,var(--accent-light),#e8d4b8);border-radius:var(--radius);display:flex;align-items:center;justify-content:center;font-size:48px;margin-bottom:14px">🎤</div>`;
+    ?`<div style="border-radius:var(--radius);overflow:hidden;margin-bottom:14px;background:#1a1612;line-height:0"><img src="${t.images[0].data}" alt="" style="width:100%;height:auto;display:block;object-fit:contain"></div>`
+    :`<div style="height:100px;background:linear-gradient(135deg,var(--accent-light),#e8d4b8);border-radius:var(--radius);display:flex;align-items:center;justify-content:center;font-size:44px;margin-bottom:14px">🎤</div>`;
   const galleryExtra=t.images&&t.images.length>1?`<div class="dv-sec" style="margin-top:14px">更多圖片</div><div class="img-gallery">${t.images.slice(1).map(img=>`<img class="img-gallery-item" src="${img.data}" style="object-fit:contain;background:#f0ece4">`).join('')}</div>`:'';
   const seatStr=[t.section&&'區：'+t.section,t.row&&'排：'+t.row,t.seat&&'號：'+t.seat].filter(Boolean).join('　')||'—';
   const timeStr=t.time?`${fmtTime(t.time)}${t.timezone?' ('+tzLabel(t.timezone)+')':''}`:'—';
@@ -1199,7 +1220,7 @@ function openEdit(id){
   writeTimeField('f-opentime-ampm','f-opentime-h','f-opentime-m',t.opentime);
   writeTimeField('f-time-ampm','f-time-h','f-time-m',t.time);
   // timezone
-  setTimeout(()=>{const tz=document.getElementById('f-timezone');if(tz) tz.value=t.timezone||'Asia/Taipei';},80);
+  setTimeout(()=>{setTzValue(t.timezone||'Asia/Taipei');},80);
   initRemindUI(t);
   pendingImgs=(t.images||[]).map(i=>({...i}));
   renderImgPreview();
@@ -1210,6 +1231,7 @@ function clearForm(){
   ['f-opentime-h','f-opentime-m','f-time-h','f-time-m'].forEach(id=>{const el=document.getElementById(id);if(el) el.value='';});
   ['f-opentime-ampm','f-time-ampm'].forEach(id=>{const el=document.getElementById(id);if(el) el.value='PM';});
   const tz=document.getElementById('f-timezone');if(tz) tz.value='Asia/Taipei';
+  const tzo=document.getElementById('f-timezone-other');if(tzo){tzo.value='';tzo.style.display='none';}
   document.getElementById('f-status').value='upcoming';
   document.getElementById('f-how').value='';
   document.getElementById('f-currency').value='TWD';
@@ -1235,7 +1257,7 @@ function saveTicket(){
     date:document.getElementById('f-date').value,
     opentime:readTimeField('f-opentime-ampm','f-opentime-h','f-opentime-m'),
     time:readTimeField('f-time-ampm','f-time-h','f-time-m'),
-    timezone:document.getElementById('f-timezone')?.value||'Asia/Taipei',
+    timezone:getTzValue(),
     'opentime-jp':'','time-jp':'',
     venue:document.getElementById('f-venue').value.trim(),
     city:document.getElementById('f-city').value.trim(),
