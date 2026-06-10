@@ -82,24 +82,23 @@ header{background:var(--surface);border-bottom:1px solid var(--border);padding:0
 
 /* ── LIST VIEW ── */
 .list-view{display:flex;flex-direction:column;gap:8px;}
-.ticket-row{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);display:flex;align-items:stretch;cursor:pointer;transition:all .2s;position:relative;overflow:hidden;}
+.ticket-row{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);display:flex;align-items:stretch;cursor:pointer;transition:all .2s;position:relative;overflow:hidden;min-height:100px;}
 .ticket-row:hover{box-shadow:var(--shadow2);border-color:var(--border2);transform:translateY(-1px);}
 .ticket-row.seen{border-left:3px solid var(--seen);}
 .ticket-row.unseen{border-left:3px solid var(--unseen-border);}
 .ticket-row.upcoming{border-left:3px solid var(--upcoming);}
-.ticket-thumb{width:90px;min-width:90px;flex-shrink:0;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:28px;overflow:hidden;}
+.ticket-thumb{width:33%;flex-shrink:0;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:32px;overflow:hidden;}
 .ticket-thumb img{width:100%;height:100%;object-fit:cover;}
-.ticket-info{flex:1;min-width:0;padding:12px 10px;}
-.ticket-artist{font-family:'DM Serif Display',serif;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.ticket-title{font-size:12px;color:var(--text2);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.ticket-venue{font-size:12px;color:var(--text3);margin-top:2px;}
-/* right column: date on top, days-left small below */
-.ticket-right{padding:12px 14px;text-align:right;display:flex;flex-direction:column;align-items:flex-end;justify-content:center;gap:3px;flex-shrink:0;min-width:60px;}
+.ticket-info{flex:1;min-width:0;padding:14px 10px;display:flex;flex-direction:column;justify-content:center;}
+.ticket-artist{font-family:'DM Serif Display',serif;font-size:18px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.2;}
+.ticket-title{font-size:11px;color:var(--text2);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.ticket-venue{font-size:11px;color:var(--text3);margin-top:3px;}
+.ticket-right{width:33%;flex-shrink:0;padding:12px 14px;text-align:right;display:flex;flex-direction:column;align-items:flex-end;justify-content:center;gap:3px;}
 .ticket-date-block{text-align:right;}
 .ticket-date-month{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;}
-.ticket-date-day{font-family:'DM Serif Display',serif;font-size:22px;line-height:1;color:var(--accent);}
+.ticket-date-day{font-family:'DM Serif Display',serif;font-size:26px;line-height:1;color:var(--accent);}
 .ticket-date-year{font-size:10px;color:var(--text3);}
-.ticket-days-small{font-size:10px;color:var(--upcoming);font-weight:500;margin-top:2px;}
+.ticket-days-small{font-size:11px;color:var(--upcoming);font-weight:500;margin-top:3px;}
 .ticket-days-small.today{color:var(--warn);}
 
 /* ── GRID VIEW ── */
@@ -237,11 +236,33 @@ header{background:var(--surface);border-bottom:1px solid var(--border);padding:0
 .mobile-overlay.open{display:block;}
 
 /* Time picker */
-.time-picker-row{display:flex;gap:4px;align-items:center;}
-.time-ampm,.time-h,.time-m{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:7px 6px;font-size:13px;color:var(--text);font-family:inherit;outline:none;-webkit-appearance:none;appearance:none;text-align:center;}
-.time-ampm{width:70px;flex-shrink:0;}
-.time-h{width:54px;flex-shrink:0;}
-.time-m{width:54px;flex-shrink:0;}
+.time-picker-row{display:flex;gap:6px;align-items:center;}
+.time-ampm,.time-h,.time-m{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 6px;font-size:15px;color:var(--text);font-family:inherit;outline:none;-webkit-appearance:none;appearance:none;text-align:center;}
+.time-ampm{width:72px;flex-shrink:0;}
+.time-h{width:58px;flex-shrink:0;}
+.time-m{width:58px;flex-shrink:0;}
+.time-colon{color:var(--text3);font-size:18px;align-self:center;flex-shrink:0;}
+
+/* 2-page form modal — fixed, no scroll on backdrop */
+.modal-form{display:flex;flex-direction:column;max-height:92vh;}
+.modal-form .modal-header{flex-shrink:0;}
+.form-page{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+.form-page .modal-body{padding:14px 20px 24px;}
+
+/* larger single-column fields for mobile friendliness */
+.fgl{display:flex;flex-direction:column;gap:14px;}
+.fgl .fi label{font-size:13px;color:var(--text2);display:block;margin-bottom:5px;font-weight:500;}
+.fgl .fi input,.fgl .fi select,.fgl .fi textarea{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;font-size:16px;color:var(--text);font-family:inherit;outline:none;transition:border-color .2s;-webkit-appearance:none;appearance:none;}
+.fgl .fi input:focus,.fgl .fi select:focus,.fgl .fi textarea:focus{border-color:var(--accent2);}
+.fgl .fi textarea{resize:vertical;min-height:80px;line-height:1.6;}
+.fgl .fi select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7' viewBox='0 0 12 7'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%239a9086' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px;}
+
+/* horizontal pair row inside fgl */
+.fi-row{display:flex;gap:10px;}
+
+/* page dots */
+.form-dot{width:8px;height:8px;border-radius:50%;background:var(--border2);transition:all .2s;}
+.form-dot.active{background:var(--accent);width:22px;border-radius:4px;}
 
 /* multi-show tint: same artist with 2+ concerts */
 .ticket-row.multi-artist{background:linear-gradient(to right,#fdfaf5,#f5ede0);}
@@ -380,192 +401,206 @@ header{background:var(--surface);border-bottom:1px solid var(--border);padding:0
 
 <!-- ══ ADD / EDIT MODAL ══ -->
 <div class="modal-backdrop hidden" id="add-modal">
-  <div class="modal">
+  <div class="modal modal-form">
     <div class="modal-header">
-      <div class="modal-title" id="modal-mode-title">新增演唱會</div>
+      <div>
+        <div class="modal-title" id="modal-mode-title">新增演唱會</div>
+        <div style="font-size:12px;color:var(--text3);margin-top:2px" id="form-page-label">第 1 頁，共 2 頁</div>
+      </div>
       <button class="modal-close" onclick="closeModal('add-modal')">✕</button>
     </div>
-    <div class="modal-body">
 
-      <!-- 基本 -->
-      <div class="modal-section">
-        <div class="modal-section-title">基本資訊</div>
-        <div class="fg">
-          <div class="fi fc"><label>活動抬頭</label><input id="f-headline" type="text" placeholder="YAMADA RYOSUKE ASIA TOUR 2026 Red.Y in Taipei"></div>
-          <div class="fi fc">
-            <label>藝人 *</label>
-            <div class="combo-wrap">
-              <input id="f-artist" type="text" placeholder="輸入或選擇藝人" autocomplete="off"
-                oninput="cb('artist')" onfocus="cb('artist')" onblur="setTimeout(()=>cbClose('artist'),200)">
-              <div class="combo-dropdown" id="dd-artist"></div>
-            </div>
-          </div>
-          <div class="fi"><label>演唱會日期 *</label><input id="f-date" type="date"></div>
-          <div class="fi"><label>場地</label><input id="f-venue" type="text" placeholder="台北小巨蛋"></div>
-          <div class="fi"><label>城市</label><input id="f-city" type="text" placeholder="台北, 台灣"></div>
-          <div class="fi">
-            <label>主辦單位</label>
-            <div class="combo-wrap">
-              <input id="f-organizer" type="text" placeholder="輸入或選擇主辦" autocomplete="off"
-                oninput="cb('org')" onfocus="cb('org')" onblur="setTimeout(()=>cbClose('org'),200)">
-              <div class="combo-dropdown" id="dd-org"></div>
-            </div>
-          </div>
-          <div class="fi">
-            <label>售票平台</label>
-            <div class="combo-wrap">
-              <input id="f-ticketing" type="text" placeholder="KKTIX / pia…" autocomplete="off"
-                oninput="cb('plat')" onfocus="cb('plat')" onblur="setTimeout(()=>cbClose('plat'),200)">
-              <div class="combo-dropdown" id="dd-plat"></div>
-            </div>
-          </div>
-        </div>
-      </div>
+    <!-- progress dots -->
+    <div style="display:flex;justify-content:center;gap:8px;padding:10px 0 0">
+      <div class="form-dot active" id="fdot0"></div>
+      <div class="form-dot" id="fdot1"></div>
+    </div>
 
-      <!-- 時間 -->
-      <div class="modal-section">
-        <div class="modal-section-title">演出時間</div>
-        <div class="fg" style="margin-bottom:10px">
-          <div class="fi fc">
-            <label>時區</label>
-            <select id="f-timezone">
-              <option value="Asia/Taipei">🇹🇼 台灣 (UTC+8)</option>
-              <option value="Asia/Tokyo">🇯🇵 日本 (UTC+9)</option>
-              <option value="Asia/Seoul">🇰🇷 韓國 (UTC+9)</option>
-              <option value="Asia/Hong_Kong">🇭🇰 香港 (UTC+8)</option>
-              <option value="Asia/Shanghai">🇨🇳 中國 (UTC+8)</option>
-              <option value="America/Los_Angeles">🇺🇸 美西 (UTC-7/-8)</option>
-              <option value="America/New_York">🇺🇸 美東 (UTC-4/-5)</option>
-              <option value="Europe/London">🇬🇧 英國</option>
-            </select>
-          </div>
-        </div>
-        <div class="fg">
-          <div class="fi">
-            <label>入場時間</label>
-            <div class="time-picker-row">
-              <select id="f-opentime-ampm" class="time-ampm"><option value="AM">上午</option><option value="PM">下午</option></select>
-              <select id="f-opentime-h" class="time-h"></select>
-              <span style="color:var(--text3);font-size:15px;align-self:center">:</span>
-              <select id="f-opentime-m" class="time-m"></select>
+    <!-- PAGE 1 -->
+    <div class="form-page" id="fpage-0">
+      <div class="modal-body">
+        <div class="modal-section">
+          <div class="modal-section-title">基本資訊</div>
+          <div class="fgl">
+            <div class="fi"><label>活動抬頭</label><input id="f-headline" type="text" placeholder="YAMADA RYOSUKE ASIA TOUR 2026 Red.Y in Taipei"></div>
+            <div class="fi">
+              <label>藝人</label>
+              <div class="combo-wrap">
+                <input id="f-artist" type="text" placeholder="輸入或選擇藝人" autocomplete="off"
+                  oninput="cb('artist')" onfocus="cb('artist')" onblur="setTimeout(()=>cbClose('artist'),200)">
+                <div class="combo-dropdown" id="dd-artist"></div>
+              </div>
             </div>
-          </div>
-          <div class="fi">
-            <label>開演時間</label>
-            <div class="time-picker-row">
-              <select id="f-time-ampm" class="time-ampm"><option value="AM">上午</option><option value="PM" selected>下午</option></select>
-              <select id="f-time-h" class="time-h"></select>
-              <span style="color:var(--text3);font-size:15px;align-self:center">:</span>
-              <select id="f-time-m" class="time-m"></select>
+            <div class="fi"><label>演唱會日期</label><input id="f-date" type="date"></div>
+            <div class="fi"><label>場地</label><input id="f-venue" type="text" placeholder="台北小巨蛋"></div>
+            <div class="fi"><label>城市</label><input id="f-city" type="text" placeholder="台北, 台灣"></div>
+            <div class="fi">
+              <label>主辦單位</label>
+              <div class="combo-wrap">
+                <input id="f-organizer" type="text" placeholder="輸入或選擇主辦" autocomplete="off"
+                  oninput="cb('org')" onfocus="cb('org')" onblur="setTimeout(()=>cbClose('org'),200)">
+                <div class="combo-dropdown" id="dd-org"></div>
+              </div>
+            </div>
+            <div class="fi">
+              <label>售票平台</label>
+              <div class="combo-wrap">
+                <input id="f-ticketing" type="text" placeholder="KKTIX / pia…" autocomplete="off"
+                  oninput="cb('plat')" onfocus="cb('plat')" onblur="setTimeout(()=>cbClose('plat'),200)">
+                <div class="combo-dropdown" id="dd-plat"></div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- 購票 -->
-      <div class="modal-section">
-        <div class="modal-section-title">購票狀態</div>
-        <div class="fg">
-          <div class="fi"><label>購票狀態</label>
-            <select id="f-status">
-              <option value="upcoming">已購票</option>
-              <option value="unseen">未購票</option>
-              <option value="seen">已看</option>
-            </select>
-          </div>
-          <div class="fi"><label>購買方式</label>
-            <select id="f-how">
-              <option value="">— 選擇 —</option>
-              <option>一般購票</option><option>抽籤中籤</option><option>預售搶票</option>
-              <option>轉售購入</option><option>贈票</option><option>兌換票</option><option>媒體票</option><option>其他</option>
-            </select>
-          </div>
-          <div class="fi"><label>幣別</label>
-            <select id="f-currency">
-              <option value="TWD">TWD 新台幣</option>
-              <option value="JPY">JPY 日圓</option>
-              <option value="USD">USD 美元</option>
-              <option value="KRW">KRW 韓元</option>
-              <option value="HKD">HKD 港幣</option>
-              <option value="CNY">CNY 人民幣</option>
-            </select>
-          </div>
-          <div class="fi"><label>票價</label><input id="f-price" type="number" placeholder="3800"></div>
-          <div class="fi"><label>手續費</label><input id="f-fee" type="number" placeholder="100"></div>
-          <div class="fi"><label>售票日期</label><input id="f-saledate" type="date"></div>
-        </div>
-      </div>
-
-      <!-- 座位 -->
-      <div class="modal-section">
-        <div class="modal-section-title">座位資訊</div>
-        <div class="fg-3">
-          <div class="fi"><label>區域</label><input id="f-sec" type="text" placeholder="A區 / VIP"></div>
-          <div class="fi"><label>排</label><input id="f-row" type="text" placeholder="10"></div>
-          <div class="fi"><label>號</label><input id="f-seat" type="text" placeholder="25"></div>
-        </div>
-      </div>
-
-      <!-- 站位 -->
-      <div class="modal-section">
-        <div class="modal-section-title">站位（無座票）</div>
-        <div class="fi"><label>站位序號</label><input id="f-standing" type="text" placeholder="S-1234"></div>
-      </div>
-
-      <!-- 提醒 -->
-      <div class="modal-section">
-        <div class="modal-section-title">提醒設定</div>
-        <div class="remind-row">
-          <div class="remind-label">🎟 預售日提醒<span class="remind-sub">售票當天 / 前一天</span></div>
-          <div class="remind-btns">
-            <button class="remind-opt" id="rs-off" onclick="setRemind('sale','off')">關</button>
-            <button class="remind-opt" id="rs-before" onclick="setRemind('sale','before')">前一天</button>
-            <button class="remind-opt active" id="rs-day" onclick="setRemind('sale','day')">當天</button>
+        <div class="modal-section">
+          <div class="modal-section-title">演出時間</div>
+          <div class="fgl">
+            <div class="fi">
+              <label>時區</label>
+              <select id="f-timezone">
+                <option value="Asia/Taipei">🇹🇼 台灣 (UTC+8)</option>
+                <option value="Asia/Tokyo">🇯🇵 日本 (UTC+9)</option>
+                <option value="Asia/Seoul">🇰🇷 韓國 (UTC+9)</option>
+                <option value="Asia/Hong_Kong">🇭🇰 香港 (UTC+8)</option>
+                <option value="Asia/Shanghai">🇨🇳 中國 (UTC+8)</option>
+                <option value="America/Los_Angeles">🇺🇸 美西</option>
+                <option value="America/New_York">🇺🇸 美東</option>
+                <option value="Europe/London">🇬🇧 英國</option>
+              </select>
+            </div>
+            <div class="fi">
+              <label>入場時間</label>
+              <div class="time-picker-row">
+                <select id="f-opentime-ampm" class="time-ampm"><option value="AM">上午</option><option value="PM">下午</option></select>
+                <select id="f-opentime-h" class="time-h"></select>
+                <span class="time-colon">:</span>
+                <select id="f-opentime-m" class="time-m"></select>
+              </div>
+            </div>
+            <div class="fi">
+              <label>開演時間</label>
+              <div class="time-picker-row">
+                <select id="f-time-ampm" class="time-ampm"><option value="AM">上午</option><option value="PM" selected>下午</option></select>
+                <select id="f-time-h" class="time-h"></select>
+                <span class="time-colon">:</span>
+                <select id="f-time-m" class="time-m"></select>
+              </div>
+            </div>
           </div>
         </div>
-        <div class="remind-row">
-          <div class="remind-label">🎤 開演提醒<span class="remind-sub">演出當天 / 前一天</span></div>
-          <div class="remind-btns">
-            <button class="remind-opt" id="rc-off" onclick="setRemind('concert','off')">關</button>
-            <button class="remind-opt" id="rc-before" onclick="setRemind('concert','before')">前一天</button>
-            <button class="remind-opt active" id="rc-day" onclick="setRemind('concert','day')">當天</button>
+
+        <div style="display:flex;gap:10px;margin-top:8px">
+          <button class="btn btn-ghost" onclick="closeModal('add-modal')" style="flex:1">取消</button>
+          <button class="btn btn-primary" onclick="formNext()" style="flex:2">下一步 →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAGE 2 -->
+    <div class="form-page hidden" id="fpage-1">
+      <div class="modal-body">
+        <div class="modal-section">
+          <div class="modal-section-title">購票狀態</div>
+          <div class="fgl">
+            <div class="fi"><label>購票狀態</label>
+              <select id="f-status">
+                <option value="upcoming">已購票</option>
+                <option value="unseen">未購票</option>
+                <option value="seen">已看</option>
+              </select>
+            </div>
+            <div class="fi"><label>購買方式</label>
+              <select id="f-how">
+                <option value="">— 選擇 —</option>
+                <option>一般購票</option><option>抽籤中籤</option><option>預售搶票</option>
+                <option>轉售購入</option><option>贈票</option><option>兌換票</option><option>媒體票</option><option>其他</option>
+              </select>
+            </div>
+            <!-- 幣別+票價左右並排 -->
+            <div class="fi-row">
+              <div class="fi" style="flex:1"><label>幣別</label>
+                <select id="f-currency">
+                  <option value="TWD">TWD</option>
+                  <option value="JPY">JPY</option>
+                  <option value="USD">USD</option>
+                  <option value="KRW">KRW</option>
+                  <option value="HKD">HKD</option>
+                  <option value="CNY">CNY</option>
+                </select>
+              </div>
+              <div class="fi" style="flex:2"><label>票價</label><input id="f-price" type="number" placeholder="3800"></div>
+            </div>
+            <div class="fi"><label>手續費</label><input id="f-fee" type="number" placeholder="100"></div>
+            <div class="fi"><label>售票日期</label><input id="f-saledate" type="date"></div>
           </div>
         </div>
-      </div>
 
-      <!-- 心得 & 曲目 -->
-      <div class="modal-section">
-        <div class="modal-section-title">心得 & 曲目</div>
-        <div class="fi" style="margin-bottom:11px"><label>心得筆記</label><textarea id="f-review" placeholder="記錄這場演唱會的感受…"></textarea></div>
-        <div class="fi">
-          <label>曲目列表（每行一首，直接貼上）</label>
-          <textarea class="setlist-paste" id="f-setlist" placeholder="Ultra Music Power&#10;Your Song&#10;BOUNCE&#10;…"></textarea>
+        <div class="modal-section">
+          <div class="modal-section-title">座位 / 站位</div>
+          <div class="fgl">
+            <div class="fi-row">
+              <div class="fi" style="flex:2"><label>區域</label><input id="f-sec" type="text" placeholder="A區 / VIP"></div>
+              <div class="fi" style="flex:1"><label>排</label><input id="f-row" type="text" placeholder="10"></div>
+              <div class="fi" style="flex:1"><label>號</label><input id="f-seat" type="text" placeholder="25"></div>
+            </div>
+            <div class="fi"><label>站位序號（無座票）</label><input id="f-standing" type="text" placeholder="S-1234"></div>
+          </div>
         </div>
-      </div>
 
-      <!-- 圖片 -->
-      <div class="modal-section">
-        <div class="modal-section-title">圖片</div>
-        <label class="img-upload-area" for="f-imgs">
-          <input type="file" id="f-imgs" accept="image/*" multiple onchange="handleImgs(event)">
-          <div class="up-icon">🖼</div>
-          <p>點擊上傳票根、現場照片（可多張）</p>
-        </label>
-        <div class="img-preview-row" id="img-preview-row"></div>
-      </div>
-
-      <!-- 其他 -->
-      <div class="modal-section">
-        <div class="modal-section-title">其他</div>
-        <div class="fg">
-          <div class="fi fc"><label>官網 / 票務連結</label><input id="f-url" type="url" placeholder="https://…"></div>
-          <div class="fi fc"><label>標籤（逗號分隔）</label><input id="f-tags" type="text" placeholder="日本演出, 抽籤中, VIP"></div>
+        <div class="modal-section">
+          <div class="modal-section-title">提醒設定</div>
+          <div class="remind-row">
+            <div class="remind-label">🎟 預售日提醒<span class="remind-sub">售票當天 / 前一天</span></div>
+            <div class="remind-btns">
+              <button class="remind-opt" id="rs-off" onclick="setRemind('sale','off')">關</button>
+              <button class="remind-opt" id="rs-before" onclick="setRemind('sale','before')">前一天</button>
+              <button class="remind-opt active" id="rs-day" onclick="setRemind('sale','day')">當天</button>
+            </div>
+          </div>
+          <div class="remind-row">
+            <div class="remind-label">🎤 開演提醒<span class="remind-sub">演出當天 / 前一天</span></div>
+            <div class="remind-btns">
+              <button class="remind-opt" id="rc-off" onclick="setRemind('concert','off')">關</button>
+              <button class="remind-opt" id="rc-before" onclick="setRemind('concert','before')">前一天</button>
+              <button class="remind-opt active" id="rc-day" onclick="setRemind('concert','day')">當天</button>
+            </div>
+          </div>
         </div>
-      </div>
 
-      <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:4px">
-        <button class="btn btn-ghost" onclick="closeModal('add-modal')">取消</button>
-        <button class="btn btn-primary" onclick="saveTicket()">儲存</button>
+        <div class="modal-section">
+          <div class="modal-section-title">心得 & 曲目</div>
+          <div class="fgl">
+            <div class="fi"><label>心得筆記</label><textarea id="f-review" placeholder="記錄這場演唱會的感受…" style="min-height:90px"></textarea></div>
+            <div class="fi">
+              <label>曲目列表（每行一首，直接貼上）</label>
+              <textarea class="setlist-paste" id="f-setlist" placeholder="Ultra Music Power&#10;Your Song&#10;BOUNCE&#10;…"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-section">
+          <div class="modal-section-title">圖片</div>
+          <label class="img-upload-area" for="f-imgs">
+            <input type="file" id="f-imgs" accept="image/*" multiple onchange="handleImgs(event)">
+            <div class="up-icon">🖼</div>
+            <p>點擊上傳票根、現場照片（可多張）</p>
+          </label>
+          <div class="img-preview-row" id="img-preview-row"></div>
+        </div>
+
+        <div class="modal-section">
+          <div class="modal-section-title">其他</div>
+          <div class="fgl">
+            <div class="fi"><label>官網 / 票務連結</label><input id="f-url" type="url" placeholder="https://…"></div>
+            <div class="fi"><label>標籤（逗號分隔）</label><input id="f-tags" type="text" placeholder="日本演出, 抽籤中, VIP"></div>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:10px;margin-top:8px">
+          <button class="btn btn-ghost" onclick="formPrev()" style="flex:1">← 上一步</button>
+          <button class="btn btn-primary" onclick="saveTicket()" style="flex:2">儲存</button>
+        </div>
       </div>
     </div>
   </div>
@@ -1124,16 +1159,32 @@ function editCurrent(){closeModal('detail-modal');openEdit(currentId);}
 function deleteCurrent(){if(!confirm('確定要刪除這筆記錄嗎？')) return;tickets=tickets.filter(t=>t.id!==currentId);markInited();save();render();closeModal('detail-modal');}
 
 // ══ ADD / EDIT ══
+// ── 2-page form navigation ──
+let formPage=0;
+function showFormPage(n){
+  formPage=n;
+  [0,1].forEach(i=>{
+    document.getElementById('fpage-'+i).classList.toggle('hidden',i!==n);
+    document.getElementById('fdot'+i).classList.toggle('active',i===n);
+  });
+  document.getElementById('form-page-label').textContent=`第 ${n+1} 頁，共 2 頁`;
+  // scroll form page back to top
+  const page=document.getElementById('fpage-'+n);
+  if(page) page.scrollTop=0;
+}
+function formNext(){ showFormPage(1); }
+function formPrev(){ showFormPage(0); }
+
 function openAdd(){
   editId=null;pendingImgs=[];
   document.getElementById('modal-mode-title').textContent='新增演唱會';
-  clearForm();
+  clearForm();showFormPage(0);
   document.getElementById('add-modal').classList.remove('hidden');
 }
 function openEdit(id){
   editId=id;const t=tickets.find(x=>x.id===id);if(!t) return;
   document.getElementById('modal-mode-title').textContent='編輯演唱會';
-  clearForm();
+  clearForm();showFormPage(0);
   const s=(i,v)=>{const el=document.getElementById(i);if(el) el.value=v||'';};
   s('f-headline',t.headline);s('f-artist',t.artist);s('f-date',t.date);
   s('f-venue',t.venue);s('f-city',t.city);s('f-organizer',t.organizer);s('f-ticketing',t.ticketing);
