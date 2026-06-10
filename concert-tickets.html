@@ -290,56 +290,9 @@ header{background:var(--surface);border-bottom:1px solid var(--border);padding:0
   .stat-val{font-size:18px;}
   .content-header{gap:6px;}
 }
-/* ── PIN LOCK ── */
-#pin-screen{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center;}
-.pin-box{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:36px 32px;width:320px;max-width:90vw;text-align:center;box-shadow:var(--shadow2);}
-.pin-logo{font-family:'DM Serif Display',serif;font-size:22px;color:var(--accent);margin-bottom:4px;}
-.pin-sub{font-size:12px;color:var(--text3);margin-bottom:24px;}
-.pin-dots{display:flex;justify-content:center;gap:12px;margin-bottom:24px;}
-.pin-dot{width:14px;height:14px;border-radius:50%;border:2px solid var(--border2);background:var(--bg);transition:all .15s;}
-.pin-dot.filled{background:var(--accent);border-color:var(--accent);}
-.pin-dot.error{background:#c0392b;border-color:#c0392b;}
-.pin-pad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px;}
-.pin-key{border:1px solid var(--border);background:var(--surface2);border-radius:12px;padding:14px 0;font-size:20px;font-family:'DM Serif Display',serif;color:var(--text);cursor:pointer;transition:all .15s;user-select:none;}
-.pin-key:hover{background:var(--accent-light);border-color:var(--accent2);}
-.pin-key:active{transform:scale(.94);}
-.pin-key.zero{grid-column:2;}
-.pin-key.del{font-size:16px;color:var(--text3);}
-.pin-error{font-size:12px;color:#c0392b;min-height:18px;margin-bottom:4px;}
-.pin-setup-label{font-size:12px;color:var(--text2);margin-bottom:16px;line-height:1.5;}
-.pin-change-btn{font-size:12px;color:var(--text3);background:none;border:none;cursor:pointer;text-decoration:underline;margin-top:8px;}
-.pin-change-btn:hover{color:var(--accent);}
 </style>
 </head>
 <body>
-
-<!-- ── PIN LOCK SCREEN ── -->
-<div id="pin-screen">
-  <div class="pin-box">
-    <div class="pin-logo">🎫 Concert Vault</div>
-    <div class="pin-sub" id="pin-sub">輸入密碼</div>
-    <div class="pin-dots" id="pin-dots">
-      <div class="pin-dot" id="pd0"></div>
-      <div class="pin-dot" id="pd1"></div>
-      <div class="pin-dot" id="pd2"></div>
-      <div class="pin-dot" id="pd3"></div>
-    </div>
-    <div class="pin-error" id="pin-error"></div>
-    <div class="pin-pad">
-      <button class="pin-key" onclick="pinKey('1')">1</button>
-      <button class="pin-key" onclick="pinKey('2')">2</button>
-      <button class="pin-key" onclick="pinKey('3')">3</button>
-      <button class="pin-key" onclick="pinKey('4')">4</button>
-      <button class="pin-key" onclick="pinKey('5')">5</button>
-      <button class="pin-key" onclick="pinKey('6')">6</button>
-      <button class="pin-key" onclick="pinKey('7')">7</button>
-      <button class="pin-key" onclick="pinKey('8')">8</button>
-      <button class="pin-key" onclick="pinKey('9')">9</button>
-      <button class="pin-key zero" onclick="pinKey('0')">0</button>
-      <button class="pin-key del" onclick="pinDel()">⌫</button>
-    </div>
-  </div>
-</div>
 
 <header>
   <button class="mobile-menu-btn" onclick="toggleSidebar()">☰</button>
@@ -623,103 +576,6 @@ header{background:var(--surface);border-bottom:1px solid var(--border);padding:0
 </div>
 
 <script>
-// ══ PIN LOCK ══
-const PIN_KEY='cv_pin';
-let pinBuffer='';
-let pinMode='unlock'; // 'unlock' | 'setup-new' | 'setup-confirm'
-let pinNewFirst='';
-
-function pinHash(s){ // simple non-crypto obfuscation (good enough for casual protection)
-  let h=0;for(let i=0;i<s.length;i++){h=((h<<5)-h)+s.charCodeAt(i);h|=0;}
-  return String(h);
-}
-
-function pinInit(){
-  const stored=localStorage.getItem(PIN_KEY);
-  if(!stored){
-    // first time — ask user to set a PIN
-    pinMode='setup-new';
-    document.getElementById('pin-sub').textContent='請設定 4 位數密碼';
-    document.getElementById('pin-setup-hint')?.remove();
-    const box=document.querySelector('.pin-box');
-    const hint=document.createElement('div');
-    hint.className='pin-setup-label';hint.id='pin-setup-hint';
-    hint.textContent='第一次使用，請設定你的專屬密碼（4位數字）';
-    box.insertBefore(hint,box.querySelector('.pin-dots'));
-  } else {
-    pinMode='unlock';
-    document.getElementById('pin-sub').textContent='請輸入密碼';
-  }
-}
-
-function pinKey(d){
-  if(pinBuffer.length>=4) return;
-  pinBuffer+=d;
-  updatePinDots();
-  if(pinBuffer.length===4) setTimeout(pinSubmit,120);
-}
-
-function pinDel(){
-  pinBuffer=pinBuffer.slice(0,-1);
-  updatePinDots();
-  document.getElementById('pin-error').textContent='';
-}
-
-function updatePinDots(state){
-  for(let i=0;i<4;i++){
-    const dot=document.getElementById('pd'+i);
-    dot.classList.toggle('filled',i<pinBuffer.length);
-    dot.classList.toggle('error',state==='error');
-  }
-}
-
-function pinSubmit(){
-  if(pinMode==='unlock'){
-    const stored=localStorage.getItem(PIN_KEY);
-    if(pinHash(pinBuffer)===stored){
-      document.getElementById('pin-screen').style.display='none';
-      appStart();
-    } else {
-      updatePinDots('error');
-      document.getElementById('pin-error').textContent='密碼錯誤，請再試一次';
-      pinBuffer='';
-      setTimeout(()=>{updatePinDots();document.getElementById('pin-error').textContent='';},800);
-    }
-  } else if(pinMode==='setup-new'){
-    pinNewFirst=pinBuffer;
-    pinBuffer='';
-    pinMode='setup-confirm';
-    document.getElementById('pin-sub').textContent='再輸入一次確認';
-    updatePinDots();
-  } else if(pinMode==='setup-confirm'){
-    if(pinBuffer===pinNewFirst){
-      localStorage.setItem(PIN_KEY,pinHash(pinBuffer));
-      document.getElementById('pin-screen').style.display='none';
-      document.getElementById('pin-setup-hint')?.remove();
-      appStart();
-    } else {
-      updatePinDots('error');
-      document.getElementById('pin-error').textContent='兩次輸入不同，請重新設定';
-      pinBuffer='';pinNewFirst='';pinMode='setup-new';
-      setTimeout(()=>{updatePinDots();document.getElementById('pin-error').textContent='';document.getElementById('pin-sub').textContent='請設定 4 位數密碼';},900);
-    }
-  }
-}
-
-// change PIN from IO panel
-function startChangePin(){
-  pinBuffer='';pinNewFirst='';pinMode='setup-new';
-  document.getElementById('pin-sub').textContent='請設定新密碼';
-  updatePinDots();
-  document.getElementById('pin-screen').style.display='flex';
-}
-
-document.addEventListener('keydown',e=>{
-  if(document.getElementById('pin-screen').style.display==='none') return;
-  if(e.key>='0'&&e.key<='9') pinKey(e.key);
-  else if(e.key==='Backspace') pinDel();
-});
-
 // ══ DATA ══
 let tickets=[];
 function loadTickets(){try{tickets=JSON.parse(localStorage.getItem('cv_tickets')||'[]');}catch(e){tickets=[];}}
