@@ -236,6 +236,18 @@ header{background:var(--surface);border-bottom:1px solid var(--border);padding:0
 .mobile-overlay{display:none;position:fixed;inset:0;background:rgba(30,27,22,.3);z-index:90;}
 .mobile-overlay.open{display:block;}
 
+/* Time picker */
+.time-picker-row{display:flex;gap:4px;align-items:center;}
+.time-ampm,.time-h,.time-m{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:7px 6px;font-size:13px;color:var(--text);font-family:inherit;outline:none;-webkit-appearance:none;appearance:none;text-align:center;}
+.time-ampm{width:70px;flex-shrink:0;}
+.time-h{width:54px;flex-shrink:0;}
+.time-m{width:54px;flex-shrink:0;}
+
+/* multi-show tint: same artist with 2+ concerts */
+.ticket-row.multi-artist{background:linear-gradient(to right,#fdfaf5,#f5ede0);}
+.ticket-card.multi-artist{background:#fdfaf5;}
+.ticket-stub.multi-artist .stub-body{background:linear-gradient(to right,var(--surface),#faf4ec);}
+
 .hidden{display:none !important;}
 .empty-state{text-align:center;padding:48px 20px;color:var(--text3);}
 .empty-state .ei{font-size:44px;margin-bottom:10px;}
@@ -366,43 +378,38 @@ header{background:var(--surface);border-bottom:1px solid var(--border);padding:0
       <!-- 時間 -->
       <div class="modal-section">
         <div class="modal-section-title">演出時間</div>
-        <!-- 台灣時間 -->
-        <div style="font-size:11px;color:var(--text2);font-weight:500;margin-bottom:6px;display:flex;align-items:center;gap:6px"><span style="background:var(--upcoming-bg);color:var(--upcoming);border:1px solid var(--upcoming-border);border-radius:10px;padding:1px 8px;font-size:10px">🇹🇼 台灣時間</span></div>
         <div class="fg" style="margin-bottom:10px">
-          <div class="fi"><label>入場時間</label>
-            <div style="display:flex;gap:4px">
-              <select id="f-opentime-ampm" style="width:90px;flex-shrink:0;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:7px 6px;font-size:13px;color:var(--text);font-family:inherit;outline:none;-webkit-appearance:none;appearance:none">
-                <option value="AM">上午</option><option value="PM">下午</option>
-              </select>
-              <select id="f-opentime" style="flex:1;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:7px 10px;font-size:13px;color:var(--text);font-family:inherit;outline:none;-webkit-appearance:none;appearance:none"><option value="">—</option></select>
-            </div>
-          </div>
-          <div class="fi"><label>開演時間</label>
-            <div style="display:flex;gap:4px">
-              <select id="f-time-ampm" style="width:90px;flex-shrink:0;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:7px 6px;font-size:13px;color:var(--text);font-family:inherit;outline:none;-webkit-appearance:none;appearance:none">
-                <option value="AM">上午</option><option value="PM" selected>下午</option>
-              </select>
-              <select id="f-time" style="flex:1;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:7px 10px;font-size:13px;color:var(--text);font-family:inherit;outline:none;-webkit-appearance:none;appearance:none"><option value="">—</option></select>
-            </div>
+          <div class="fi fc">
+            <label>時區</label>
+            <select id="f-timezone">
+              <option value="Asia/Taipei">🇹🇼 台灣 (UTC+8)</option>
+              <option value="Asia/Tokyo">🇯🇵 日本 (UTC+9)</option>
+              <option value="Asia/Seoul">🇰🇷 韓國 (UTC+9)</option>
+              <option value="Asia/Hong_Kong">🇭🇰 香港 (UTC+8)</option>
+              <option value="Asia/Shanghai">🇨🇳 中國 (UTC+8)</option>
+              <option value="America/Los_Angeles">🇺🇸 美西 (UTC-7/-8)</option>
+              <option value="America/New_York">🇺🇸 美東 (UTC-4/-5)</option>
+              <option value="Europe/London">🇬🇧 英國</option>
+            </select>
           </div>
         </div>
-        <!-- 日本時間 -->
-        <div style="font-size:11px;color:var(--text2);font-weight:500;margin-bottom:6px;display:flex;align-items:center;gap:6px"><span style="background:#fff8f0;color:#c0522a;border:1px solid #f0c898;border-radius:10px;padding:1px 8px;font-size:10px">🇯🇵 日本時間</span></div>
         <div class="fg">
-          <div class="fi"><label>入場時間</label>
-            <div style="display:flex;gap:4px">
-              <select id="f-opentime-jp-ampm" style="width:90px;flex-shrink:0;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:7px 6px;font-size:13px;color:var(--text);font-family:inherit;outline:none;-webkit-appearance:none;appearance:none">
-                <option value="AM">上午</option><option value="PM">下午</option>
-              </select>
-              <select id="f-opentime-jp" style="flex:1;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:7px 10px;font-size:13px;color:var(--text);font-family:inherit;outline:none;-webkit-appearance:none;appearance:none"><option value="">—</option></select>
+          <div class="fi">
+            <label>入場時間</label>
+            <div class="time-picker-row">
+              <select id="f-opentime-ampm" class="time-ampm"><option value="AM">上午</option><option value="PM">下午</option></select>
+              <select id="f-opentime-h" class="time-h"></select>
+              <span style="color:var(--text3);font-size:15px;align-self:center">:</span>
+              <select id="f-opentime-m" class="time-m"></select>
             </div>
           </div>
-          <div class="fi"><label>開演時間</label>
-            <div style="display:flex;gap:4px">
-              <select id="f-time-jp-ampm" style="width:90px;flex-shrink:0;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:7px 6px;font-size:13px;color:var(--text);font-family:inherit;outline:none;-webkit-appearance:none;appearance:none">
-                <option value="AM">上午</option><option value="PM" selected>下午</option>
-              </select>
-              <select id="f-time-jp" style="flex:1;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:7px 10px;font-size:13px;color:var(--text);font-family:inherit;outline:none;-webkit-appearance:none;appearance:none"><option value="">—</option></select>
+          <div class="fi">
+            <label>開演時間</label>
+            <div class="time-picker-row">
+              <select id="f-time-ampm" class="time-ampm"><option value="AM">上午</option><option value="PM" selected>下午</option></select>
+              <select id="f-time-h" class="time-h"></select>
+              <span style="color:var(--text3);font-size:15px;align-self:center">:</span>
+              <select id="f-time-m" class="time-m"></select>
             </div>
           </div>
         </div>
@@ -544,58 +551,70 @@ function save(){localStorage.setItem('cv_tickets',JSON.stringify(tickets));}
 function getMem(k){try{return JSON.parse(localStorage.getItem(k)||'[]');}catch(e){return[];}}
 function addMem(k,v){if(!v||!v.trim()) return; const a=getMem(k); if(!a.includes(v)){a.unshift(v);localStorage.setItem(k,JSON.stringify(a.slice(0,40)));}}
 
-// ══ TIME OPTIONS (上午/下午 各 1-12 點，每15分) ══
+// ══ TIME HELPERS ══
 const PLATFORM_DEFAULTS=['KKTIX','年代售票','ibon','拓元售票','城市售票網','寬宏售票','Ticket Plus','LiveNation','PayEasy','pia（日本）','e+（日本）','ローソンチケット','セブンチケット','その他'];
 
-function buildTimeOpts(){
-  const opts=['<option value="">—</option>'];
-  for(let h=1;h<=12;h++) for(let m of [0,15,30,45]){
-    const hh=String(h).padStart(2,'0'),mm=String(m).padStart(2,'0');
-    opts.push(`<option value="${hh}:${mm}">${hh}:${mm}</option>`);
-  }
-  return opts.join('');
-}
 function initTimeSelects(){
-  const html=buildTimeOpts();
-  ['f-opentime','f-time','f-opentime-jp','f-time-jp'].forEach(id=>{
-    const el=document.getElementById(id); if(el) el.innerHTML=html;
-  });
+  const hOpts=['<option value="">—</option>',...Array.from({length:12},(_,i)=>{const h=String(i+1).padStart(2,'0');return `<option value="${h}">${h}</option>`})].join('');
+  const mOpts=['<option value="">—</option>',...[0,15,30,45].map(m=>{const mm=String(m).padStart(2,'0');return `<option value="${mm}">${mm}</option>`})].join('');
+  ['f-opentime-h','f-time-h'].forEach(id=>{const el=document.getElementById(id);if(el) el.innerHTML=hOpts;});
+  ['f-opentime-m','f-time-m'].forEach(id=>{const el=document.getElementById(id);if(el) el.innerHTML=mOpts;});
 }
 
-// Convert stored "PM 06:30" → display "下午 6:30"
+// stored format: "PM 06:30" — display as "下午 6:30"
 function fmtTime(stored){
-  if(!stored||stored==='—') return stored||'—';
-  // format: "AM 09:00" or "PM 06:30"
+  if(!stored) return '—';
   const m=stored.match(/^(AM|PM)\s+(\d{1,2}):(\d{2})$/);
-  if(!m) return stored; // legacy plain HH:MM
-  const label=m[1]==='AM'?'上午':'下午';
-  return `${label} ${parseInt(m[2])}:${m[3]}`;
+  if(!m) return stored;
+  return `${m[1]==='AM'?'上午':'下午'} ${parseInt(m[2])}:${m[3]}`;
 }
-// Combine ampm select + time select → stored string
-function readTimeField(ampmId,timeId){
+
+// read 3 selects → stored "PM 06:30" or ""
+function readTimeField(ampmId,hId,mId){
   const ampm=document.getElementById(ampmId)?.value||'PM';
-  const t=document.getElementById(timeId)?.value||'';
-  if(!t) return '';
-  return `${ampm} ${t}`;
+  const h=document.getElementById(hId)?.value||'';
+  const m=document.getElementById(mId)?.value||'';
+  if(!h||!m) return '';
+  return `${ampm} ${h}:${m}`;
 }
-// Restore ampm+time selects from stored string
-function writeTimeField(ampmId,timeId,stored){
+
+// write stored string back to 3 selects
+function writeTimeField(ampmId,hId,mId,stored){
   if(!stored) return;
-  const m=stored.match(/^(AM|PM)\s+(\d{2}:\d{2})$/);
-  if(m){
-    const amEl=document.getElementById(ampmId); if(amEl) amEl.value=m[1];
-    setTimeout(()=>{const tEl=document.getElementById(timeId);if(tEl) tEl.value=m[2];},60);
+  const match=stored.match(/^(AM|PM)\s+(\d{2}):(\d{2})$/);
+  if(match){
+    const ae=document.getElementById(ampmId);if(ae) ae.value=match[1];
+    setTimeout(()=>{
+      const he=document.getElementById(hId);if(he) he.value=match[2];
+      const me=document.getElementById(mId);if(me) me.value=match[3];
+    },60);
   } else {
-    // legacy plain HH:MM — infer AM/PM
-    const hm=stored.match(/^(\d{2}):(\d{2})$/);
-    if(hm){
-      const h24=parseInt(hm[1]);
-      const amEl=document.getElementById(ampmId);if(amEl) amEl.value=h24<12?'AM':'PM';
+    // legacy HH:MM 24h
+    const lm=stored.match(/^(\d{2}):(\d{2})$/);
+    if(lm){
+      const h24=parseInt(lm[1]),mm=lm[2];
+      const ampm=h24<12?'AM':'PM';
       const h12=h24===0?12:h24>12?h24-12:h24;
-      const val=String(h12).padStart(2,'0')+':'+hm[2];
-      setTimeout(()=>{const tEl=document.getElementById(timeId);if(tEl) tEl.value=val;},60);
+      const ae=document.getElementById(ampmId);if(ae) ae.value=ampm;
+      setTimeout(()=>{
+        const he=document.getElementById(hId);if(he) he.value=String(h12).padStart(2,'0');
+        const me=document.getElementById(mId);if(me) me.value=mm;
+      },60);
     }
   }
+}
+
+// timezone label helper
+function tzLabel(tz){
+  const map={'Asia/Taipei':'🇹🇼','Asia/Tokyo':'🇯🇵','Asia/Seoul':'🇰🇷','Asia/Hong_Kong':'🇭🇰','Asia/Shanghai':'🇨🇳','America/Los_Angeles':'🇺🇸','America/New_York':'🇺🇸','Europe/London':'🇬🇧'};
+  return map[tz]||'🌐';
+}
+
+// multi-artist detection: artists with 2+ tickets
+function multiArtistSet(){
+  const counts={};
+  tickets.forEach(t=>{if(t.artist) counts[t.artist]=(counts[t.artist]||0)+1;});
+  return new Set(Object.keys(counts).filter(a=>counts[a]>=2));
 }
 
 // ══ STATE ══
@@ -772,6 +791,7 @@ function renderList(list){
   const seenList=list.filter(t=>statusOf(t)==='seen');
   const showGroups=(currentNav==='all')&&upcomingList.length>0&&seenList.length>0;
 
+  const multiSet=multiArtistSet();
   function rowHtml(t){
     const s=statusOf(t),d=t.date?new Date(t.date):null;
     const dl=daysUntil(t.date);
@@ -782,7 +802,8 @@ function renderList(list){
       ? `<div class="ticket-date-block"><div class="ticket-date-month">${MN[d.getMonth()]}</div><div class="ticket-date-day">${d.getDate()}</div><div class="ticket-date-year">${d.getFullYear()}</div>${daysSmall}</div>`
       : `<div style="font-size:12px;color:var(--text3)">—</div>`;
     const imgContent=t.images&&t.images.length?`<img src="${t.images[0].data}" alt="">`:'🎤';
-    return `<div class="ticket-row ${s}" onclick="openDetail('${t.id}')">
+    const multiCls=t.artist&&multiSet.has(t.artist)?' multi-artist':'';
+    return `<div class="ticket-row ${s}${multiCls}" onclick="openDetail('${t.id}')">
       <div class="ticket-thumb">${imgContent}</div>
       <div class="ticket-info">
         <div class="ticket-artist">${t.artist||'（未填藝人）'}</div>
@@ -811,13 +832,15 @@ function renderGrid(list){
   const seenList=list.filter(t=>statusOf(t)==='seen');
   const showGroups=(currentNav==='all')&&upcomingList.length>0&&seenList.length>0;
 
+  const multiSet=multiArtistSet();
   function cardHtml(t){
     const s=statusOf(t),d=t.date?new Date(t.date):null;
     const dotCls={seen:'dot-seen',unseen:'dot-unseen',upcoming:'dot-upcoming'}[s]||'dot-unseen';
     const dl=daysUntil(t.date);
     const imgC=t.images&&t.images.length?`<img src="${t.images[0].data}" alt="">`:'🎤';
     const dayBadge=s!=='seen'&&dl!==null&&dl>=0?`<div class="card-days-badge">${dl===0?'今天':dl+'天後'}</div>`:'';
-    return `<div class="ticket-card" onclick="openDetail('${t.id}')">
+    const multiCls=t.artist&&multiSet.has(t.artist)?' multi-artist':'';
+    return `<div class="ticket-card${multiCls}" onclick="openDetail('${t.id}')">
       <div class="card-img"><div class="card-img-inner">${imgC}</div><span class="card-status-dot ${dotCls}"></span>${dayBadge}</div>
       <div class="card-body"><div class="card-artist">${t.artist||'—'}</div><div class="card-meta">${t.headline||''}</div><div class="card-venue">📍${t.venue||'—'}</div></div>
       <div class="card-footer">${statusBadge(t)}<span class="card-price">${d?MN[d.getMonth()]+' '+d.getDate():'—'}</span></div>
@@ -917,8 +940,8 @@ function openDetail(id){
     :`<div style="height:120px;background:linear-gradient(135deg,var(--accent-light),#e8d4b8);border-radius:var(--radius);display:flex;align-items:center;justify-content:center;font-size:48px;margin-bottom:14px">🎤</div>`;
   const galleryExtra=t.images&&t.images.length>1?`<div class="dv-sec" style="margin-top:14px">更多圖片</div><div class="img-gallery">${t.images.slice(1).map(img=>`<img class="img-gallery-item" src="${img.data}" style="object-fit:contain;background:#f0ece4">`).join('')}</div>`:'';
   const seatStr=[t.section&&'區：'+t.section,t.row&&'排：'+t.row,t.seat&&'號：'+t.seat].filter(Boolean).join('　')||'—';
-  const timeStr=t.time?(t['time-jp']?`${fmtTime(t.time)}（台）<br>${fmtTime(t['time-jp'])}（日）`:fmtTime(t.time)):'—';
-  const openStr=t.opentime?(t['opentime-jp']?`${fmtTime(t.opentime)}（台）<br>${fmtTime(t['opentime-jp'])}（日）`:fmtTime(t.opentime)):'—';
+  const timeStr=t.time?`${fmtTime(t.time)}${t.timezone?' ('+tzLabel(t.timezone)+')':''}`:'—';
+  const openStr=t.opentime?`${fmtTime(t.opentime)}${t.timezone?' ('+tzLabel(t.timezone)+')':''}`:'—';
   const total=t.price&&t.fee?parseFloat(t.price)+parseFloat(t.fee):null;
   document.getElementById('detail-body').innerHTML=`
     ${heroHtml}
@@ -977,11 +1000,11 @@ function openEdit(id){
   s('f-sec',t.section);s('f-row',t.row);s('f-seat',t.seat);s('f-standing',t.standing);
   s('f-review',t.review);s('f-setlist',(t.setlist||[]).join('\n'));
   s('f-url',t.url);s('f-tags',t.tags);
-  // AM/PM time fields
-  writeTimeField('f-opentime-ampm','f-opentime',t.opentime);
-  writeTimeField('f-time-ampm','f-time',t.time);
-  writeTimeField('f-opentime-jp-ampm','f-opentime-jp',t['opentime-jp']);
-  writeTimeField('f-time-jp-ampm','f-time-jp',t['time-jp']);
+  // AM/PM time fields (new 3-select format)
+  writeTimeField('f-opentime-ampm','f-opentime-h','f-opentime-m',t.opentime);
+  writeTimeField('f-time-ampm','f-time-h','f-time-m',t.time);
+  // timezone
+  setTimeout(()=>{const tz=document.getElementById('f-timezone');if(tz) tz.value=t.timezone||'Asia/Taipei';},80);
   initRemindUI(t);
   pendingImgs=(t.images||[]).map(i=>({...i}));
   renderImgPreview();
@@ -989,8 +1012,9 @@ function openEdit(id){
 }
 function clearForm(){
   ['f-headline','f-artist','f-date','f-venue','f-city','f-organizer','f-ticketing','f-price','f-fee','f-saledate','f-sec','f-row','f-seat','f-standing','f-review','f-setlist','f-url','f-tags'].forEach(id=>{const el=document.getElementById(id);if(el) el.value='';});
-  ['f-opentime','f-time','f-opentime-jp','f-time-jp'].forEach(id=>{const el=document.getElementById(id);if(el) el.value='';});
-  ['f-opentime-ampm','f-time-ampm','f-opentime-jp-ampm','f-time-jp-ampm'].forEach(id=>{const el=document.getElementById(id);if(el) el.value='PM';});
+  ['f-opentime-h','f-opentime-m','f-time-h','f-time-m'].forEach(id=>{const el=document.getElementById(id);if(el) el.value='';});
+  ['f-opentime-ampm','f-time-ampm'].forEach(id=>{const el=document.getElementById(id);if(el) el.value='PM';});
+  const tz=document.getElementById('f-timezone');if(tz) tz.value='Asia/Taipei';
   document.getElementById('f-status').value='upcoming';
   document.getElementById('f-how').value='';
   document.getElementById('f-currency').value='TWD';
@@ -1014,10 +1038,10 @@ function saveTicket(){
     id:editId||Date.now().toString(),
     headline:document.getElementById('f-headline').value.trim(),artist,
     date:document.getElementById('f-date').value,
-    opentime:readTimeField('f-opentime-ampm','f-opentime'),
-    time:readTimeField('f-time-ampm','f-time'),
-    'opentime-jp':readTimeField('f-opentime-jp-ampm','f-opentime-jp'),
-    'time-jp':readTimeField('f-time-jp-ampm','f-time-jp'),
+    opentime:readTimeField('f-opentime-ampm','f-opentime-h','f-opentime-m'),
+    time:readTimeField('f-time-ampm','f-time-h','f-time-m'),
+    timezone:document.getElementById('f-timezone')?.value||'Asia/Taipei',
+    'opentime-jp':'','time-jp':'',
     venue:document.getElementById('f-venue').value.trim(),
     city:document.getElementById('f-city').value.trim(),
     organizer:document.getElementById('f-organizer').value.trim(),
@@ -1099,15 +1123,30 @@ function pasteCloud(){
   }catch(e){alert('備份碼無效：'+e.message);}
 }
 
-// ══ DEMO ══
-// Only inject demo data on very first ever visit (flag never set before).
-// Once user has interacted (saved or deleted), flag is set and demo never re-appears.
+// ══ DEMO / INITIAL DATA ══
 function initDemo(){
-  if(localStorage.getItem('cv_inited')) return; // already seen
-  if(tickets.length) return; // user has own data
+  if(localStorage.getItem('cv_inited')) return;
+  if(tickets.length) return;
+  const base={images:[],setlist:[],remindSale:'day',remindConcert:'before',review:'',tags:'',url:'',fee:'',section:'',row:'',seat:'',standing:'',how:'',saledate:'',currency:'TWD',price:''};
   tickets=[
-    {id:'demo1',headline:'Ryosuke Yamada ASIA TOUR 2026 Red.Y in Taipei',artist:'山田涼介',date:'2026-09-05',time:'18:30',opentime:'17:30','time-jp':'','opentime-jp':'',venue:'台北流行音樂中心',city:'台北, 台灣',organizer:'IMC娛樂',ticketing:'KKTIX',status:'upcoming',how:'抽籤中籤',currency:'TWD',price:'3800',saledate:'2026-03-01',section:'A',row:'5',seat:'20',standing:'',remindSale:'day',remindConcert:'before',review:'',setlist:[],images:[],tags:'山田涼介, Red.Y, 抽籤中',url:'',createdAt:Date.now()},
-    {id:'demo2',headline:'Hey! Say! JUMP LIVE TOUR 2024 in Taipei',artist:'Hey! Say! JUMP',date:'2024-11-20',time:'19:00',opentime:'18:00','time-jp':'','opentime-jp':'',venue:'台北國際會議中心',city:'台北, 台灣',organizer:'好好音樂',ticketing:'年代售票',status:'seen',how:'一般購票',currency:'TWD',price:'2800',saledate:'2024-08-15',section:'B',row:'15',seat:'28',standing:'',remindSale:'off',remindConcert:'off',review:'這場太感動了！整個Arena都沸騰！山ちゃん的solo超級好聽，整個人都融化了✨\n第一次看日本偶像演唱會，比想像中還要專業，燈光和舞台設計都很精緻。',setlist:['Ultra Music Power','週邊人情味','Your Song','BOUNCE','Ai no Hana','Hey! Say!','Endless Dream'],images:[],tags:'日本偶像, 感動',url:'',createdAt:Date.now()-86400000*30}
+    // ── 已看 ──
+    {...base,id:'r0a',artist:'KinKi Kids',headline:'Concert 2024-2025 DOMOTO',date:'2025-01-13',time:'',opentime:'',timezone:'Asia/Tokyo',venue:'',city:'東京',organizer:'',ticketing:'',status:'seen',createdAt:Date.now()-86400000*150},
+    {...base,id:'r0b',artist:'Koichi Domoto',headline:'Live Tour Raise',date:'2025-10-12',time:'PM 12:30',opentime:'',timezone:'Asia/Taipei',venue:'',city:'台北',organizer:'',ticketing:'',status:'seen',createdAt:Date.now()-86400000*90},
+    // ── 即將 ──
+    {...base,id:'r0c',artist:'tuki.',headline:'1st ASIA TOUR in TAIPEI',date:'2026-04-04',time:'PM 05:00',opentime:'',timezone:'Asia/Taipei',venue:'',city:'台北',organizer:'',ticketing:'',status:'upcoming',createdAt:Date.now()-86400000*60},
+    {...base,id:'r0d',artist:'百老匯星光演唱會',headline:'百老匯星光演唱會',date:'2026-04-18',time:'PM 03:00',opentime:'',timezone:'Asia/Taipei',venue:'',city:'台北',organizer:'',ticketing:'',status:'upcoming',createdAt:Date.now()-86400000*55},
+    {...base,id:'r1',artist:'ONE OK ROCK',headline:'DETOX Asia Tour in Taipei',date:'2026-04-25',time:'PM 07:00',opentime:'',timezone:'Asia/Taipei',venue:'',city:'台北',organizer:'',ticketing:'',status:'upcoming',createdAt:Date.now()-86400000*50},
+    {...base,id:'r2',artist:'Arashi',headline:'We are ARASHI',date:'2026-05-31',time:'PM 05:00',opentime:'',timezone:'Asia/Taipei',venue:'',city:'台北',organizer:'',ticketing:'',status:'upcoming',createdAt:Date.now()-86400000*45},
+    {...base,id:'r3',artist:'友成空',headline:'Here Comes SORA!! in Taipei',date:'2026-06-13',time:'PM 06:30',opentime:'',timezone:'Asia/Taipei',venue:'MOONDOG',city:'台北',organizer:'',ticketing:'',status:'upcoming',createdAt:Date.now()-86400000*40},
+    {...base,id:'r4',artist:'Eason',headline:"IT'S ABOUT TIME",date:'2026-07-07',time:'PM 06:30',opentime:'',timezone:'Asia/Taipei',venue:'',city:'台北',organizer:'',ticketing:'',status:'upcoming',createdAt:Date.now()-86400000*35},
+    {...base,id:'r5',artist:'DOMOTO',headline:'Concert 2026 ～Stay with me～',date:'2026-07-15',time:'',opentime:'',timezone:'Asia/Tokyo',venue:'東京ドーム',city:'東京',organizer:'',ticketing:'',status:'upcoming',createdAt:Date.now()-86400000*34},
+    {...base,id:'r6',artist:'DOMOTO',headline:'Concert 2026 ～Stay with me～',date:'2026-07-16',time:'',opentime:'',timezone:'Asia/Tokyo',venue:'東京ドーム',city:'東京',organizer:'',ticketing:'',status:'upcoming',createdAt:Date.now()-86400000*33},
+    {...base,id:'r7',artist:'ASH DA HERO',headline:'ASIA TOUR 2026 LIVE IN TAIPEI',date:'2026-08-01',time:'PM 06:00',opentime:'',timezone:'Asia/Taipei',venue:'水管音樂',city:'台北',organizer:'',ticketing:'KKTIX',status:'upcoming',createdAt:Date.now()-86400000*30},
+    {...base,id:'r8',artist:'back number',headline:'Grateful Yesterdays Tour 2026 in Taipei',date:'2026-08-23',time:'PM 06:00',opentime:'',timezone:'Asia/Taipei',venue:'',city:'台北',organizer:'',ticketing:'',status:'upcoming',createdAt:Date.now()-86400000*25},
+    {...base,id:'r9',artist:'Kodaline',headline:'Farewell Tour',date:'2026-08-24',time:'PM 08:00',opentime:'',timezone:'Asia/Taipei',venue:'',city:'台北',organizer:'',ticketing:'',status:'upcoming',createdAt:Date.now()-86400000*24},
+    {...base,id:'r10',artist:'髭男dism',headline:'OFFICIAL HIGE DANDISM ASIA TOUR 2026',date:'2026-08-29',time:'PM 06:00',opentime:'',timezone:'Asia/Taipei',venue:'',city:'台北',organizer:'',ticketing:'',status:'upcoming',createdAt:Date.now()-86400000*23},
+    {...base,id:'r11',artist:'Ryosuke Yamada',headline:'ASIA TOUR 2026 Red.Y in Taipei',date:'2026-09-05',time:'PM 06:00',opentime:'',timezone:'Asia/Taipei',venue:'台北流行音樂中心',city:'台北',organizer:'',ticketing:'',status:'upcoming',createdAt:Date.now()-86400000*20},
+    {...base,id:'r12',artist:'Ryosuke Yamada',headline:'ASIA TOUR 2026 Red.Y in Taipei',date:'2026-09-06',time:'PM 06:00',opentime:'',timezone:'Asia/Taipei',venue:'台北流行音樂中心',city:'台北',organizer:'',ticketing:'',status:'upcoming',createdAt:Date.now()-86400000*19},
   ];
   save();
 }
