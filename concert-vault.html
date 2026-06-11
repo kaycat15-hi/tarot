@@ -9,142 +9,113 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg: #f7f4ef;
-  --bg2: #f0ebe2;
-  --card: #fffdf9;
-  --border: #e2d9cc;
-  --accent: #8b6f47;
-  --accent2: #c4a97d;
-  --text: #2a2018;
-  --text2: #7a6a54;
-  --seen: #4a9068;
-  --seen-bg: #eef6f1;
-  --upcoming: #4a7ab5;
-  --upcoming-bg: #eef2f8;
-  --purchased: #8b6f47;
-  --purchased-bg: #f5ede0;
-  --multi-bg: linear-gradient(135deg,#fdf6ec 0%,#f9efe0 100%);
-  --shadow: 0 2px 10px rgba(80,50,20,.07);
-  --radius: 14px;
-  --font-serif: 'DM Serif Display', serif;
-  --font-sans: 'DM Sans', 'Noto Sans TC', sans-serif;
+:root{
+  --bg:#f7f4ef;--bg2:#f0ebe2;--card:#fffdf9;--border:#e2d9cc;
+  --accent:#8b6f47;--accent2:#c4a97d;--text:#2a2018;--text2:#7a6a54;
+  --seen:#4a9068;--seen-bg:#eef6f1;
+  --upcoming:#4a7ab5;--upcoming-bg:#eef2f8;
+  --multi-bg:linear-gradient(135deg,#fdf6ec 0%,#f9efe0 100%);
+  --shadow:0 2px 10px rgba(80,50,20,.07);--radius:14px;
+  --font-serif:'DM Serif Display',serif;
+  --font-sans:'DM Sans','Noto Sans TC',sans-serif;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--font-sans);font-size:16px;-webkit-font-smoothing:antialiased}
 button{font-family:inherit;cursor:pointer;border:none;background:none}
 input,select,textarea{font-family:inherit;font-size:16px}
 
-/* ─── LAYOUT ─── */
+/* LAYOUT */
 #app{display:flex;height:100dvh;overflow:hidden}
 #sidebar{width:220px;min-width:220px;background:var(--card);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow-y:auto;transition:transform .25s ease}
 #main{flex:1;display:flex;flex-direction:column;overflow:hidden}
-#topbar{height:56px;min-height:56px;background:var(--card);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;padding:0 16px;position:sticky;top:0;z-index:20}
+#topbar{height:56px;min-height:56px;background:var(--card);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;padding:0 12px;position:sticky;top:0;z-index:20}
 #content{flex:1;overflow-y:auto;padding:16px}
 
-/* ─── SIDEBAR ─── */
+/* SIDEBAR */
 .sidebar-logo{padding:20px 18px 10px;font-family:var(--font-serif);font-size:1.3rem;color:var(--accent);letter-spacing:.02em;border-bottom:1px solid var(--border)}
 .sidebar-logo span{display:block;font-family:var(--font-sans);font-size:.7rem;color:var(--text2);font-weight:500;letter-spacing:.08em;text-transform:uppercase;margin-top:2px}
 .sidebar-section{padding:10px 10px 0}
 .sidebar-section-label{font-size:.68rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--text2);padding:6px 8px 4px}
 .sidebar-btn{display:flex;align-items:center;gap:8px;width:100%;padding:9px 12px;border-radius:9px;font-size:.92rem;color:var(--text);transition:background .15s;text-align:left}
 .sidebar-btn:hover{background:var(--bg)}
-.sidebar-btn.active{background:var(--purchased-bg);color:var(--accent);font-weight:600}
+.sidebar-btn.active{background:#f5ede0;color:var(--accent);font-weight:600}
 .sidebar-btn .icon{font-size:1.1em;flex-shrink:0}
 .sidebar-count{margin-left:auto;background:var(--bg2);border-radius:20px;font-size:.72rem;padding:1px 7px;color:var(--text2)}
 .sidebar-artists{padding:10px}
 .artist-chip{display:inline-block;padding:4px 10px;margin:3px;border-radius:20px;background:var(--bg2);font-size:.8rem;cursor:pointer;border:1px solid transparent;transition:all .15s}
-.artist-chip:hover,.artist-chip.active{border-color:var(--accent2);background:var(--purchased-bg);color:var(--accent)}
+.artist-chip:hover,.artist-chip.active{border-color:var(--accent2);background:#f5ede0;color:var(--accent)}
 .sidebar-footer{margin-top:auto;padding:12px;border-top:1px solid var(--border)}
 
-/* ─── TOPBAR ─── */
-.menu-btn{padding:6px 8px;border-radius:8px;font-size:1.2rem;color:var(--text2)}
+/* TOPBAR */
+.menu-btn{padding:6px 8px;border-radius:8px;font-size:1.2rem;color:var(--text2);flex-shrink:0}
 .menu-btn:hover{background:var(--bg2)}
-#search-input{flex:1;border:1px solid var(--border);border-radius:10px;padding:8px 14px;background:var(--bg);color:var(--text);outline:none;font-size:.95rem}
+#search-input{flex:1;min-width:0;border:1px solid var(--border);border-radius:10px;padding:8px 12px;background:var(--bg);color:var(--text);outline:none;font-size:.9rem}
 #search-input:focus{border-color:var(--accent2)}
-.view-btn{padding:7px 9px;border-radius:8px;font-size:1rem;color:var(--text2)}
-.view-btn:hover,.view-btn.active{background:var(--purchased-bg);color:var(--accent)}
-.add-btn{background:var(--accent);color:#fff;border-radius:10px;padding:7px 14px;font-size:.9rem;font-weight:600;white-space:nowrap;transition:opacity .15s}
+.view-btn{padding:7px 9px;border-radius:8px;font-size:1rem;color:var(--text2);flex-shrink:0}
+.view-btn:hover,.view-btn.active{background:#f5ede0;color:var(--accent)}
+.add-btn{background:var(--accent);color:#fff;border-radius:10px;padding:7px 14px;font-size:.9rem;font-weight:600;white-space:nowrap;flex-shrink:0;transition:opacity .15s}
 .add-btn:hover{opacity:.88}
-.backup-btn{padding:7px 9px;border-radius:8px;font-size:1.1rem;color:var(--text2)}
+.backup-btn{padding:7px 9px;border-radius:8px;font-size:1.1rem;color:var(--text2);flex-shrink:0}
 .backup-btn:hover{background:var(--bg2)}
 
-/* ─── LIST VIEW ─── */
+/* LIST VIEW */
 .section-label{font-size:.75rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--text2);padding:6px 2px 8px;margin-top:4px}
 .concert-item{display:flex;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:10px;cursor:pointer;box-shadow:var(--shadow);transition:box-shadow .15s,transform .1s;position:relative}
 .concert-item:hover{box-shadow:0 4px 18px rgba(80,50,20,.13);transform:translateY(-1px)}
 .concert-item.status-seen{border-left:3px solid var(--seen)}
 .concert-item.status-upcoming{border-left:3px solid var(--upcoming)}
-.concert-item.status-purchased{border-left:3px solid var(--purchased)}
 .concert-item.multi-artist{background:var(--multi-bg)}
-.item-img{width:38%;min-width:38%;max-width:38%;flex-shrink:0;overflow:hidden;background:#e8e0d4}
+.item-img{width:38%;min-width:38%;max-width:38%;flex-shrink:0;overflow:hidden;background:#e8e0d4;position:relative}
 .item-img img{width:100%;height:100%;object-fit:cover;display:block}
-.item-img-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:2rem;background:linear-gradient(135deg,#e8dfd0,#d4c8b4)}
+.item-img-ph{width:100%;height:100%;min-height:80px;display:flex;align-items:center;justify-content:center;font-size:2rem;background:linear-gradient(135deg,#e8dfd0,#d4c8b4)}
 .item-info{flex:1;padding:12px 10px;display:flex;flex-direction:column;justify-content:center;overflow:hidden;min-width:0}
 .item-artist{font-family:var(--font-serif);font-size:1.05rem;color:var(--text);line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .item-title{font-size:.78rem;color:var(--text2);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.3}
-.item-venue{font-size:.75rem;color:var(--text2);margin-top:3px;display:flex;align-items:center;gap:4px}
-.item-venue::before{content:'📍';font-size:.7em}
-.item-date{flex-shrink:0;width:70px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px 8px;border-left:1px solid var(--border);text-align:center}
+.item-venue{font-size:.75rem;color:var(--text2);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.item-date{flex-shrink:0;width:68px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px 6px;border-left:1px solid var(--border);text-align:center}
 .item-month{font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
 .item-day{font-family:var(--font-serif);font-size:2rem;line-height:1;color:var(--text)}
-.item-year{font-size:.68rem;color:var(--text2)}
-.item-countdown{font-size:.62rem;color:var(--text2);margin-top:2px;text-align:center;line-height:1.2}
-.status-badge{position:absolute;top:8px;right:78px;font-size:.62rem;padding:2px 7px;border-radius:10px;font-weight:600}
+.item-year{font-size:.65rem;color:var(--text2)}
+.item-countdown{font-size:.6rem;color:var(--text2);margin-top:2px;line-height:1.2}
+.status-badge{position:absolute;top:7px;right:72px;font-size:.6rem;padding:2px 6px;border-radius:10px;font-weight:600;pointer-events:none}
 .status-badge.seen{background:var(--seen-bg);color:var(--seen)}
 .status-badge.upcoming{background:var(--upcoming-bg);color:var(--upcoming)}
-.status-badge.purchased{background:var(--purchased-bg);color:var(--purchased)}
 
-/* ─── GRID VIEW ─── */
-#content.view-grid .concert-item{flex-direction:column;width:calc(50% - 5px);display:inline-flex;vertical-align:top;margin-right:10px}
-#content.view-grid .concert-item:nth-child(2n){margin-right:0}
-#content.view-grid .item-img{width:100%;height:140px}
-#content.view-grid .item-date{width:100%;flex-direction:row;border-left:none;border-top:1px solid var(--border);padding:8px 12px;justify-content:flex-start;gap:6px}
-#content.view-grid .item-day{font-size:1.3rem}
-#content.view-grid .item-month{font-size:.72rem}
-#content.view-grid .status-badge{right:8px}
+/* GRID VIEW — photo cards */
+.grid-wrap{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.grid-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;cursor:pointer;box-shadow:var(--shadow);transition:box-shadow .15s,transform .1s;position:relative}
+.grid-card:hover{box-shadow:0 4px 18px rgba(80,50,20,.13);transform:translateY(-1px)}
+.grid-card.status-seen{border-top:3px solid var(--seen)}
+.grid-card.status-upcoming{border-top:3px solid var(--upcoming)}
+.grid-card.multi-artist{background:var(--multi-bg)}
+.grid-img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;background:linear-gradient(135deg,#e8dfd0,#d4c8b4)}
+.grid-img-ph{width:100%;aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;font-size:2.5rem;background:linear-gradient(135deg,#e8dfd0,#d4c8b4)}
+.grid-info{padding:10px 11px 11px}
+.grid-date-line{font-size:.7rem;font-weight:700;color:var(--accent);letter-spacing:.04em;margin-bottom:3px}
+.grid-artist{font-family:var(--font-serif);font-size:1rem;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.grid-title{font-size:.73rem;color:var(--text2);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.grid-venue{font-size:.7rem;color:var(--text2);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.grid-countdown{font-size:.62rem;color:var(--text2);margin-top:3px}
 
-/* ─── TICKET VIEW ─── */
-#content.view-ticket .concert-item{flex-direction:row;border-radius:12px;background:var(--card);overflow:visible;border:none;box-shadow:none;margin-bottom:0;padding:0;cursor:default}
-.ticket-wrap{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:12px;box-shadow:var(--shadow);cursor:pointer}
-.ticket-wrap:hover{box-shadow:0 4px 18px rgba(80,50,20,.13)}
-.ticket-top{display:flex;gap:0}
-.ticket-img{width:90px;height:90px;object-fit:cover;flex-shrink:0}
-.ticket-img-ph{width:90px;height:90px;display:flex;align-items:center;justify-content:center;font-size:1.8rem;background:linear-gradient(135deg,#e8dfd0,#d4c8b4);flex-shrink:0}
-.ticket-body{flex:1;padding:12px}
-.ticket-artist{font-family:var(--font-serif);font-size:1.1rem}
-.ticket-title{font-size:.8rem;color:var(--text2);margin-top:2px}
-.ticket-divider{border:none;border-top:2px dashed var(--border);margin:0 10px;position:relative}
-.ticket-divider::before,.ticket-divider::after{content:'';position:absolute;width:16px;height:16px;border-radius:50%;background:var(--bg);border:1px solid var(--border);top:-9px}
-.ticket-divider::before{left:-18px}
-.ticket-divider::after{right:-18px}
-.ticket-bottom{display:flex;padding:10px 12px;gap:16px;font-size:.8rem;color:var(--text2)}
-.ticket-field{display:flex;flex-direction:column;gap:2px}
-.ticket-field strong{font-size:.68rem;letter-spacing:.06em;text-transform:uppercase;color:var(--text2)}
-.ticket-field span{color:var(--text);font-weight:500}
-
-/* ─── CALENDAR VIEW ─── */
+/* CALENDAR VIEW */
 .cal-header{display:flex;align-items:center;justify-content:space-between;padding:0 4px 12px}
 .cal-header h2{font-family:var(--font-serif);font-size:1.3rem}
-.cal-nav{padding:8px 12px;border-radius:8px;font-size:.9rem;border:1px solid var(--border);color:var(--text);background:var(--card)}
+.cal-nav{padding:8px 12px;border-radius:8px;font-size:.9rem;border:1px solid var(--border);color:var(--text);background:var(--card);cursor:pointer}
 .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
 .cal-dow{text-align:center;font-size:.68rem;font-weight:700;letter-spacing:.07em;color:var(--text2);padding:4px 0;text-transform:uppercase}
-.cal-cell{min-height:54px;background:var(--card);border-radius:8px;border:1px solid var(--border);padding:4px;font-size:.78rem;cursor:default}
-.cal-cell.today{border-color:var(--accent2);background:var(--purchased-bg)}
+.cal-cell{min-height:54px;background:var(--card);border-radius:8px;border:1px solid var(--border);padding:4px;font-size:.78rem}
+.cal-cell.today{border-color:var(--accent2);background:#f5ede0}
 .cal-cell.other-month{opacity:.4}
 .cal-num{font-weight:600;margin-bottom:2px}
 .cal-dot{border-radius:3px;padding:1px 4px;font-size:.65rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:1px;cursor:pointer}
 .cal-dot.seen{background:var(--seen-bg);color:var(--seen)}
 .cal-dot.upcoming{background:var(--upcoming-bg);color:var(--upcoming)}
-.cal-dot.purchased{background:var(--purchased-bg);color:var(--purchased)}
 
-/* ─── DETAIL MODAL ─── */
-.modal-overlay{position:fixed;inset:0;background:rgba(30,20,10,.45);z-index:100;display:flex;align-items:flex-end;justify-content:center;padding:0}
-.modal-overlay.center{align-items:center;padding:20px}
+/* DETAIL MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(30,20,10,.45);z-index:100;display:flex;align-items:flex-end;justify-content:center}
 .modal{background:var(--card);border-radius:20px 20px 0 0;width:100%;max-width:600px;max-height:92dvh;display:flex;flex-direction:column;overflow:hidden}
-.modal-overlay.center .modal{border-radius:20px;max-height:85dvh}
 .modal-handle{width:40px;height:4px;background:var(--border);border-radius:2px;margin:10px auto 4px}
-.modal-header{display:flex;align-items:center;justify-content:space-between;padding:12px 18px 10px;border-bottom:1px solid var(--border)}
+.modal-header{display:flex;align-items:center;justify-content:space-between;padding:10px 18px 10px;border-bottom:1px solid var(--border)}
 .modal-title{font-family:var(--font-serif);font-size:1.2rem}
 .modal-close{font-size:1.3rem;padding:4px 8px;border-radius:8px;color:var(--text2)}
 .modal-close:hover{background:var(--bg2)}
@@ -162,7 +133,6 @@ input,select,textarea{font-family:inherit;font-size:16px}
 .detail-pill{padding:4px 12px;border-radius:20px;font-size:.8rem;font-weight:500}
 .detail-pill.seen{background:var(--seen-bg);color:var(--seen)}
 .detail-pill.upcoming{background:var(--upcoming-bg);color:var(--upcoming)}
-.detail-pill.purchased{background:var(--purchased-bg);color:var(--purchased)}
 .detail-pill.neutral{background:var(--bg2);color:var(--text2)}
 .detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
 .detail-field{background:var(--bg);border-radius:10px;padding:10px 12px}
@@ -182,7 +152,7 @@ input,select,textarea{font-family:inherit;font-size:16px}
 .btn-edit:hover{opacity:.88}
 .btn-delete:hover{background:#fdf0ec}
 
-/* ─── FORM ─── */
+/* FORM */
 .form-overlay{position:fixed;inset:0;background:rgba(30,20,10,.45);z-index:200;display:flex;align-items:flex-end;justify-content:center}
 .form-modal{background:var(--card);border-radius:20px 20px 0 0;width:100%;max-width:600px;height:92dvh;display:flex;flex-direction:column}
 .form-header{display:flex;align-items:center;justify-content:space-between;padding:12px 18px;border-bottom:1px solid var(--border);flex-shrink:0}
@@ -199,7 +169,7 @@ input,select,textarea{font-family:inherit;font-size:16px}
 .form-input:focus{border-color:var(--accent2)}
 select.form-input{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238b6f47' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px}
 textarea.form-input{resize:vertical;min-height:80px}
-.form-inline{display:flex;gap:8px;align-items:flex-end}
+.form-inline{display:flex;gap:8px}
 .form-inline .form-row{flex:1;margin-bottom:0}
 .time-row{display:flex;gap:6px;align-items:center}
 .time-row select{flex:1;border:1px solid var(--border);border-radius:8px;padding:10px 8px;background:var(--bg);color:var(--text);outline:none;-webkit-appearance:none;appearance:none;font-size:.9rem}
@@ -208,56 +178,49 @@ textarea.form-input{resize:vertical;min-height:80px}
 .btn-secondary{padding:12px 18px;border-radius:10px;border:1px solid var(--border);color:var(--text);font-size:.95rem}
 .btn-secondary:hover{background:var(--bg2)}
 .img-preview-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
-.img-thumb{width:70px;height:70px;object-fit:cover;border-radius:8px;border:1px solid var(--border)}
-.img-thumb-del{position:relative;display:inline-block}
-.img-del-btn{position:absolute;top:-4px;right:-4px;background:#c0392b;color:#fff;border-radius:50%;width:18px;height:18px;font-size:.7rem;display:flex;align-items:center;justify-content:center;cursor:pointer}
-.upload-btn{width:70px;height:70px;border-radius:8px;border:2px dashed var(--border);display:flex;align-items:center;justify-content:center;font-size:1.4rem;color:var(--text2);cursor:pointer;background:var(--bg)}
+.img-thumb{width:72px;height:72px;object-fit:cover;border-radius:8px;border:1px solid var(--border);display:block}
+.img-thumb-del{position:relative;display:inline-block;flex-shrink:0}
+.img-del-btn{position:absolute;top:-5px;right:-5px;background:#c0392b;color:#fff;border-radius:50%;width:20px;height:20px;font-size:.7rem;display:flex;align-items:center;justify-content:center;cursor:pointer;line-height:1}
+.upload-btn{width:72px;height:72px;border-radius:8px;border:2px dashed var(--border);display:flex;align-items:center;justify-content:center;font-size:1.5rem;color:var(--text2);cursor:pointer;background:var(--bg);flex-shrink:0}
 .upload-btn:hover{border-color:var(--accent2);color:var(--accent)}
 
-/* ─── BACKUP MENU ─── */
+/* BACKUP MENU */
 .backup-menu{position:fixed;top:56px;right:10px;background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:0 8px 30px rgba(0,0,0,.12);z-index:150;min-width:200px;overflow:hidden}
-.backup-item{display:flex;align-items:center;gap:10px;padding:13px 16px;font-size:.9rem;color:var(--text);transition:background .15s;cursor:pointer;width:100%}
+.backup-item{display:flex;align-items:center;gap:10px;padding:13px 16px;font-size:.9rem;color:var(--text);transition:background .15s;cursor:pointer;width:100%;text-align:left}
 .backup-item:hover{background:var(--bg2)}
 .backup-item .icon{font-size:1.1em}
 
-/* ─── MOBILE SIDEBAR ─── */
+/* MOBILE */
 .sidebar-overlay{position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:90;display:none}
-
-/* ─── EMPTY STATE ─── */
 .empty-state{text-align:center;padding:60px 20px;color:var(--text2)}
 .empty-state .big{font-size:3rem;margin-bottom:12px}
 .empty-state p{font-size:.95rem;line-height:1.6}
-
-/* ─── TOAST ─── */
-.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:#2a2018;color:#fff;padding:10px 20px;border-radius:10px;font-size:.88rem;z-index:500;opacity:0;transition:opacity .3s;pointer-events:none}
+.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:#2a2018;color:#fff;padding:10px 20px;border-radius:10px;font-size:.88rem;z-index:500;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap}
 .toast.show{opacity:1}
 
 @media(max-width:640px){
   #sidebar{position:fixed;left:0;top:0;bottom:0;z-index:100;transform:translateX(-100%)}
   #sidebar.open{transform:translateX(0)}
   .sidebar-overlay.open{display:block}
-  #content.view-grid .concert-item{width:100%;display:flex;margin-right:0}
-  #content.view-grid .item-img{width:38%;height:auto}
-  #content.view-grid .item-date{width:70px;flex-direction:column;border-left:1px solid var(--border);border-top:none}
-  #content.view-grid .item-day{font-size:2rem}
   .detail-grid{grid-template-columns:1fr}
+  .grid-wrap{grid-template-columns:1fr 1fr}
+}
+@media(max-width:380px){
+  .grid-wrap{grid-template-columns:1fr}
 }
 </style>
 </head>
 <body>
-
 <div id="app">
-  <!-- Sidebar -->
   <div class="sidebar-overlay" id="sidebarOverlay"></div>
   <aside id="sidebar">
     <div class="sidebar-logo">Concert Vault<span>票券記錄</span></div>
     <div class="sidebar-section">
       <div class="sidebar-section-label">檢視</div>
-      <button class="sidebar-btn active" data-filter="all" id="sb-all"><span class="icon">🎵</span>全部<span class="sidebar-count" id="cnt-all">0</span></button>
-      <button class="sidebar-btn" data-filter="upcoming" id="sb-upcoming"><span class="icon">📅</span>即將到來<span class="sidebar-count" id="cnt-upcoming">0</span></button>
-      <button class="sidebar-btn" data-filter="seen" id="sb-seen"><span class="icon">✅</span>已看<span class="sidebar-count" id="cnt-seen">0</span></button>
-      <button class="sidebar-btn" data-filter="purchased" id="sb-purchased"><span class="icon">🎟️</span>已購未看<span class="sidebar-count" id="cnt-purchased">0</span></button>
-      <button class="sidebar-btn" data-filter="calendar" id="sb-calendar"><span class="icon">🗓️</span>日曆</button>
+      <button class="sidebar-btn active" data-filter="all"><span class="icon">🎵</span>全部<span class="sidebar-count" id="cnt-all">0</span></button>
+      <button class="sidebar-btn" data-filter="upcoming"><span class="icon">📅</span>即將到來<span class="sidebar-count" id="cnt-upcoming">0</span></button>
+      <button class="sidebar-btn" data-filter="seen"><span class="icon">✅</span>已看<span class="sidebar-count" id="cnt-seen">0</span></button>
+      <button class="sidebar-btn" data-filter="calendar"><span class="icon">🗓️</span>日曆</button>
     </div>
     <div class="sidebar-section">
       <div class="sidebar-section-label">藝人</div>
@@ -268,16 +231,14 @@ textarea.form-input{resize:vertical;min-height:80px}
     </div>
   </aside>
 
-  <!-- Main -->
   <div id="main">
     <div id="topbar">
-      <button class="menu-btn" id="menuBtn" onclick="toggleSidebar()">☰</button>
+      <button class="menu-btn" onclick="toggleSidebar()">☰</button>
+      <button class="add-btn" onclick="openForm()">＋ 新增</button>
       <input type="text" id="search-input" placeholder="搜尋藝人、演唱會…" oninput="renderList()">
       <button class="view-btn active" id="vb-list" title="列表" onclick="setView('list')">☰</button>
       <button class="view-btn" id="vb-grid" title="格狀" onclick="setView('grid')">⊞</button>
-      <button class="view-btn" id="vb-ticket" title="票根" onclick="setView('ticket')">🎟</button>
       <button class="backup-btn" onclick="toggleBackupMenu()" title="備份">💾</button>
-      <button class="add-btn" onclick="openForm()">＋ 新增</button>
     </div>
     <div id="content">
       <div id="list-container"></div>
@@ -288,10 +249,10 @@ textarea.form-input{resize:vertical;min-height:80px}
 
 <!-- Detail Modal -->
 <div class="modal-overlay" id="detailOverlay" style="display:none" onclick="closeDetailIfBg(event)">
-  <div class="modal" id="detailModal">
+  <div class="modal">
     <div class="modal-handle"></div>
     <div class="modal-header">
-      <div class="modal-title" id="detail-modal-title">演唱會詳情</div>
+      <div class="modal-title" id="detail-modal-title"></div>
       <button class="modal-close" onclick="closeDetail()">✕</button>
     </div>
     <div class="modal-body" id="detail-body"></div>
@@ -332,112 +293,81 @@ textarea.form-input{resize:vertical;min-height:80px}
 <div class="toast" id="toast"></div>
 
 <script>
-// ─── DATA ───────────────────────────────────────────────
-const STORAGE_KEY = 'concert_vault_v2';
-const INIT_FLAG = 'cv_inited';
+const STORAGE_KEY='concert_vault_v2';
+const INIT_FLAG='cv_inited';
 
-const SEED_DATA = [
-  {id:'s1',artist:'KinKi Kids',title:'Concert 2024-2025 DOMOTO',date:'2025-01-13',venue:'東京ドーム',city:'東京',timezone:'Asia/Tokyo',status:'seen',showTime:'',images:[],tags:[],notes:'',setlist:'',buyMethod:'',price:'',currency:'JPY',fee:'',seatArea:'',seatRow:'',seatNum:'',standNum:'',ticketPlatform:'',saleDate:'',organizer:'',reminderPre:false,reminderDay:false,purchaseStatus:'',links:''},
-  {id:'s2',artist:'Koichi Domoto',title:'Live Tour Raise',date:'2025-10-12',venue:'',city:'台北',timezone:'Asia/Taipei',status:'seen',showTime:'12:30 PM',images:[],tags:[],notes:'',setlist:'',buyMethod:'',price:'',currency:'TWD',fee:'',seatArea:'',seatRow:'',seatNum:'',standNum:'',ticketPlatform:'',saleDate:'',organizer:'',reminderPre:false,reminderDay:false,purchaseStatus:'',links:''},
-  {id:'s3',artist:'tuki.',title:'1st ASIA TOUR in TAIPEI',date:'2026-04-04',venue:'',city:'台北',timezone:'Asia/Taipei',status:'upcoming',showTime:'5:00 PM',images:[],tags:[],notes:'',setlist:'',buyMethod:'',price:'',currency:'TWD',fee:'',seatArea:'',seatRow:'',seatNum:'',standNum:'',ticketPlatform:'KKTIX',saleDate:'',organizer:'',reminderPre:false,reminderDay:false,purchaseStatus:'已購票',links:''},
-  {id:'s4',artist:'百老匯',title:'百老匯星光演唱會',date:'2026-04-18',venue:'',city:'台北',timezone:'Asia/Taipei',status:'upcoming',showTime:'3:00 PM',images:[],tags:[],notes:'',setlist:'',buyMethod:'',price:'',currency:'TWD',fee:'',seatArea:'',seatRow:'',seatNum:'',standNum:'',ticketPlatform:'',saleDate:'',organizer:'',reminderPre:false,reminderDay:false,purchaseStatus:'已購票',links:''},
-  {id:'s5',artist:'ONE OK ROCK',title:'DETOX Asia Tour in Taipei',date:'2026-04-25',venue:'',city:'台北',timezone:'Asia/Taipei',status:'upcoming',showTime:'7:00 PM',images:[],tags:[],notes:'',setlist:'',buyMethod:'',price:'',currency:'TWD',fee:'',seatArea:'',seatRow:'',seatNum:'',standNum:'',ticketPlatform:'KKTIX',saleDate:'',organizer:'',reminderPre:false,reminderDay:false,purchaseStatus:'已購票',links:''},
-  {id:'s6',artist:'Arashi',title:'We are ARASHI',date:'2026-05-31',venue:'',city:'台北',timezone:'Asia/Taipei',status:'upcoming',showTime:'5:00 PM',images:[],tags:[],notes:'',setlist:'',buyMethod:'',price:'',currency:'TWD',fee:'',seatArea:'',seatRow:'',seatNum:'',standNum:'',ticketPlatform:'',saleDate:'',organizer:'',reminderPre:false,reminderDay:false,purchaseStatus:'已購票',links:''},
-  {id:'s7',artist:'友成空',title:'Here Comes SORA!! in Taipei',date:'2026-06-13',venue:'MOONDOG',city:'台北',timezone:'Asia/Taipei',status:'upcoming',showTime:'6:30 PM',images:[],tags:[],notes:'',setlist:'',buyMethod:'',price:'',currency:'TWD',fee:'',seatArea:'',seatRow:'',seatNum:'',standNum:'',ticketPlatform:'',saleDate:'',organizer:'',reminderPre:false,reminderDay:false,purchaseStatus:'已購票',links:''},
-  {id:'s8',artist:'Eason',title:"IT'S ABOUT TIME",date:'2026-07-07',venue:'',city:'台北',timezone:'Asia/Taipei',status:'upcoming',showTime:'6:30 PM',images:[],tags:[],notes:'',setlist:'',buyMethod:'',price:'',currency:'TWD',fee:'',seatArea:'',seatRow:'',seatNum:'',standNum:'',ticketPlatform:'',saleDate:'',organizer:'',reminderPre:false,reminderDay:false,purchaseStatus:'已購票',links:''},
-  {id:'s9',artist:'DOMOTO',title:'Concert 2026 ～Stay with me～',date:'2026-07-15',venue:'東京ドーム',city:'東京',timezone:'Asia/Tokyo',status:'upcoming',showTime:'',images:[],tags:[],notes:'',setlist:'',buyMethod:'',price:'',currency:'JPY',fee:'',seatArea:'',seatRow:'',seatNum:'',standNum:'',ticketPlatform:'pia日本',saleDate:'',organizer:'',reminderPre:false,reminderDay:false,purchaseStatus:'已購票',links:''},
-  {id:'s10',artist:'DOMOTO',title:'Concert 2026 ～Stay with me～',date:'2026-07-16',venue:'東京ドーム',city:'東京',timezone:'Asia/Tokyo',status:'upcoming',showTime:'',images:[],tags:[],notes:'',setlist:'',buyMethod:'',price:'',currency:'JPY',fee:'',seatArea:'',seatRow:'',seatNum:'',standNum:'',ticketPlatform:'pia日本',saleDate:'',organizer:'',reminderPre:false,reminderDay:false,purchaseStatus:'已購票',links:''},
-  {id:'s11',artist:'ASH DA HERO',title:'ASIA TOUR 2026 LIVE IN TAIPEI',date:'2026-08-01',venue:'水管音樂',city:'台北',timezone:'Asia/Taipei',status:'upcoming',showTime:'6:00 PM',images:[],tags:[],notes:'',setlist:'',buyMethod:'',price:'',currency:'TWD',fee:'',seatArea:'',seatRow:'',seatNum:'',standNum:'',ticketPlatform:'KKTIX',saleDate:'',organizer:'',reminderPre:false,reminderDay:false,purchaseStatus:'已購票',links:''},
-  {id:'s12',artist:'back number',title:'Grateful Yesterdays Tour 2026 in Taipei',date:'2026-08-23',venue:'',city:'台北',timezone:'Asia/Taipei',status:'upcoming',showTime:'6:00 PM',images:[],tags:[],notes:'',setlist:'',buyMethod:'',price:'',currency:'TWD',fee:'',seatArea:'',seatRow:'',seatNum:'',standNum:'',ticketPlatform:'KKTIX',saleDate:'',organizer:'',reminderPre:false,reminderDay:false,purchaseStatus:'已購票',links:''},
-  {id:'s13',artist:'Kodaline',title:'Farewell Tour',date:'2026-08-24',venue:'',city:'台北',timezone:'Asia/Taipei',status:'upcoming',showTime:'8:00 PM',images:[],tags:[],notes:'',setlist:'',buyMethod:'',price:'',currency:'TWD',fee:'',seatArea:'',seatRow:'',seatNum:'',standNum:'',ticketPlatform:'KKTIX',saleDate:'',organizer:'',reminderPre:false,reminderDay:false,purchaseStatus:'已購票',links:''},
-  {id:'s14',artist:'髭男dism',title:'OFFICIAL HIGE DANDISM ASIA TOUR 2026',date:'2026-08-29',venue:'',city:'台北',timezone:'Asia/Taipei',status:'upcoming',showTime:'6:00 PM',images:[],tags:[],notes:'',setlist:'',buyMethod:'',price:'',currency:'TWD',fee:'',seatArea:'',seatRow:'',seatNum:'',standNum:'',ticketPlatform:'KKTIX',saleDate:'',organizer:'',reminderPre:false,reminderDay:false,purchaseStatus:'已購票',links:''},
-  {id:'s15',artist:'Ryosuke Yamada',title:'ASIA TOUR 2026 Red.Y in Taipei',date:'2026-09-05',venue:'台北流行音樂中心',city:'台北',timezone:'Asia/Taipei',status:'upcoming',showTime:'6:00 PM',images:[],tags:[],notes:'',setlist:'',buyMethod:'',price:'',currency:'TWD',fee:'',seatArea:'',seatRow:'',seatNum:'',standNum:'',ticketPlatform:'KKTIX',saleDate:'',organizer:'',reminderPre:false,reminderDay:false,purchaseStatus:'已購票',links:''},
-  {id:'s16',artist:'Ryosuke Yamada',title:'ASIA TOUR 2026 Red.Y in Taipei',date:'2026-09-06',venue:'台北流行音樂中心',city:'台北',timezone:'Asia/Taipei',status:'upcoming',showTime:'6:00 PM',images:[],tags:[],notes:'',setlist:'',buyMethod:'',price:'',currency:'TWD',fee:'',seatArea:'',seatRow:'',seatNum:'',standNum:'',ticketPlatform:'KKTIX',saleDate:'',organizer:'',reminderPre:false,reminderDay:false,purchaseStatus:'已購票',links:''},
+const SEED=[
+  {id:'s1',artist:'KinKi Kids',title:'Concert 2024-2025 DOMOTO',date:'2025-01-13',venue:'東京ドーム',city:'東京',timezone:'Asia/Tokyo',status:'seen',showTime:'',doorTime:'',images:[],tags:[],notes:'',setlist:'',buyMethod:'',price:'',currency:'JPY',fee:'',seatArea:'',seatRow:'',seatNum:'',standNum:'',ticketPlatform:'',saleDate:'',organizer:'',links:''},
+  {id:'s2',artist:'Koichi Domoto',title:'Live Tour Raise',date:'2025-10-12',venue:'',city:'台北',timezone:'Asia/Taipei',status:'seen',showTime:'12:30 PM',doorTime:'',images:[],tags:[],notes:'',setlist:'',buyMethod:'',price:'',currency:'TWD',fee:'',seatArea:'',seatRow:'',seatNum:'',standNum:'',ticketPlatform:'',saleDate:'',organizer:'',links:''},
+  {id:'s3',artist:'tuki.',title:'1st ASIA TOUR in TAIPEI',date:'2026-04-04',venue:'',city:'台北',timezone:'Asia/Taipei',status:'upcoming',showTime:'5:00 PM',doorTime:'',images:[],tags:[],notes:'',setlist:'',buyMethod:'',price:'',currency:'TWD',fee:'',seatArea:'',seatRow:'',seatNum:'',standNum:'',ticketPlatform:'KKTIX',saleDate:'',organizer:'',links:''},
+  {id:'s4',artist:'百老匯',title:'百老匯星光演唱會',date:'2026-04-18',venue:'',city:'台北',timezone:'Asia/Taipei',status:'upcoming',showTime:'3:00 PM',doorTime:'',images:[],tags:[],notes:'',setlist:'',buyMethod:'',price:'',currency:'TWD',fee:'',seatArea:'',seatRow:'',seatNum:'',standNum:'',ticketPlatform:'',saleDate:'',organizer:'',links:''},
+  {id:'s5',artist:'ONE OK ROCK',title:'DETOX Asia Tour in Taipei',date:'2026-04-25',venue:'',city:'台北',timezone:'Asia/Taipei',status:'upcoming',showTime:'7:00 PM',doorTime:'',images:[],tags:[],notes:'',setlist:'',buyMethod:'',price:'',currency:'TWD',fee:'',seatArea:'',seatRow:'',seatNum:'',standNum:'',ticketPlatform:'KKTIX',saleDate:'',organizer:'',links:''},
+  {id:'s6',artist:'Arashi',title:'We are ARASHI',date:'2026-05-31',venue:'',city:'台北',timezone:'Asia/Taipei',status:'upcoming',showTime:'5:00 PM',doorTime:'',images:[],tags:[],notes:'',setlist:'',buyMethod:'',price:'',currency:'TWD',fee:'',seatArea:'',seatRow:'',seatNum:'',standNum:'',ticketPlatform:'',saleDate:'',organizer:'',links:''},
+  {id:'s7',artist:'友成空',title:'Here Comes SORA!! in Taipei',date:'2026-06-13',venue:'MOONDOG',city:'台北',timezone:'Asia/Taipei',status:'upcoming',showTime:'6:30 PM',doorTime:'',images:[],tags:[],notes:'',setlist:'',buyMethod:'',price:'',currency:'TWD',fee:'',seatArea:'',seatRow:'',seatNum:'',standNum:'',ticketPlatform:'',saleDate:'',organizer:'',links:''},
+  {id:'s8',artist:'Eason',title:"IT'S ABOUT TIME",date:'2026-07-07',venue:'',city:'台北',timezone:'Asia/Taipei',status:'upcoming',showTime:'6:30 PM',doorTime:'',images:[],tags:[],notes:'',setlist:'',buyMethod:'',price:'',currency:'TWD',fee:'',seatArea:'',seatRow:'',seatNum:'',standNum:'',ticketPlatform:'',saleDate:'',organizer:'',links:''},
+  {id:'s9',artist:'DOMOTO',title:'Concert 2026 ～Stay with me～',date:'2026-07-15',venue:'東京ドーム',city:'東京',timezone:'Asia/Tokyo',status:'upcoming',showTime:'',doorTime:'',images:[],tags:[],notes:'',setlist:'',buyMethod:'',price:'',currency:'JPY',fee:'',seatArea:'',seatRow:'',seatNum:'',standNum:'',ticketPlatform:'pia日本',saleDate:'',organizer:'',links:''},
+  {id:'s10',artist:'DOMOTO',title:'Concert 2026 ～Stay with me～',date:'2026-07-16',venue:'東京ドーム',city:'東京',timezone:'Asia/Tokyo',status:'upcoming',showTime:'',doorTime:'',images:[],tags:[],notes:'',setlist:'',buyMethod:'',price:'',currency:'JPY',fee:'',seatArea:'',seatRow:'',seatNum:'',standNum:'',ticketPlatform:'pia日本',saleDate:'',organizer:'',links:''},
+  {id:'s11',artist:'ASH DA HERO',title:'ASIA TOUR 2026 LIVE IN TAIPEI',date:'2026-08-01',venue:'水管音樂',city:'台北',timezone:'Asia/Taipei',status:'upcoming',showTime:'6:00 PM',doorTime:'',images:[],tags:[],notes:'',setlist:'',buyMethod:'',price:'',currency:'TWD',fee:'',seatArea:'',seatRow:'',seatNum:'',standNum:'',ticketPlatform:'KKTIX',saleDate:'',organizer:'',links:''},
+  {id:'s12',artist:'back number',title:'Grateful Yesterdays Tour 2026 in Taipei',date:'2026-08-23',venue:'',city:'台北',timezone:'Asia/Taipei',status:'upcoming',showTime:'6:00 PM',doorTime:'',images:[],tags:[],notes:'',setlist:'',buyMethod:'',price:'',currency:'TWD',fee:'',seatArea:'',seatRow:'',seatNum:'',standNum:'',ticketPlatform:'KKTIX',saleDate:'',organizer:'',links:''},
+  {id:'s13',artist:'Kodaline',title:'Farewell Tour',date:'2026-08-24',venue:'',city:'台北',timezone:'Asia/Taipei',status:'upcoming',showTime:'8:00 PM',doorTime:'',images:[],tags:[],notes:'',setlist:'',buyMethod:'',price:'',currency:'TWD',fee:'',seatArea:'',seatRow:'',seatNum:'',standNum:'',ticketPlatform:'KKTIX',saleDate:'',organizer:'',links:''},
+  {id:'s14',artist:'髭男dism',title:'OFFICIAL HIGE DANDISM ASIA TOUR 2026',date:'2026-08-29',venue:'',city:'台北',timezone:'Asia/Taipei',status:'upcoming',showTime:'6:00 PM',doorTime:'',images:[],tags:[],notes:'',setlist:'',buyMethod:'',price:'',currency:'TWD',fee:'',seatArea:'',seatRow:'',seatNum:'',standNum:'',ticketPlatform:'KKTIX',saleDate:'',organizer:'',links:''},
+  {id:'s15',artist:'Ryosuke Yamada',title:'ASIA TOUR 2026 Red.Y in Taipei',date:'2026-09-05',venue:'台北流行音樂中心',city:'台北',timezone:'Asia/Taipei',status:'upcoming',showTime:'6:00 PM',doorTime:'',images:[],tags:[],notes:'',setlist:'',buyMethod:'',price:'',currency:'TWD',fee:'',seatArea:'',seatRow:'',seatNum:'',standNum:'',ticketPlatform:'KKTIX',saleDate:'',organizer:'',links:''},
+  {id:'s16',artist:'Ryosuke Yamada',title:'ASIA TOUR 2026 Red.Y in Taipei',date:'2026-09-06',venue:'台北流行音樂中心',city:'台北',timezone:'Asia/Taipei',status:'upcoming',showTime:'6:00 PM',doorTime:'',images:[],tags:[],notes:'',setlist:'',buyMethod:'',price:'',currency:'TWD',fee:'',seatArea:'',seatRow:'',seatNum:'',standNum:'',ticketPlatform:'KKTIX',saleDate:'',organizer:'',links:''},
 ];
 
-function loadData(){
-  try{return JSON.parse(localStorage.getItem(STORAGE_KEY))||[];}catch{return[];}
-}
+function loadData(){try{return JSON.parse(localStorage.getItem(STORAGE_KEY))||[];}catch{return[];}}
 function saveData(d){localStorage.setItem(STORAGE_KEY,JSON.stringify(d));}
 
-// Init seed
-if(!localStorage.getItem(INIT_FLAG)){
-  saveData(SEED_DATA);
-  localStorage.setItem(INIT_FLAG,'1');
-}
+if(!localStorage.getItem(INIT_FLAG)){saveData(SEED);localStorage.setItem(INIT_FLAG,'1');}
+let concerts=loadData();
 
-let concerts = loadData();
+let currentFilter='all';
+let currentArtist=null;
+let currentView='list';
+let calYear=new Date().getFullYear();
+let calMonth=new Date().getMonth();
+let editingId=null;
+let formPage=1;
+let formImages=[];
 
-// ─── STATE ───────────────────────────────────────────────
-let currentFilter = 'all';
-let currentArtist = null;
-let currentView = 'list';
-let calYear = new Date().getFullYear();
-let calMonth = new Date().getMonth();
-let editingId = null;
-let formPage = 1;
-let formImages = []; // base64 strings
-let detailId = null;
-let memorizedArtists = [];
-let memorizedOrganizers = [];
-let memorizedPlatforms = ['KKTIX','年代','ibon','拓元','pia日本','e+日本','ローソンチケット'];
-
-function updateMemory(){
-  memorizedArtists=[...new Set(concerts.map(c=>c.artist).filter(Boolean))];
-  memorizedOrganizers=[...new Set(concerts.map(c=>c.organizer).filter(Boolean))];
-  const ps=[...new Set(concerts.map(c=>c.ticketPlatform).filter(Boolean))];
-  memorizedPlatforms=[...new Set(['KKTIX','年代','ibon','拓元','pia日本','e+日本','ローソンチケット',...ps])];
-}
-updateMemory();
-
-// ─── HELPERS ─────────────────────────────────────────────
 const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 const MONTHS_ZH=['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
 
-function parseDate(ds){
-  if(!ds)return null;
-  const [y,m,d]=ds.split('-').map(Number);
-  return new Date(y,m-1,d);
-}
+function loadData2(){concerts=loadData();}
+function parseDate(ds){if(!ds)return null;const[y,m,d]=ds.split('-').map(Number);return new Date(y,m-1,d);}
 function countdownText(ds){
-  if(!ds)return '';
-  const today=new Date(); today.setHours(0,0,0,0);
-  const d=parseDate(ds);
-  if(!d)return '';
-  const diff=Math.round((d-today)/(1000*60*60*24));
-  if(diff<0)return `${-diff}天前`;
-  if(diff===0)return '今天！';
-  if(diff===1)return '明天';
-  return `${diff}天後`;
+  if(!ds)return'';
+  const today=new Date();today.setHours(0,0,0,0);
+  const d=parseDate(ds);if(!d)return'';
+  const diff=Math.round((d-today)/(86400000));
+  if(diff<0)return`${-diff}天前`;if(diff===0)return'今天！';if(diff===1)return'明天';return`${diff}天後`;
 }
 function formatDate(ds){
   if(!ds)return{month:'',day:'',year:''};
-  const d=parseDate(ds);
-  if(!d)return{month:'',day:'',year:''};
+  const d=parseDate(ds);if(!d)return{month:'',day:'',year:''};
   return{month:MONTHS[d.getMonth()],day:d.getDate(),year:d.getFullYear()};
 }
 function uid(){return'c'+Date.now()+Math.random().toString(36).slice(2);}
-function showToast(msg){
-  const t=document.getElementById('toast');
-  t.textContent=msg;t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),2200);
-}
-function esc(s){
-  if(!s)return'';
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200);}
+function esc(s){if(!s)return'';return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function getV(id){return(document.getElementById(id)||{value:''}).value||'';}
 
-// ─── SIDEBAR & VIEW ──────────────────────────────────────
-function toggleSidebar(){
-  document.getElementById('sidebar').classList.toggle('open');
-  document.getElementById('sidebarOverlay').classList.toggle('open');
+// --- Mem ---
+let memArtists=[],memOrganizers=[],memPlatforms=['KKTIX','年代','ibon','拓元','pia日本','e+日本','ローソンチケット'];
+function updateMemory(){
+  memArtists=[...new Set(concerts.map(c=>c.artist).filter(Boolean))];
+  memOrganizers=[...new Set(concerts.map(c=>c.organizer).filter(Boolean))];
+  const ps=[...new Set(concerts.map(c=>c.ticketPlatform).filter(Boolean))];
+  memPlatforms=[...new Set(['KKTIX','年代','ibon','拓元','pia日本','e+日本','ローソンチケット',...ps])];
 }
+updateMemory();
+
+// --- Sidebar ---
+function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');document.getElementById('sidebarOverlay').classList.toggle('open');}
 document.getElementById('sidebarOverlay').onclick=toggleSidebar;
-
 document.querySelectorAll('[data-filter]').forEach(btn=>{
   btn.onclick=()=>{
-    currentFilter=btn.dataset.filter;
-    currentArtist=null;
+    currentFilter=btn.dataset.filter;currentArtist=null;
     document.querySelectorAll('[data-filter]').forEach(b=>b.classList.remove('active'));
     btn.classList.add('active');
     if(window.innerWidth<641)toggleSidebar();
@@ -455,89 +385,87 @@ document.querySelectorAll('[data-filter]').forEach(btn=>{
 
 function setView(v){
   currentView=v;
-  ['list','grid','ticket'].forEach(x=>{
-    document.getElementById('vb-'+x)?.classList.toggle('active',x===v);
-  });
-  const c=document.getElementById('content');
-  c.className='';
-  if(v==='grid')c.classList.add('view-grid');
-  if(v==='ticket')c.classList.add('view-ticket');
+  ['list','grid'].forEach(x=>document.getElementById('vb-'+x)?.classList.toggle('active',x===v));
   renderList();
 }
 
-// ─── RENDER LIST ─────────────────────────────────────────
+// --- Filtered data ---
 function getFiltered(){
   const q=(document.getElementById('search-input').value||'').toLowerCase();
   return concerts.filter(c=>{
     if(currentArtist&&c.artist!==currentArtist)return false;
     if(currentFilter==='upcoming'&&c.status!=='upcoming')return false;
     if(currentFilter==='seen'&&c.status!=='seen')return false;
-    if(currentFilter==='purchased'&&!(c.status==='upcoming'&&c.purchaseStatus==='已購票'))return false;
-    if(q&&!(
-      (c.artist||'').toLowerCase().includes(q)||
-      (c.title||'').toLowerCase().includes(q)||
-      (c.venue||'').toLowerCase().includes(q)||
-      (c.city||'').toLowerCase().includes(q)
-    ))return false;
+    if(q&&![(c.artist||''),(c.title||''),(c.venue||''),(c.city||'')].some(s=>s.toLowerCase().includes(q)))return false;
     return true;
   });
 }
 
+function updateCounts(){
+  document.getElementById('cnt-all').textContent=concerts.length;
+  document.getElementById('cnt-upcoming').textContent=concerts.filter(c=>c.status==='upcoming').length;
+  document.getElementById('cnt-seen').textContent=concerts.filter(c=>c.status==='seen').length;
+}
+function renderArtistChips(){
+  const artists=[...new Set(concerts.map(c=>c.artist).filter(Boolean))].sort();
+  document.getElementById('artist-chips').innerHTML=artists.map(a=>`<span class="artist-chip${currentArtist===a?' active':''}" onclick="filterArtist(this,'${a.replace(/\\/g,'\\\\').replace(/'/g,"\\'")}')">${esc(a)}</span>`).join('');
+}
+function filterArtist(el,a){
+  currentArtist=currentArtist===a?null:a;
+  currentFilter='all';
+  document.querySelectorAll('[data-filter]').forEach(b=>b.classList.toggle('active',b.dataset.filter==='all'));
+  document.getElementById('list-container').style.display='';
+  document.getElementById('calendar-container').style.display='none';
+  if(window.innerWidth<641)toggleSidebar();
+  renderList();
+}
+
+// --- Render ---
 function renderList(){
-  updateCounts();
-  renderArtistChips();
+  updateCounts();renderArtistChips();
   const filtered=getFiltered();
   const container=document.getElementById('list-container');
-  if(currentView==='ticket'){
-    renderTicketView(filtered,container);return;
-  }
-  if(currentFilter==='all'){
-    // Two sections
-    const upcoming=filtered.filter(c=>c.status!=='seen').sort((a,b)=>a.date.localeCompare(b.date));
+  if(currentView==='grid'){renderGrid(filtered,container);return;}
+  if(currentFilter==='all'||currentFilter==='calendar'){
+    const up=filtered.filter(c=>c.status!=='seen').sort((a,b)=>a.date.localeCompare(b.date));
     const seen=filtered.filter(c=>c.status==='seen').sort((a,b)=>b.date.localeCompare(a.date));
     let html='';
-    if(upcoming.length){html+=`<div class="section-label">即將到來／已購票</div>`+upcoming.map(c=>renderConcertItem(c,upcoming)).join('');}
-    if(seen.length){html+=`<div class="section-label">已看</div>`+seen.map(c=>renderConcertItem(c,seen)).join('');}
+    if(up.length)html+=`<div class="section-label">即將到來</div>`+up.map(c=>listItem(c,up)).join('');
+    if(seen.length)html+=`<div class="section-label">已看</div>`+seen.map(c=>listItem(c,seen)).join('');
     if(!html)html=emptyState();
     container.innerHTML=html;
   } else {
-    const sorted=currentFilter==='seen'
-      ?filtered.sort((a,b)=>b.date.localeCompare(a.date))
-      :filtered.sort((a,b)=>a.date.localeCompare(b.date));
-    container.innerHTML=sorted.length?sorted.map(c=>renderConcertItem(c,sorted)).join(''):emptyState();
+    const sorted=currentFilter==='seen'?filtered.sort((a,b)=>b.date.localeCompare(a.date)):filtered.sort((a,b)=>a.date.localeCompare(b.date));
+    container.innerHTML=sorted.length?sorted.map(c=>listItem(c,sorted)).join(''):emptyState();
   }
-  container.querySelectorAll('.concert-item').forEach(el=>{
-    el.onclick=()=>openDetail(el.dataset.id);
-  });
+  container.querySelectorAll('.concert-item').forEach(el=>el.onclick=()=>openDetail(el.dataset.id));
 }
 
-function emptyState(){
-  return`<div class="empty-state"><div class="big">🎵</div><p>還沒有演唱會記錄<br>點右上角「＋ 新增」開始記錄吧！</p></div>`;
-}
+function emptyState(){return`<div class="empty-state"><div class="big">🎵</div><p>沒有符合的演唱會記錄<br>點「＋ 新增」開始記錄吧！</p></div>`;}
 
-function artistCount(artist,list){
-  return list.filter(c=>c.artist===artist).length;
-}
+function multiArtist(artist,list){return list.filter(c=>c.artist===artist).length>1;}
 
-function renderConcertItem(c,list){
-  const {month,day,year}=formatDate(c.date);
+function listItem(c,list){
+  const{month,day,year}=formatDate(c.date);
   const countdown=countdownText(c.date);
-  const multi=artistCount(c.artist,list)>1?'multi-artist':'';
-  const statusClass=c.status==='seen'?'status-seen':c.status==='upcoming'?'status-upcoming':'status-purchased';
-  const badgeClass=c.status==='seen'?'seen':c.status==='upcoming'?'upcoming':'purchased';
-  const badgeText=c.status==='seen'?'已看':c.status==='upcoming'?'即將':'已購';
+  const multi=multiArtist(c.artist,list)?'multi-artist':'';
+  const statusCls=c.status==='seen'?'status-seen':'status-upcoming';
+  const badgeCls=c.status==='seen'?'seen':'upcoming';
+  const badgeTxt=c.status==='seen'?'已看':'即將';
+  const venueText=c.venue||(c.city||'');
+  // Image: use first image if available
   const imgHtml=c.images&&c.images.length
-    ?`<img src="${c.images[0]}" alt="${esc(c.artist)}">`
-    :`<div class="item-img-placeholder">🎵</div>`;
-  const venueText=c.venue||(c.city?c.city:'');
-  return`<div class="concert-item ${statusClass} ${multi}" data-id="${c.id}">
-    <div class="item-img">${imgHtml}</div>
+    ?`<img src="${c.images[0]}" alt="${esc(c.artist)}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
+    :'';
+  const phStyle=c.images&&c.images.length?'style="display:none"':'';
+  return`<div class="concert-item ${statusCls} ${multi}" data-id="${c.id}">
+    <div class="item-img">${imgHtml}<div class="item-img-ph" ${phStyle}>🎵</div></div>
     <div class="item-info">
       <div class="item-artist">${esc(c.artist)}</div>
       <div class="item-title">${esc(c.title)}</div>
-      ${venueText?`<div class="item-venue">${esc(venueText)}</div>`:''}
+      ${venueText?`<div class="item-venue">📍 ${esc(venueText)}</div>`:''}
     </div>
-    <span class="status-badge ${badgeClass}">${badgeText}</span>
+    <span class="status-badge ${badgeCls}">${badgeTxt}</span>
     <div class="item-date">
       <div class="item-month">${month}</div>
       <div class="item-day">${day}</div>
@@ -547,152 +475,108 @@ function renderConcertItem(c,list){
   </div>`;
 }
 
-// ─── TICKET VIEW ─────────────────────────────────────────
-function renderTicketView(filtered,container){
+function renderGrid(filtered,container){
   if(!filtered.length){container.innerHTML=emptyState();return;}
-  const upcoming=filtered.filter(c=>c.status!=='seen').sort((a,b)=>a.date.localeCompare(b.date));
+  const up=filtered.filter(c=>c.status!=='seen').sort((a,b)=>a.date.localeCompare(b.date));
   const seen=filtered.filter(c=>c.status==='seen').sort((a,b)=>b.date.localeCompare(a.date));
-  const all=[...upcoming,...seen];
-  container.innerHTML=all.map(c=>{
-    const {month,day,year}=formatDate(c.date);
+  const all=[...up,...seen];
+  let html='<div class="grid-wrap">';
+  html+=all.map(c=>{
+    const{month,day,year}=formatDate(c.date);
+    const countdown=countdownText(c.date);
+    const multi=multiArtist(c.artist,all)?'multi-artist':'';
+    const statusCls=c.status==='seen'?'status-seen':'status-upcoming';
+    const venueText=c.venue||(c.city||'');
     const imgHtml=c.images&&c.images.length
-      ?`<img class="ticket-img" src="${c.images[0]}" alt="">`
-      :`<div class="ticket-img-ph">🎵</div>`;
-    const dotClass=c.status==='seen'?'seen':c.status==='upcoming'?'upcoming':'purchased';
-    return`<div class="ticket-wrap" onclick="openDetail('${c.id}')">
-      <div class="ticket-top">
-        ${imgHtml}
-        <div class="ticket-body">
-          <div class="ticket-artist">${esc(c.artist)}</div>
-          <div class="ticket-title">${esc(c.title)}</div>
-          ${c.venue?`<div style="font-size:.78rem;color:var(--text2);margin-top:4px">📍 ${esc(c.venue)}</div>`:''}
-        </div>
-      </div>
-      <hr class="ticket-divider">
-      <div class="ticket-bottom">
-        <div class="ticket-field"><strong>日期</strong><span>${c.date}</span></div>
-        ${c.showTime?`<div class="ticket-field"><strong>開演</strong><span>${esc(c.showTime)}</span></div>`:''}
-        ${c.seatArea?`<div class="ticket-field"><strong>區域</strong><span>${esc(c.seatArea)}${c.seatRow?' 排'+c.seatRow:''}${c.seatNum?' 號'+c.seatNum:''}</span></div>`:''}
-        ${c.ticketPlatform?`<div class="ticket-field"><strong>售票</strong><span>${esc(c.ticketPlatform)}</span></div>`:''}
-        <div class="ticket-field"><strong>狀態</strong><span class="cal-dot ${dotClass}" style="display:inline-block">${c.status==='seen'?'已看':c.status==='upcoming'?'即將':'已購'}</span></div>
+      ?`<img class="grid-img" src="${c.images[0]}" alt="${esc(c.artist)}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
+      :'';
+    const phStyle=c.images&&c.images.length?'style="display:none"':'';
+    return`<div class="grid-card ${statusCls} ${multi}" onclick="openDetail('${c.id}')">
+      ${imgHtml}<div class="grid-img-ph" ${phStyle}>🎵</div>
+      <div class="grid-info">
+        <div class="grid-date-line">${month} ${day}, ${year}${countdown?' · '+countdown:''}</div>
+        <div class="grid-artist">${esc(c.artist)}</div>
+        <div class="grid-title">${esc(c.title)}</div>
+        ${venueText?`<div class="grid-venue">📍 ${esc(venueText)}</div>`:''}
       </div>
     </div>`;
   }).join('');
+  html+='</div>';
+  container.innerHTML=html;
 }
 
-// ─── CALENDAR VIEW ────────────────────────────────────────
+// --- Calendar ---
 function renderCalendar(){
   const container=document.getElementById('calendar-container');
   const firstDay=new Date(calYear,calMonth,1);
   const lastDay=new Date(calYear,calMonth+1,0);
   const startDow=firstDay.getDay();
   const today=new Date();
-
-  const concertsThisMonth=concerts.filter(c=>{
-    if(!c.date)return false;
-    const d=parseDate(c.date);
+  const thisMonth=concerts.filter(c=>{
+    if(!c.date)return false;const d=parseDate(c.date);
     return d&&d.getFullYear()===calYear&&d.getMonth()===calMonth;
   });
-
   let html=`<div class="cal-header">
     <button class="cal-nav" onclick="calNav(-1)">‹ 上月</button>
     <h2>${calYear}年 ${MONTHS_ZH[calMonth]}</h2>
     <button class="cal-nav" onclick="calNav(1)">下月 ›</button>
-  </div>
-  <div class="cal-grid">
-    ${['日','一','二','三','四','五','六'].map(d=>`<div class="cal-dow">${d}</div>`).join('')}`;
-
-  // Prev month fill
+  </div><div class="cal-grid">`;
+  ['日','一','二','三','四','五','六'].forEach(d=>html+=`<div class="cal-dow">${d}</div>`);
   const prevLast=new Date(calYear,calMonth,0).getDate();
-  for(let i=startDow-1;i>=0;i--){
-    html+=`<div class="cal-cell other-month"><div class="cal-num">${prevLast-i}</div></div>`;
-  }
+  for(let i=startDow-1;i>=0;i--)html+=`<div class="cal-cell other-month"><div class="cal-num">${prevLast-i}</div></div>`;
   for(let d=1;d<=lastDay.getDate();d++){
     const isToday=today.getFullYear()===calYear&&today.getMonth()===calMonth&&today.getDate()===d;
-    const dayStr=`${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-    const dayShows=concertsThisMonth.filter(c=>c.date===dayStr);
-    const dotsHtml=dayShows.map(c=>{
-      const cls=c.status==='seen'?'seen':c.status==='upcoming'?'upcoming':'purchased';
-      return`<div class="cal-dot ${cls}" onclick="event.stopPropagation();openDetail('${c.id}')">${esc(c.artist)}</div>`;
-    }).join('');
-    html+=`<div class="cal-cell${isToday?' today':''}"><div class="cal-num">${d}</div>${dotsHtml}</div>`;
+    const ds=`${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const shows=thisMonth.filter(c=>c.date===ds);
+    const dots=shows.map(c=>`<div class="cal-dot ${c.status==='seen'?'seen':'upcoming'}" onclick="event.stopPropagation();openDetail('${c.id}')">${esc(c.artist)}</div>`).join('');
+    html+=`<div class="cal-cell${isToday?' today':''}"><div class="cal-num">${d}</div>${dots}</div>`;
   }
-  // Next month fill
   const endDow=lastDay.getDay();
-  for(let i=1;i<7-endDow;i++){
-    html+=`<div class="cal-cell other-month"><div class="cal-num">${i}</div></div>`;
-  }
+  for(let i=1;i<7-endDow;i++)html+=`<div class="cal-cell other-month"><div class="cal-num">${i}</div></div>`;
   html+=`</div>`;
   container.innerHTML=html;
 }
 function calNav(dir){calMonth+=dir;if(calMonth<0){calMonth=11;calYear--;}if(calMonth>11){calMonth=0;calYear++;}renderCalendar();}
 
-// ─── COUNTS & CHIPS ──────────────────────────────────────
-function updateCounts(){
-  document.getElementById('cnt-all').textContent=concerts.length;
-  document.getElementById('cnt-upcoming').textContent=concerts.filter(c=>c.status==='upcoming').length;
-  document.getElementById('cnt-seen').textContent=concerts.filter(c=>c.status==='seen').length;
-  document.getElementById('cnt-purchased').textContent=concerts.filter(c=>c.status==='upcoming'&&c.purchaseStatus==='已購票').length;
-}
-function renderArtistChips(){
-  const artists=[...new Set(concerts.map(c=>c.artist).filter(Boolean))].sort();
-  document.getElementById('artist-chips').innerHTML=artists.map(a=>`<span class="artist-chip${currentArtist===a?' active':''}" onclick="filterArtist('${a.replace(/'/g,"\\'")}','${a.replace(/'/g,"\\'")}')">${esc(a)}</span>`).join('');
-}
-function filterArtist(a){
-  currentArtist=currentArtist===a?null:a;
-  currentFilter='all';
-  document.querySelectorAll('[data-filter]').forEach(b=>b.classList.toggle('active',b.dataset.filter==='all'));
-  document.getElementById('list-container').style.display='';
-  document.getElementById('calendar-container').style.display='none';
-  renderList();
-  if(window.innerWidth<641)toggleSidebar();
-}
-
-// ─── DETAIL MODAL ─────────────────────────────────────────
+// --- Detail ---
 function openDetail(id){
-  const c=concerts.find(x=>x.id===id);
-  if(!c)return;
-  detailId=id;
+  const c=concerts.find(x=>x.id===id);if(!c)return;
   document.getElementById('detailOverlay').style.display='flex';
   document.getElementById('detail-modal-title').textContent=c.artist;
-  const statusClass=c.status==='seen'?'seen':c.status==='upcoming'?'upcoming':'purchased';
-  const statusText=c.status==='seen'?'已看':c.status==='upcoming'?'即將到來':'已購票';
-  const imgsHtml=c.images&&c.images.length?c.images.map(i=>`<div class="detail-img-wrap"><img src="${i}" alt=""></div>`).join(''):'';
-  const {month,day,year}=formatDate(c.date);
+  const statusCls=c.status==='seen'?'seen':'upcoming';
+  const statusTxt=c.status==='seen'?'已看':'即將到來';
+  const{month,day,year}=formatDate(c.date);
+  // All images
+  const imgsHtml=(c.images&&c.images.length)?c.images.map(img=>`<div class="detail-img-wrap"><img src="${img}" alt="" onerror="this.parentElement.style.display='none'"></div>`).join(''):'';
   const setlistItems=(c.setlist||'').split('\n').filter(s=>s.trim());
-
   let html=`${imgsHtml}
   <div class="detail-hero">
     <div>
       <div class="detail-artist">${esc(c.artist)}</div>
       <div class="detail-title">${esc(c.title)}</div>
     </div>
-    <div class="detail-date-big">
-      <div class="month">${month}</div>
-      <div class="day">${day}</div>
-      <div class="year">${year}</div>
-    </div>
+    <div class="detail-date-big"><div class="month">${month}</div><div class="day">${day}</div><div class="year">${year}</div></div>
   </div>
   <div class="detail-pills">
-    <span class="detail-pill ${statusClass}">${statusText}</span>
+    <span class="detail-pill ${statusCls}">${statusTxt}</span>
     ${c.city?`<span class="detail-pill neutral">📍 ${esc(c.city)}</span>`:''}
     ${c.buyMethod?`<span class="detail-pill neutral">${esc(c.buyMethod)}</span>`:''}
   </div>
   <div class="detail-grid">
     ${c.venue?`<div class="detail-field"><label>場地</label><span>${esc(c.venue)}</span></div>`:''}
-    ${c.showTime?`<div class="detail-field"><label>開演時間</label><span>${esc(c.showTime)}</span></div>`:''}
-    ${c.ticketPlatform?`<div class="detail-field"><label>售票平台</label><span>${esc(c.ticketPlatform)}</span></div>`:''}
+    ${c.showTime?`<div class="detail-field"><label>開演</label><span>${esc(c.showTime)}</span></div>`:''}
+    ${c.doorTime?`<div class="detail-field"><label>入場</label><span>${esc(c.doorTime)}</span></div>`:''}
+    ${c.ticketPlatform?`<div class="detail-field"><label>售票</label><span>${esc(c.ticketPlatform)}</span></div>`:''}
     ${c.organizer?`<div class="detail-field"><label>主辦</label><span>${esc(c.organizer)}</span></div>`:''}
     ${c.price?`<div class="detail-field"><label>票價</label><span>${esc(c.currency||'')} ${esc(c.price)}${c.fee?' + 手續費 '+esc(c.fee):''}</span></div>`:''}
-    ${c.seatArea?`<div class="detail-field"><label>座位</label><span>${esc(c.seatArea)}${c.seatRow?' 排'+esc(c.seatRow):''}${c.seatNum?' 號'+esc(c.seatNum):''}</span></div>`:''}
+    ${c.seatArea||c.seatRow||c.seatNum?`<div class="detail-field"><label>座位</label><span>${[c.seatArea,c.seatRow?'排'+c.seatRow:'',c.seatNum?'號'+c.seatNum:''].filter(Boolean).join(' ')}</span></div>`:''}
     ${c.standNum?`<div class="detail-field"><label>站位序號</label><span>${esc(c.standNum)}</span></div>`:''}
     ${c.saleDate?`<div class="detail-field"><label>售票日</label><span>${esc(c.saleDate)}</span></div>`:''}
   </div>
   ${c.notes?`<div class="detail-section"><h4>心得</h4><p>${esc(c.notes)}</p></div>`:''}
   ${setlistItems.length?`<div class="detail-section"><h4>曲目</h4>${setlistItems.map((s,i)=>`<div class="setlist-item"><span class="setlist-num">${i+1}</span><span>${esc(s)}</span></div>`).join('')}</div>`:''}
   ${c.tags&&c.tags.length?`<div class="detail-section"><h4>標籤</h4><div class="tag-list">${c.tags.map(t=>`<span class="tag-item">${esc(t)}</span>`).join('')}</div></div>`:''}
-  ${c.links?`<div class="detail-section"><h4>官網</h4><p><a href="${esc(c.links)}" target="_blank" style="color:var(--accent)">${esc(c.links)}</a></p></div>`:''}
-  `;
+  ${c.links?`<div class="detail-section"><h4>官網</h4><p><a href="${esc(c.links)}" target="_blank" style="color:var(--accent)">${esc(c.links)}</a></p></div>`:''}`;
   document.getElementById('detail-body').innerHTML=html;
   document.getElementById('detail-edit-btn').onclick=()=>{closeDetail();openForm(id);};
   document.getElementById('detail-delete-btn').onclick=()=>deleteConfirm(id);
@@ -702,16 +586,12 @@ function closeDetailIfBg(e){if(e.target===document.getElementById('detailOverlay
 function deleteConfirm(id){
   if(!confirm('確定要刪除這場演唱會嗎？'))return;
   concerts=concerts.filter(c=>c.id!==id);
-  saveData(concerts);
-  closeDetail();
-  renderList();
-  showToast('已刪除');
+  saveData(concerts);closeDetail();renderList();showToast('已刪除');
 }
 
-// ─── FORM ─────────────────────────────────────────────────
+// --- Form ---
 function openForm(id=null){
-  editingId=id;
-  formPage=1;
+  editingId=id;formPage=1;
   const c=id?concerts.find(x=>x.id===id):null;
   formImages=c&&c.images?[...c.images]:[];
   document.getElementById('formOverlay').style.display='flex';
@@ -720,34 +600,23 @@ function openForm(id=null){
 }
 function closeForm(){document.getElementById('formOverlay').style.display='none';}
 
-function datalistHTML(id,items){
-  return`<datalist id="${id}">${items.map(i=>`<option value="${esc(i)}">`).join('')}</datalist>`;
-}
+function dl(id,items){return`<datalist id="${id}">${items.map(i=>`<option value="${esc(i)}">`).join('')}</datalist>`;}
 
 function renderFormPage(c){
-  const page=formPage;
-  document.getElementById('step-dot-1').classList.toggle('active',page===1);
-  document.getElementById('step-dot-2').classList.toggle('active',page===2);
-  document.getElementById('form-back-btn').style.display=page===1?'none':'';
-  document.getElementById('form-next-btn').textContent=page===1?'下一步 →':'儲存';
-
-  if(page===1){
-    const timeVal=c&&c.showTime?c.showTime:'';
+  document.getElementById('step-dot-1').classList.toggle('active',formPage===1);
+  document.getElementById('step-dot-2').classList.toggle('active',formPage===2);
+  document.getElementById('form-back-btn').style.display=formPage===1?'none':'';
+  document.getElementById('form-next-btn').textContent=formPage===1?'下一步 →':'儲存';
+  if(formPage===1){
+    // Parse existing showTime
     let ampm='PM',hh='7',mm='00';
-    if(timeVal){
-      const m=timeVal.match(/(\d+):(\d+)\s*(AM|PM)/i);
-      if(m){hh=m[1];mm=m[2];ampm=m[3].toUpperCase();}
-    }
-    let dorTime='',dorAmpm='PM',dorHh='12',dorMm='00';
-    if(c&&c.doorTime){
-      const m=c.doorTime.match(/(\d+):(\d+)\s*(AM|PM)/i);
-      if(m){dorHh=m[1];dorMm=m[2];dorAmpm=m[3].toUpperCase();}
-      dorTime=c.doorTime;
-    }
+    let dampm='PM',dhh='5',dmm='00';
+    if(c&&c.showTime){const m=c.showTime.match(/(\d+):(\d+)\s*(AM|PM)/i);if(m){hh=m[1];mm=m[2];ampm=m[3].toUpperCase();}}
+    if(c&&c.doorTime){const m=c.doorTime.match(/(\d+):(\d+)\s*(AM|PM)/i);if(m){dhh=m[1];dmm=m[2];dampm=m[3].toUpperCase();}}
+    const mkH=(sel,cur)=>[...Array(12)].map((_,i)=>`<option${(i+1)===parseInt(cur)?' selected':''}>${i+1}</option>`).join('');
+    const mkM=(sel,cur)=>['00','15','30','45'].map(v=>`<option${v===cur?' selected':''}>${v}</option>`).join('');
     document.getElementById('form-body').innerHTML=`
-    ${datalistHTML('dl-artist',memorizedArtists)}
-    ${datalistHTML('dl-organizer',memorizedOrganizers)}
-    ${datalistHTML('dl-platform',memorizedPlatforms)}
+    ${dl('dl-artist',memArtists)}${dl('dl-org',memOrganizers)}${dl('dl-plat',memPlatforms)}
     <div class="form-row"><label class="form-label">活動抬頭</label><input class="form-input" id="f-title" value="${esc(c?c.title:'')}"></div>
     <div class="form-row"><label class="form-label">藝人</label><input class="form-input" id="f-artist" list="dl-artist" value="${esc(c?c.artist:'')}"></div>
     <div class="form-row"><label class="form-label">日期</label><input class="form-input" id="f-date" type="date" value="${c?c.date:''}"></div>
@@ -755,45 +624,36 @@ function renderFormPage(c){
       <div class="form-row"><label class="form-label">場地 <span class="opt">選填</span></label><input class="form-input" id="f-venue" value="${esc(c?c.venue:'')}"></div>
       <div class="form-row"><label class="form-label">城市</label><input class="form-input" id="f-city" value="${esc(c?c.city:'')}"></div>
     </div>
-    <div class="form-row"><label class="form-label">主辦 <span class="opt">選填</span></label><input class="form-input" id="f-organizer" list="dl-organizer" value="${esc(c?c.organizer:'')}"></div>
-    <div class="form-row"><label class="form-label">售票平台 <span class="opt">選填</span></label><input class="form-input" id="f-platform" list="dl-platform" value="${esc(c?c.ticketPlatform:'')}"></div>
+    <div class="form-row"><label class="form-label">主辦 <span class="opt">選填</span></label><input class="form-input" id="f-organizer" list="dl-org" value="${esc(c?c.organizer:'')}"></div>
+    <div class="form-row"><label class="form-label">售票平台 <span class="opt">選填</span></label><input class="form-input" id="f-platform" list="dl-plat" value="${esc(c?c.ticketPlatform:'')}"></div>
     <div class="form-row"><label class="form-label">時區</label>
-      <select class="form-input" id="f-timezone">
-        <option value="Asia/Taipei"${(c&&c.timezone==='Asia/Taipei')||!c?' selected':''}>台灣 (Asia/Taipei)</option>
+      <select class="form-input" id="f-timezone" onchange="document.getElementById('tz-other-row').style.display=this.value==='other'?'':'none'">
+        <option value="Asia/Taipei"${!c||c.timezone==='Asia/Taipei'?' selected':''}>台灣 (Asia/Taipei)</option>
         <option value="Asia/Tokyo"${c&&c.timezone==='Asia/Tokyo'?' selected':''}>日本 (Asia/Tokyo)</option>
         <option value="other"${c&&c.timezone&&c.timezone!=='Asia/Taipei'&&c.timezone!=='Asia/Tokyo'?' selected':''}>其他</option>
       </select>
     </div>
     <div class="form-row" id="tz-other-row" style="${c&&c.timezone&&c.timezone!=='Asia/Taipei'&&c.timezone!=='Asia/Tokyo'?'':'display:none'}">
       <label class="form-label">時區（自填）</label>
-      <input class="form-input" id="f-timezone-custom" value="${c&&c.timezone&&c.timezone!=='Asia/Taipei'&&c.timezone!=='Asia/Tokyo'?esc(c.timezone):''}">
+      <input class="form-input" id="f-tz-custom" value="${c&&c.timezone&&c.timezone!=='Asia/Taipei'&&c.timezone!=='Asia/Tokyo'?esc(c.timezone):''}">
     </div>
     <div class="form-row"><label class="form-label">入場時間 <span class="opt">選填</span></label>
       <div class="time-row">
-        <select id="f-door-ampm"><option${dorAmpm==='AM'?' selected':''}>AM</option><option${dorAmpm==='PM'?' selected':''}>PM</option></select>
-        <select id="f-door-h">${[...Array(12)].map((_,i)=>`<option${(i+1)===parseInt(dorHh)?' selected':''}>${i+1}</option>`).join('')}</select>
-        <select id="f-door-m">${['00','15','30','45'].map(m=>`<option${m===dorMm?' selected':''}>${m}</option>`).join('')}</select>
+        <select id="f-da"><option${dampm==='AM'?' selected':''}>AM</option><option${dampm==='PM'?' selected':''}>PM</option></select>
+        <select id="f-dh">${mkH('f-dh',dhh)}</select>
+        <select id="f-dm">${mkM('f-dm',dmm)}</select>
       </div>
     </div>
     <div class="form-row"><label class="form-label">開演時間 <span class="opt">選填</span></label>
       <div class="time-row">
-        <select id="f-show-ampm"><option${ampm==='AM'?' selected':''}>AM</option><option${ampm==='PM'?' selected':''}>PM</option></select>
-        <select id="f-show-h">${[...Array(12)].map((_,i)=>`<option${(i+1)===parseInt(hh)?' selected':''}>${i+1}</option>`).join('')}</select>
-        <select id="f-show-m">${['00','15','30','45'].map(m=>`<option${m===mm?' selected':''}>${m}</option>`).join('')}</select>
+        <select id="f-sa"><option${ampm==='AM'?' selected':''}>AM</option><option${ampm==='PM'?' selected':''}>PM</option></select>
+        <select id="f-sh">${mkH('f-sh',hh)}</select>
+        <select id="f-sm">${mkM('f-sm',mm)}</select>
       </div>
     </div>`;
-    document.getElementById('f-timezone').onchange=function(){
-      document.getElementById('tz-other-row').style.display=this.value==='other'?'':'none';
-    };
   } else {
-    const tags=(c&&c.tags)?c.tags.join(', '):'';
+    const tags=c&&c.tags?c.tags.join(', '):'';
     document.getElementById('form-body').innerHTML=`
-    <div class="form-row"><label class="form-label">購票狀態</label>
-      <select class="form-input" id="f-purchase-status">
-        <option value="">—</option>
-        ${['已購票','未購票','已看'].map(s=>`<option${c&&c.purchaseStatus===s?' selected':''}>${s}</option>`).join('')}
-      </select>
-    </div>
     <div class="form-row"><label class="form-label">購買方式 <span class="opt">選填</span></label>
       <select class="form-input" id="f-buy-method">
         <option value="">—</option>
@@ -820,204 +680,118 @@ function renderFormPage(c){
     <div class="form-row"><label class="form-label">站位序號 <span class="opt">選填</span></label><input class="form-input" id="f-stand" value="${esc(c?c.standNum:'')}"></div>
     <div class="form-row"><label class="form-label">狀態</label>
       <select class="form-input" id="f-status">
-        ${[['upcoming','即將到來／已購票'],['seen','已看']].map(([v,l])=>`<option value="${v}"${(c&&c.status===v)||(!c&&v==='upcoming')?' selected':''}>${l}</option>`).join('')}
+        <option value="upcoming"${!c||c.status==='upcoming'?' selected':''}>即將到來</option>
+        <option value="seen"${c&&c.status==='seen'?' selected':''}>已看</option>
       </select>
     </div>
     <div class="form-row"><label class="form-label">心得 <span class="opt">選填</span></label><textarea class="form-input" id="f-notes">${esc(c?c.notes:'')}</textarea></div>
     <div class="form-row"><label class="form-label">曲目 <span class="opt">每行一首</span></label><textarea class="form-input" id="f-setlist" style="min-height:100px">${esc(c?c.setlist:'')}</textarea></div>
     <div class="form-row"><label class="form-label">圖片 <span class="opt">選填</span></label>
-      <div class="img-preview-row" id="img-preview-row">
-        ${formImages.map((img,i)=>`<div class="img-thumb-del"><img class="img-thumb" src="${img}"><span class="img-del-btn" onclick="removeImg(${i})">✕</span></div>`).join('')}
-        <label class="upload-btn">＋<input type="file" accept="image/*" multiple style="display:none" onchange="handleImgUpload(event)"></label>
-      </div>
+      <div class="img-preview-row" id="img-preview-row"></div>
     </div>
     <div class="form-row"><label class="form-label">官網連結 <span class="opt">選填</span></label><input class="form-input" id="f-links" type="url" value="${esc(c?c.links:'')}"></div>
     <div class="form-row"><label class="form-label">標籤 <span class="opt">逗號分隔</span></label><input class="form-input" id="f-tags" value="${esc(tags)}"></div>`;
+    refreshImgPreview();
   }
 }
 
-function removeImg(idx){
-  formImages.splice(idx,1);
-  // re-render img preview only
+function refreshImgPreview(){
   const row=document.getElementById('img-preview-row');
-  if(row){
-    row.innerHTML=formImages.map((img,i)=>`<div class="img-thumb-del"><img class="img-thumb" src="${img}"><span class="img-del-btn" onclick="removeImg(${i})">✕</span></div>`).join('')+`<label class="upload-btn">＋<input type="file" accept="image/*" multiple style="display:none" onchange="handleImgUpload(event)"></label>`;
-  }
+  if(!row)return;
+  row.innerHTML=formImages.map((img,i)=>`<div class="img-thumb-del"><img class="img-thumb" src="${img}" onerror="this.style.opacity='.3'"><span class="img-del-btn" onclick="removeImg(${i})">✕</span></div>`).join('')
+    +`<label class="upload-btn" title="新增圖片">＋<input type="file" accept="image/*" multiple style="display:none" onchange="handleImgUpload(event)"></label>`;
 }
-
+function removeImg(idx){formImages.splice(idx,1);refreshImgPreview();}
 function handleImgUpload(e){
-  const files=Array.from(e.target.files);
-  files.forEach(f=>{
+  Array.from(e.target.files).forEach(f=>{
     const r=new FileReader();
-    r.onload=ev=>{
-      formImages.push(ev.target.result);
-      removeImg(-1+0);// trigger re-render hack
-      const row=document.getElementById('img-preview-row');
-      if(row){row.innerHTML=formImages.map((img,i)=>`<div class="img-thumb-del"><img class="img-thumb" src="${img}"><span class="img-del-btn" onclick="removeImg(${i})">✕</span></div>`).join('')+`<label class="upload-btn">＋<input type="file" accept="image/*" multiple style="display:none" onchange="handleImgUpload(event)"></label>`;}
-    };
+    r.onload=ev=>{formImages.push(ev.target.result);refreshImgPreview();};
     r.readAsDataURL(f);
   });
 }
 
 function formBack(){formPage=1;const c=editingId?concerts.find(x=>x.id===editingId):null;renderFormPage(c);}
 
-function formNext(){
-  if(formPage===1){
-    formPage=2;
-    const c=editingId?concerts.find(x=>x.id===editingId):null;
-    renderFormPage(c);
-  } else {
-    saveForm();
-  }
-}
-
-function saveForm(){
-  const getV=id=>(document.getElementById(id)||{}).value||'';
-  const tz=getV('f-timezone')==='other'?getV('f-timezone-custom'):getV('f-timezone');
-  const showAmpm=getV('f-show-ampm');
-  const showH=getV('f-show-h');
-  const showM=getV('f-show-m');
-  const showTime=showH?`${showH}:${showM} ${showAmpm}`:'';
-  const doorAmpm=getV('f-door-ampm');
-  const doorH=getV('f-door-h');
-  const doorM=getV('f-door-m');
-  const doorTime=doorH?`${doorH}:${doorM} ${doorAmpm}`:'';
-
-  // page 1 values saved in hidden map via DOM since page 2 replaces body
-  // Use sessionStorage to pass page1 data
-  const p1=JSON.parse(sessionStorage.getItem('cv_p1')||'{}');
-  const tagsRaw=getV('f-tags');
-  const tags=tagsRaw?tagsRaw.split(',').map(t=>t.trim()).filter(Boolean):[];
-
-  const data={
-    id:editingId||uid(),
-    artist:p1.artist||'',
-    title:p1.title||'',
-    date:p1.date||'',
-    venue:p1.venue||'',
-    city:p1.city||'',
-    organizer:p1.organizer||'',
-    ticketPlatform:p1.platform||'',
-    timezone:p1.timezone||'Asia/Taipei',
-    doorTime:p1.doorTime||'',
-    showTime:p1.showTime||'',
-    status:getV('f-status')||'upcoming',
-    purchaseStatus:getV('f-purchase-status'),
-    buyMethod:getV('f-buy-method'),
-    currency:getV('f-currency')||'TWD',
-    price:getV('f-price'),
-    fee:getV('f-fee'),
-    saleDate:getV('f-sale-date'),
-    seatArea:getV('f-area'),
-    seatRow:getV('f-row'),
-    seatNum:getV('f-num'),
-    standNum:getV('f-stand'),
-    notes:getV('f-notes'),
-    setlist:getV('f-setlist'),
-    links:getV('f-links'),
-    tags,
-    images:formImages,
-  };
-  if(editingId){
-    const idx=concerts.findIndex(x=>x.id===editingId);
-    if(idx>=0)concerts[idx]=data;
-  } else {
-    concerts.push(data);
-  }
-  localStorage.setItem(INIT_FLAG,'1');
-  saveData(concerts);
-  updateMemory();
-  closeForm();
-  renderList();
-  showToast(editingId?'已更新！':'已新增！');
-}
-
-// Save page1 to sessionStorage before going to page2
-const origFormNext=formNext;
 window.formNext=function(){
   if(formPage===1){
-    const getV=id=>(document.getElementById(id)||{}).value||'';
-    const tz=getV('f-timezone')==='other'?getV('f-timezone-custom'):getV('f-timezone');
-    const showTime=`${getV('f-show-h')}:${getV('f-show-m')} ${getV('f-show-ampm')}`;
-    const doorTime=`${getV('f-door-h')}:${getV('f-door-m')} ${getV('f-door-ampm')}`;
+    const tz=getV('f-timezone')==='other'?getV('f-tz-custom'):getV('f-timezone');
     sessionStorage.setItem('cv_p1',JSON.stringify({
       artist:getV('f-artist'),title:getV('f-title'),date:getV('f-date'),
       venue:getV('f-venue'),city:getV('f-city'),organizer:getV('f-organizer'),
-      platform:getV('f-platform'),timezone:tz,doorTime,showTime
+      platform:getV('f-platform'),timezone:tz,
+      showTime:`${getV('f-sh')}:${getV('f-sm')} ${getV('f-sa')}`,
+      doorTime:`${getV('f-dh')}:${getV('f-dm')} ${getV('f-da')}`
     }));
-    formPage=2;
-    const c=editingId?concerts.find(x=>x.id===editingId):null;
-    renderFormPage(c);
-  } else {saveForm();}
+    formPage=2;renderFormPage(editingId?concerts.find(x=>x.id===editingId):null);
+  } else {
+    const p1=JSON.parse(sessionStorage.getItem('cv_p1')||'{}');
+    const tagsRaw=getV('f-tags');
+    const tags=tagsRaw?tagsRaw.split(',').map(t=>t.trim()).filter(Boolean):[];
+    const data={
+      id:editingId||uid(),
+      artist:p1.artist||'',title:p1.title||'',date:p1.date||'',
+      venue:p1.venue||'',city:p1.city||'',organizer:p1.organizer||'',
+      ticketPlatform:p1.platform||'',timezone:p1.timezone||'Asia/Taipei',
+      showTime:p1.showTime||'',doorTime:p1.doorTime||'',
+      status:getV('f-status')||'upcoming',
+      buyMethod:getV('f-buy-method'),
+      currency:getV('f-currency')||'TWD',price:getV('f-price'),fee:getV('f-fee'),
+      saleDate:getV('f-sale-date'),
+      seatArea:getV('f-area'),seatRow:getV('f-row'),seatNum:getV('f-num'),
+      standNum:getV('f-stand'),notes:getV('f-notes'),setlist:getV('f-setlist'),
+      links:getV('f-links'),tags,images:formImages,
+    };
+    if(editingId){const idx=concerts.findIndex(x=>x.id===editingId);if(idx>=0)concerts[idx]=data;}
+    else concerts.push(data);
+    localStorage.setItem(INIT_FLAG,'1');
+    saveData(concerts);updateMemory();closeForm();renderList();
+    showToast(editingId?'已更新！':'已新增！');
+  }
 };
 
-// ─── BACKUP ──────────────────────────────────────────────
-function toggleBackupMenu(){
-  const m=document.getElementById('backupMenu');
-  m.style.display=m.style.display==='none'?'block':'none';
-}
+// --- Backup ---
+function toggleBackupMenu(){const m=document.getElementById('backupMenu');m.style.display=m.style.display==='none'?'block':'none';}
 document.addEventListener('click',e=>{
   const bm=document.getElementById('backupMenu');
   if(!bm.contains(e.target)&&!e.target.closest('.backup-btn'))bm.style.display='none';
 });
-
 function exportJSON(){
   const blob=new Blob([JSON.stringify(concerts,null,2)],{type:'application/json'});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement('a');a.href=url;a.download='concert-vault-backup.json';a.click();
-  URL.revokeObjectURL(url);
-  showToast('已匯出 JSON');
-  document.getElementById('backupMenu').style.display='none';
+  const url=URL.createObjectURL(blob);const a=document.createElement('a');
+  a.href=url;a.download='concert-vault-backup.json';a.click();URL.revokeObjectURL(url);
+  showToast('已匯出 JSON');document.getElementById('backupMenu').style.display='none';
 }
-function importJSONClick(){
-  document.getElementById('import-file').click();
-  document.getElementById('backupMenu').style.display='none';
-}
+function importJSONClick(){document.getElementById('import-file').click();document.getElementById('backupMenu').style.display='none';}
 function doImport(e){
   const f=e.target.files[0];if(!f)return;
   const r=new FileReader();
   r.onload=ev=>{
     try{
-      const imported=JSON.parse(ev.target.result);
-      if(!Array.isArray(imported))throw new Error('格式錯誤');
-      const existingIds=new Set(concerts.map(c=>c.id));
-      let added=0;
-      imported.forEach(c=>{if(!existingIds.has(c.id)){concerts.push(c);added++;}});
-      saveData(concerts);
-      updateMemory();
-      renderList();
-      showToast(`已匯入 ${added} 筆`);
+      const imp=JSON.parse(ev.target.result);if(!Array.isArray(imp))throw 0;
+      const ids=new Set(concerts.map(c=>c.id));let n=0;
+      imp.forEach(c=>{if(!ids.has(c.id)){concerts.push(c);n++;}});
+      saveData(concerts);updateMemory();renderList();showToast(`已匯入 ${n} 筆`);
     }catch{showToast('匯入失敗，請確認檔案格式');}
   };
-  r.readAsText(f);
-  e.target.value='';
+  r.readAsText(f);e.target.value='';
 }
 function copyBackupCode(){
   const noImg=concerts.map(c=>({...c,images:[]}));
   const code=btoa(unescape(encodeURIComponent(JSON.stringify(noImg))));
-  navigator.clipboard.writeText(code).then(()=>showToast('備份碼已複製！')).catch(()=>{
-    prompt('複製此備份碼：',code);
-  });
+  navigator.clipboard.writeText(code).then(()=>showToast('備份碼已複製！')).catch(()=>prompt('複製此備份碼：',code));
   document.getElementById('backupMenu').style.display='none';
 }
 function pasteBackupCode(){
-  const code=prompt('貼上備份碼：');
-  if(!code)return;
+  const code=prompt('貼上備份碼：');if(!code)return;
   try{
-    const data=JSON.parse(decodeURIComponent(escape(atob(code))));
-    if(!Array.isArray(data))throw new Error();
-    const existingIds=new Set(concerts.map(c=>c.id));
-    let added=0;
-    data.forEach(c=>{if(!existingIds.has(c.id)){concerts.push(c);added++;}});
-    saveData(concerts);
-    updateMemory();
-    renderList();
-    showToast(`已還原 ${added} 筆`);
+    const data=JSON.parse(decodeURIComponent(escape(atob(code))));if(!Array.isArray(data))throw 0;
+    const ids=new Set(concerts.map(c=>c.id));let n=0;
+    data.forEach(c=>{if(!ids.has(c.id)){concerts.push(c);n++;}});
+    saveData(concerts);updateMemory();renderList();showToast(`已還原 ${n} 筆`);
   }catch{showToast('備份碼無效');}
   document.getElementById('backupMenu').style.display='none';
 }
 
-// ─── INIT ─────────────────────────────────────────────────
 renderList();
 </script>
 </body>
