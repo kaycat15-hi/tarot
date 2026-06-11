@@ -1159,7 +1159,6 @@ function toggleIOPanel(){
       <label class="btn btn-ghost btn-sm" style="cursor:pointer">⬆ 匯入 JSON<input type="file" accept=".json" style="display:none" onchange="importJSON(event)"></label>
       <button class="btn btn-ghost btn-sm" onclick="copyCloud()">☁ 複製備份碼</button>
       <button class="btn btn-ghost btn-sm" onclick="pasteCloud()">📋 貼上備份碼</button>
-      <button class="btn btn-ghost btn-sm" onclick="startChangePin()">🔒 變更密碼</button>
       <button class="btn btn-ghost btn-sm" style="margin-left:auto" onclick="toggleIOPanel()">✕</button>
     </div>
     <div class="io-note">備份碼可貼到 Google Keep / Notion 存放。圖片資料較大請用 JSON 匯出保留圖片。</div>
@@ -1234,7 +1233,7 @@ function appStart(){
   render();
 }
 
-pinInit();
+appStart();
 </script>
 </body>
 </html>
