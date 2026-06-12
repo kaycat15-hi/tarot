@@ -62,7 +62,7 @@ input,select,textarea{font-family:inherit;font-size:16px}
 .concert-item.status-seen{border-left:3px solid var(--seen)}
 .concert-item.status-upcoming{border-left:3px solid var(--upcoming)}
 .concert-item.multi-artist{background:var(--multi-bg)}
-.item-img{width:110px;min-width:110px;height:82px;flex-shrink:0;overflow:hidden;background:#e8e0d4;position:relative}
+.item-img{width:120px;min-width:120px;height:90px;flex-shrink:0;overflow:hidden;background:#e8e0d4;position:relative}
 .item-img img{width:100%;height:100%;object-fit:cover;display:block}
 .item-img-ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:2rem;background:linear-gradient(135deg,#e8dfd0,#d4c8b4)}
 .item-info{flex:1;padding:12px 10px;display:flex;flex-direction:column;justify-content:center;overflow:hidden;min-width:0}
@@ -270,8 +270,8 @@ textarea.form-input{resize:vertical;min-height:80px}
     </div>
     <div class="form-body" id="form-body"></div>
     <div class="form-footer">
-      <button class="btn-secondary" id="form-back-btn" onclick="formBack()" style="display:none">← 上一步</button>
-      <button class="btn-primary" id="form-next-btn" onclick="formNext()">下一步 →</button>
+      <button class="btn-secondary" id="form-back-btn" style="display:none">← 上一步</button>
+      <button class="btn-primary" id="form-next-btn">下一步 →</button>
     </div>
   </div>
 </div>
@@ -605,7 +605,7 @@ function listItemHTML(c, list){
       <div class="item-title">${esc(c.title)}</div>
       ${venueText?`<div class="item-venue">📍 ${esc(venueText)}</div>`:''}
     </div>
-    <span class="status-badge ${badgeCls}">${badgeTxt}</span>
+    <span class="status-badge ${badgeCls}" style="display:none">${badgeTxt}</span>
     <div class="item-date">
       <div class="item-month">${month}</div>
       <div class="item-day">${day}</div>
@@ -707,7 +707,6 @@ function openDetail(id){
     </div>
   </div>
   <div class="detail-pills">
-    <span class="detail-pill ${statusCls}">${statusTxt}</span>
     ${c.city?`<span class="detail-pill neutral">📍 ${esc(c.city)}</span>`:''}
     ${c.buyMethod?`<span class="detail-pill neutral">${esc(c.buyMethod)}</span>`:''}
   </div>
@@ -883,7 +882,7 @@ function handleImgUpload(e){
 
 function formBack(){ formPage=1; renderFormPage(editingId?concerts.find(x=>x.id===editingId):null); }
 
-window.formNext = function(){
+function doFormNext(){
   if(formPage===1){
     const tz = gv('f-timezone')==='other' ? gv('f-tz-custom') : gv('f-timezone');
     sessionStorage.setItem('cv_p1', JSON.stringify({
@@ -897,7 +896,7 @@ window.formNext = function(){
   } else {
     saveForm();
   }
-};
+}
 
 async function saveForm(){
   const btn = document.getElementById('form-next-btn');
@@ -1020,6 +1019,8 @@ function pasteBackupCode(){
 // ═══════════════════════════════════════════
 //  Init
 // ═══════════════════════════════════════════
+document.getElementById('form-next-btn').addEventListener('click', doFormNext);
+document.getElementById('form-back-btn').addEventListener('click', formBack);
 openIDB().then(()=>renderList()).catch(()=>renderList());
 </script>
 </body>
