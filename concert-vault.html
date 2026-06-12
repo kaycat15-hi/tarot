@@ -756,9 +756,12 @@ function deleteConfirm(id){
 // ═══════════════════════════════════════════
 function openForm(id=null){
   editingId = id; formPage = 1;
-  formImgDataURLs = []; // reset; will load from IDB if editing
+  formImgDataURLs = [];
   document.getElementById('formOverlay').style.display='flex';
   document.getElementById('form-title').textContent = id?'編輯演唱會':'新增演唱會';
+  // Rebind buttons every time (DOM may have been replaced)
+  document.getElementById('form-next-btn').onclick = doFormNext;
+  document.getElementById('form-back-btn').onclick = formBack;
   const c = id ? concerts.find(x=>x.id===id) : null;
   if(id && c && c.imgCount>0){
     loadImagesFromIDB(id, c.imgCount, imgs=>{ formImgDataURLs=imgs; refreshImgPreview(); });
