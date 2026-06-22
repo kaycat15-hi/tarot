@@ -1,443 +1,1541 @@
 <!DOCTYPE html>
-
 <html lang="zh-TW">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="塔羅學習">
-<title>塔羅牌學習系統</title>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Noto+Serif+TC:wght@300;400;700&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>典典占卜日記 ✨</title>
 <style>
-:root{
-  --parchment:#fdf3e3;
-  --gold:#c8873a;
-  --gold-light:#e8b06a;
-  --warm:#8b3a2a;
-  --rose:#c2637a;
-  --midnight:#1a0f08;
-  --surface:#2a1508;
-  --surface2:#3a1e0c;
-  --border:rgba(200,135,58,0.35)
+:root {
+  --bg: #0d0d1a;
+  --bg2: #13132a;
+  --bg3: #1a1a35;
+  --card: #1e1e3f;
+  --card2: #252550;
+  --border: #2e2e60;
+  --accent: #a78bfa;
+  --accent2: #c4b5fd;
+  --gold: #fbbf24;
+  --gold2: #fde68a;
+  --pink: #f472b6;
+  --teal: #2dd4bf;
+  --red: #f87171;
+  --green: #4ade80;
+  --text: #e2e0ff;
+  --text2: #a8a4d4;
+  --text3: #6b6890;
+  --upright: #7dd3fc;
+  --reversed: #fb923c;
+  --shadow: 0 4px 24px rgba(0,0,0,0.5);
 }
-*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{height:100%}
-body{background:var(--midnight);color:var(--parchment);font-family:'Noto Serif TC',serif;min-height:100vh;overflow-x:hidden;overflow-y:scroll;-webkit-overflow-scrolling:touch;padding-bottom:calc(88px + env(safe-area-inset-bottom));font-size:16px;line-height:1.65}
-body::before{content:'';position:fixed;inset:0;background:
-  radial-gradient(ellipse at 20% 0%,rgba(180,80,20,.2) 0%,transparent 50%),
-  radial-gradient(ellipse at 80% 100%,rgba(140,50,10,.15) 0%,transparent 50%),
-  radial-gradient(1px 1px at 15% 20%,rgba(255,220,150,.4) 0%,transparent 100%),
-  radial-gradient(1px 1px at 70% 10%,rgba(255,200,100,.3) 0%,transparent 100%),
-  radial-gradient(1px 1px at 45% 60%,rgba(255,180,80,.2) 0%,transparent 100%),
-  radial-gradient(1px 1px at 85% 40%,rgba(255,220,150,.3) 0%,transparent 100%),
-  var(--midnight);pointer-events:none;z-index:0}
-.app{position:relative;z-index:1;max-width:640px;margin:0 auto}
-header{text-align:center;padding:24px 16px 16px;border-bottom:1px solid var(--border)}
-.logo-symbol{font-size:1.8rem;margin-bottom:4px;display:block;animation:float 4s ease-in-out infinite}
-@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
-h1{font-family:'Cinzel Decorative',serif;font-size:clamp(.85rem,3.2vw,1.15rem);color:var(--gold-light);letter-spacing:.07em;line-height:1.3}
-.subtitle{font-size:.68rem;color:rgba(253,243,227,.3);margin-top:3px;letter-spacing:.07em;font-style:italic}
-.bottom-nav{position:fixed;bottom:0;left:0;right:0;z-index:50;background:rgba(26,15,8,.97);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--border);padding:6px 0 calc(6px + env(safe-area-inset-bottom));display:flex}
-.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 2px;background:none;border:none;color:rgba(253,243,227,.3);cursor:pointer;font-family:'Noto Serif TC',serif;font-size:.6rem;letter-spacing:.02em;transition:all .2s;-webkit-appearance:none}
-.nav-item .nav-icon{font-size:1.25rem;line-height:1}
-.nav-item.active{color:var(--gold-light)}
-.nav-item.active .nav-icon{filter:drop-shadow(0 0 5px rgba(200,135,58,.5))}
-.panel{display:none;padding:14px 13px}
-.panel.active{display:block;animation:fadeIn .3s ease}
-@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-.card-box{background:linear-gradient(145deg,var(--surface2),var(--surface));border:1px solid var(--border);border-radius:14px;padding:18px 16px;margin-bottom:14px;box-shadow:0 6px 24px rgba(0,0,0,.4)}
-.card-box h2{font-family:'Cinzel Decorative',serif;font-size:.75rem;color:var(--gold-light);letter-spacing:.1em;margin-bottom:14px;display:flex;align-items:center;gap:8px}
-.card-box h2::after{content:'';flex:1;height:1px;background:var(--border)}
-label{display:block;font-size:.78rem;color:var(--gold-light);letter-spacing:.06em;margin-bottom:5px;margin-top:13px}
-label:first-of-type{margin-top:0}
-input,textarea{width:100%;background:rgba(0,0,0,.32);border:1px solid rgba(200,135,58,.2);border-radius:10px;color:var(--parchment);font-family:'Noto Serif TC',serif;font-size:.95rem;padding:11px 13px;transition:border-color .25s;outline:none;-webkit-appearance:none;-webkit-overflow-scrolling:touch}
-input:focus,textarea:focus{border-color:var(--gold);box-shadow:0 0 0 2px rgba(200,135,58,.1)}
-textarea{resize:none;line-height:1.7;overflow-y:auto;-webkit-overflow-scrolling:touch;display:block}
-.ta-sm{height:75px}.ta-md{height:110px}.ta-lg{height:150px}
-.btn{display:flex;align-items:center;justify-content:center;gap:6px;padding:12px 18px;border:none;border-radius:12px;font-family:'Noto Serif TC',serif;font-size:.9rem;cursor:pointer;transition:all .2s;letter-spacing:.04em;width:100%;-webkit-appearance:none}
-.btn:active{opacity:.85;transform:scale(.98)}
-.btn-gold{background:linear-gradient(135deg,#7a4010,var(--gold));color:#fdf3e3;font-weight:700;box-shadow:0 4px 14px rgba(200,135,58,.3);margin-top:14px}
-.btn-sm{width:auto;padding:9px 15px;font-size:.82rem;margin-top:0}
-.btn-outline{background:transparent;border:1px solid var(--border);color:var(--gold-light)}
-.btn-danger{background:rgba(194,99,122,.13);border:1px solid rgba(194,99,122,.27);color:#e09090}
-.ori-toggle{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px}
-.ori-btn{padding:11px;border-radius:10px;border:1px solid var(--border);background:transparent;color:rgba(253,243,227,.4);font-family:'Noto Serif TC',serif;font-size:.9rem;cursor:pointer;transition:all .2s;-webkit-appearance:none}
-.ori-btn.selected{border-color:var(--gold-light);background:rgba(200,135,58,.12);color:var(--gold-light)}
-.picker-toggle{background:rgba(0,0,0,.2);border:1px dashed var(--border);border-radius:10px;padding:9px 13px;cursor:pointer;color:rgba(253,243,227,.38);font-size:.8rem;text-align:center;margin-top:8px;display:block;width:100%;font-family:'Noto Serif TC',serif;-webkit-appearance:none}
-.card-picker{display:none;margin-top:8px;background:rgba(0,0,0,.35);border:1px solid var(--border);border-radius:12px;padding:12px;max-height:200px;overflow-y:auto;-webkit-overflow-scrolling:touch}
-.card-picker.open{display:block;animation:fadeIn .2s ease}
-.picker-section-title{font-size:.68rem;color:var(--gold);letter-spacing:.1em;margin-bottom:6px;margin-top:10px;padding-bottom:3px;border-bottom:1px solid rgba(200,135,58,.18)}
-.picker-section-title:first-child{margin-top:0}
-.card-chips{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:3px}
-.card-chip{background:rgba(139,58,42,.15);border:1px solid rgba(139,58,42,.28);border-radius:16px;padding:4px 10px;font-size:.72rem;color:rgba(253,243,227,.58);cursor:pointer;transition:all .16s}
-.card-chip.selected{background:rgba(200,135,58,.28);border-color:var(--gold);color:var(--parchment)}
 
-/* 今日運勢卡片 */
-.fortune-card{background:linear-gradient(145deg,#4a1e08,#3a1208);border:1px solid rgba(200,135,58,.5);border-radius:14px;padding:18px 16px;margin-bottom:14px;display:none}
-.fortune-card.visible{display:block;animation:fadeIn .4s ease}
-.fortune-header{display:flex;align-items:center;gap:10px;margin-bottom:14px}
-.fortune-card-name{font-family:‘Cinzel Decorative’,serif;font-size:.9rem;color:var(–gold-light)}
-.fortune-ori{font-size:.72rem;padding:3px 9px;border-radius:12px;background:rgba(200,135,58,.18);border:1px solid var(–border);color:var(–gold-light)}
-.fortune-section{margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid rgba(200,135,58,.12)}
-.fortune-section:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
-.fortune-label{font-size:.7rem;color:var(–gold-light);letter-spacing:.08em;margin-bottom:5px}
-.fortune-text{font-size:.92rem;color:rgba(253,243,227,.82);line-height:1.8}
-.fortune-mantra{text-align:center;font-style:italic;color:var(–gold-light);font-size:.95rem;line-height:1.7;padding:12px;background:rgba(200,135,58,.08);border-radius:10px;border:1px solid rgba(200,135,58,.18)}
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
-/* 筆記卡片 */
-.note-card{background:linear-gradient(145deg,var(–surface2),var(–surface));border:1px solid var(–border);border-radius:13px;padding:13px 14px;margin-bottom:10px;cursor:pointer;transition:all .2s}
-.note-card:active{transform:scale(.98);border-color:var(–gold)}
-.note-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px}
-.note-name{font-family:‘Cinzel Decorative’,serif;font-size:.8rem;color:var(–gold-light)}
-.note-date{font-size:.67rem;color:rgba(253,243,227,.26)}
-.note-kws{display:flex;flex-wrap:wrap;gap:5px}
-.kw-pill{background:rgba(200,135,58,.14);border:1px solid rgba(200,135,58,.26);border-radius:14px;padding:3px 9px;font-size:.68rem;color:rgba(253,243,227,.65)}
-.kw-pill.neg{background:rgba(194,99,122,.1);border-color:rgba(194,99,122,.22);color:rgba(253,243,227,.6)}
-.empty-state{text-align:center;padding:48px 20px;color:rgba(253,243,227,.2);font-style:italic;font-size:.85rem;line-height:1.8}
-.empty-icon{font-size:2.2rem;margin-bottom:10px}
-.search-wrap{position:relative;margin-bottom:12px}
-.search-wrap input{padding-left:36px}
-.search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:.85rem;pointer-events:none}
-.section-label{font-size:.72rem;color:var(–gold-light);letter-spacing:.08em;margin-bottom:8px;padding:0 2px}
-.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:14px}
-.stat-box{background:linear-gradient(145deg,var(–surface2),var(–surface));border:1px solid var(–border);border-radius:13px;padding:13px 7px;text-align:center}
-.stat-num{font-family:‘Cinzel Decorative’,serif;font-size:1.5rem;color:var(–gold-light)}
-.stat-label{font-size:.63rem;color:rgba(253,243,227,.3);margin-top:3px;letter-spacing:.05em}
-.prog-wrap{margin-bottom:12px}
-.prog-label-row{display:flex;justify-content:space-between;font-size:.72rem;color:rgba(253,243,227,.34);margin-bottom:5px}
-.prog-bar-bg{background:rgba(0,0,0,.3);border-radius:20px;height:7px;overflow:hidden}
-.prog-bar{height:100%;border-radius:20px;background:linear-gradient(90deg,var(–warm),var(–gold));transition:width .7s ease}
-.backup-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
-.backup-card{background:rgba(0,0,0,.18);border:1px solid var(–border);border-radius:13px;padding:15px 12px;text-align:center}
-.backup-icon{font-size:1.6rem;margin-bottom:5px}
-.backup-title{font-size:.8rem;color:var(–gold-light);margin-bottom:3px}
-.backup-desc{font-size:.7rem;color:rgba(253,243,227,.28);line-height:1.55;margin-bottom:10px}
-.status-pill{font-size:.68rem;padding:4px 10px;border-radius:16px;display:inline-block}
-.status-ok{background:rgba(74,124,107,.16);color:#7ec8a0;border:1px solid rgba(74,124,107,.26)}
-.status-warn{background:rgba(200,135,58,.1);color:var(–gold-light);border:1px solid rgba(200,135,58,.2)}
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.87);z-index:200;display:none;align-items:flex-end;justify-content:center}
-.modal-overlay.open{display:flex;animation:fadeIn .22s ease}
-.modal{background:linear-gradient(165deg,var(–surface2),var(–midnight));border:1px solid var(–gold);border-radius:22px 22px 0 0;padding:20px 18px calc(20px + env(safe-area-inset-bottom));width:100%;max-height:88vh;overflow-y:auto;-webkit-overflow-scrolling:touch}
-.modal-handle{width:36px;height:4px;background:rgba(200,135,58,.28);border-radius:2px;margin:0 auto 16px}
-.modal-close-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
-.modal h2{font-family:‘Cinzel Decorative’,serif;color:var(–gold-light);font-size:.85rem}
-.modal-close{background:none;border:none;color:rgba(253,243,227,.36);font-size:1.2rem;cursor:pointer;padding:4px;width:auto}
-.m-section{margin-bottom:11px}
-.m-label{font-size:.7rem;color:var(–gold-light);letter-spacing:.08em;margin-bottom:4px}
-.m-value{font-size:.9rem;color:rgba(253,243,227,.76);line-height:1.75}
-.m-kws{display:flex;flex-wrap:wrap;gap:5px}
-.m-divider{height:1px;background:var(–border);margin:11px 0}
-.toast{position:fixed;bottom:92px;left:50%;transform:translateX(-50%) translateY(20px);background:linear-gradient(135deg,var(–warm),#a03020);color:var(–parchment);padding:10px 22px;border-radius:24px;font-size:.82rem;box-shadow:0 5px 18px rgba(0,0,0,.5);z-index:300;opacity:0;transition:all .27s;pointer-events:none;max-width:88vw;text-align:center}
-.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
-::-webkit-scrollbar{width:3px}
-::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:var(–border);border-radius:2px}
-@media(max-width:380px){.backup-grid{grid-template-columns:1fr}}
+body {
+  font-family: 'Segoe UI', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  font-size: 14px;
+}
+
+/* ── NAV ── */
+.nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  background: rgba(13,13,26,0.95);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center;
+  padding: 0 12px;
+  height: 52px;
+  gap: 2px;
+  overflow-x: auto;
+}
+.nav-title {
+  font-size: 16px; font-weight: 700;
+  color: var(--accent2);
+  white-space: nowrap;
+  margin-right: 12px;
+  letter-spacing: 0.02em;
+}
+.nav-btn {
+  flex-shrink: 0;
+  background: none; border: none;
+  color: var(--text2); font-size: 12px;
+  padding: 6px 10px; border-radius: 8px;
+  cursor: pointer; white-space: nowrap;
+  transition: all .2s;
+}
+.nav-btn:hover { background: var(--bg3); color: var(--accent2); }
+.nav-btn.active { background: var(--accent); color: #fff; font-weight: 600; }
+
+/* ── PAGES ── */
+.page { display: none; padding: 68px 12px 24px; max-width: 900px; margin: 0 auto; }
+.page.active { display: block; }
+
+/* ── SECTION HEADINGS ── */
+.section-title {
+  font-size: 18px; font-weight: 700;
+  color: var(--accent2);
+  margin: 20px 0 12px;
+  display: flex; align-items: center; gap: 8px;
+}
+.section-title::after {
+  content: ''; flex: 1; height: 1px;
+  background: linear-gradient(to right, var(--border), transparent);
+}
+
+/* ── CARDS ── */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px;
+  margin-bottom: 12px;
+  box-shadow: var(--shadow);
+}
+.card.highlight {
+  border-color: var(--accent);
+  background: linear-gradient(135deg, var(--card), #221e45);
+}
+
+/* ── FORM ELEMENTS ── */
+select, input[type="text"], input[type="date"], textarea {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  padding: 8px 10px;
+  font-size: 13px;
+  font-family: inherit;
+  width: 100%;
+  outline: none;
+  transition: border-color .2s;
+}
+select:focus, input:focus, textarea:focus {
+  border-color: var(--accent);
+}
+select option { background: var(--bg2); }
+textarea { resize: vertical; min-height: 70px; }
+label { font-size: 12px; color: var(--text2); display: block; margin-bottom: 4px; }
+
+.row { display: flex; gap: 8px; flex-wrap: wrap; }
+.col { flex: 1; min-width: 120px; }
+
+/* ── BUTTONS ── */
+.btn {
+  background: var(--accent);
+  color: #fff; border: none;
+  border-radius: 8px; padding: 9px 18px;
+  font-size: 13px; font-weight: 600;
+  cursor: pointer; transition: all .2s;
+  white-space: nowrap;
+}
+.btn:hover { background: var(--accent2); color: var(--bg); }
+.btn.secondary {
+  background: var(--bg3); color: var(--text2);
+  border: 1px solid var(--border);
+}
+.btn.secondary:hover { border-color: var(--accent); color: var(--accent2); }
+.btn.danger { background: #7f1d1d; color: var(--red); }
+.btn.danger:hover { background: var(--red); color: #fff; }
+.btn.gold { background: var(--gold); color: #1a1000; }
+.btn.gold:hover { background: var(--gold2); }
+.btn.sm { padding: 5px 10px; font-size: 11px; }
+
+/* ── TAGS / BADGES ── */
+.badge {
+  display: inline-block;
+  border-radius: 20px; padding: 2px 10px;
+  font-size: 11px; font-weight: 600;
+}
+.badge.upright { background: rgba(125,211,252,0.15); color: var(--upright); border: 1px solid rgba(125,211,252,0.3); }
+.badge.reversed { background: rgba(251,146,60,0.15); color: var(--reversed); border: 1px solid rgba(251,146,60,0.3); }
+.badge.qianqian { background: rgba(251,191,36,0.15); color: var(--gold); border: 1px solid rgba(251,191,36,0.3); }
+.badge.diandian { background: rgba(167,139,250,0.15); color: var(--accent2); border: 1px solid rgba(167,139,250,0.3); }
+.badge.oracle { background: rgba(45,212,191,0.15); color: var(--teal); border: 1px solid rgba(45,212,191,0.3); }
+
+/* ── POSITION TOGGLE ── */
+.pos-toggle { display: flex; gap: 6px; margin-top: 6px; }
+.pos-btn {
+  flex: 1; padding: 7px; border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--bg3);
+  color: var(--text2); cursor: pointer;
+  font-size: 12px; font-weight: 600;
+  transition: all .2s; text-align: center;
+}
+.pos-btn.selected-upright { background: rgba(125,211,252,0.2); border-color: var(--upright); color: var(--upright); }
+.pos-btn.selected-reversed { background: rgba(251,146,60,0.2); border-color: var(--reversed); color: var(--reversed); }
+
+/* ── CALENDAR ── */
+.calendar-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 12px;
+}
+.cal-nav-btn {
+  background: var(--bg3); border: 1px solid var(--border);
+  color: var(--text); border-radius: 8px;
+  padding: 6px 14px; cursor: pointer; font-size: 14px;
+}
+.cal-nav-btn:hover { border-color: var(--accent); }
+.calendar-month-title { font-size: 16px; font-weight: 700; color: var(--accent2); }
+.cal-grid {
+  display: grid; grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+.cal-day-header {
+  text-align: center; font-size: 11px;
+  color: var(--text3); padding: 4px 0;
+  font-weight: 600;
+}
+.cal-day {
+  background: var(--bg3); border-radius: 8px;
+  min-height: 52px; padding: 4px;
+  cursor: pointer; border: 1px solid transparent;
+  transition: border-color .15s;
+  position: relative;
+  overflow: hidden;
+}
+.cal-day:hover { border-color: var(--accent); }
+.cal-day.today { border-color: var(--accent); }
+.cal-day.empty { background: transparent; cursor: default; pointer-events: none; }
+.cal-day.has-record { background: var(--card); }
+.cal-day-num {
+  font-size: 11px; color: var(--text2);
+  font-weight: 600;
+}
+.cal-day.today .cal-day-num { color: var(--accent2); }
+.cal-dots {
+  display: flex; flex-wrap: wrap; gap: 2px; margin-top: 2px;
+}
+.cal-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+}
+.cal-dot.q { background: var(--gold); }
+.cal-dot.d { background: var(--accent); }
+.cal-dot.o { background: var(--teal); }
+.cal-turtle-mini {
+  font-size: 10px; line-height: 1; margin-top: 1px;
+}
+
+/* ── TODAY RECORD ── */
+.turtle-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 8px;
+}
+.turtle-card {
+  background: var(--bg3); border-radius: 10px;
+  border: 2px solid transparent;
+  padding: 10px 8px;
+  cursor: pointer; transition: all .2s;
+  text-align: center;
+}
+.turtle-card:hover { border-color: var(--gold); }
+.turtle-card.selected { border-color: var(--gold); background: rgba(251,191,36,0.1); }
+.turtle-emoji { font-size: 28px; margin-bottom: 4px; }
+.turtle-name { font-size: 12px; font-weight: 700; color: var(--gold); }
+.turtle-stone { font-size: 10px; color: var(--text3); }
+.turtle-energy { font-size: 10px; color: var(--teal); margin-top: 2px; }
+
+/* ── CARD STUDY ── */
+.study-tabs {
+  display: flex; gap: 6px; margin-bottom: 16px; flex-wrap: wrap;
+}
+.study-tab {
+  background: var(--bg3); border: 1px solid var(--border);
+  border-radius: 20px; padding: 5px 14px;
+  font-size: 12px; color: var(--text2);
+  cursor: pointer; transition: all .2s;
+}
+.study-tab:hover { border-color: var(--accent); }
+.study-tab.active { background: var(--accent); color: #fff; border-color: var(--accent); font-weight: 600; }
+
+.study-panel { display: none; }
+.study-panel.active { display: block; }
+
+.learn-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px; margin-bottom: 10px;
+}
+.learn-card-header {
+  display: flex; align-items: flex-start;
+  justify-content: space-between; gap: 8px;
+  margin-bottom: 12px;
+}
+.learn-card-title { font-size: 15px; font-weight: 700; color: var(--accent2); }
+.learn-card-num { font-size: 11px; color: var(--text3); margin-top: 2px; }
+.learn-card-archetype { font-size: 12px; color: var(--gold); }
+
+.keyword-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+.keyword {
+  background: var(--bg3); border-radius: 20px;
+  padding: 3px 10px; font-size: 11px;
+  border: 1px solid var(--border);
+}
+.keyword.up { border-color: rgba(125,211,252,0.4); color: var(--upright); }
+.keyword.rev { border-color: rgba(251,146,60,0.4); color: var(--reversed); }
+
+.interp-table { width: 100%; border-collapse: collapse; }
+.interp-table td {
+  padding: 6px 8px; font-size: 12px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+.interp-table td:first-child {
+  width: 60px; color: var(--text3);
+  font-weight: 600; white-space: nowrap;
+}
+.memory-tip {
+  background: rgba(251,191,36,0.08);
+  border: 1px solid rgba(251,191,36,0.2);
+  border-radius: 8px; padding: 8px 10px;
+  font-size: 12px; color: var(--gold2);
+  margin-top: 10px;
+}
+.memory-tip::before { content: '💡 '; }
+
+.progress-bar {
+  background: var(--bg3); border-radius: 20px;
+  height: 6px; overflow: hidden; margin-top: 4px;
+}
+.progress-fill {
+  height: 100%; border-radius: 20px;
+  background: linear-gradient(to right, var(--accent), var(--teal));
+  transition: width .5s;
+}
+
+/* ── ORACLE ── */
+.oracle-section {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 14px; padding: 16px; margin-bottom: 12px;
+}
+.oracle-section-title {
+  font-size: 13px; font-weight: 700;
+  color: var(--teal); margin-bottom: 10px;
+}
+.oracle-card-selected {
+  background: rgba(45,212,191,0.08);
+  border: 1px solid rgba(45,212,191,0.3);
+  border-radius: 8px; padding: 10px;
+  margin-top: 8px; font-size: 13px;
+  color: var(--teal);
+}
+.oracle-sum-display {
+  background: var(--bg3); border-radius: 10px;
+  padding: 12px; text-align: center; margin-top: 10px;
+}
+.oracle-sum-num { font-size: 28px; font-weight: 700; color: var(--gold); }
+.oracle-sum-label { font-size: 11px; color: var(--text3); }
+.oracle-result-card {
+  background: linear-gradient(135deg, rgba(45,212,191,0.1), rgba(167,139,250,0.1));
+  border: 1px solid var(--teal);
+  border-radius: 10px; padding: 14px;
+  margin-top: 10px; text-align: center;
+}
+.oracle-result-name { font-size: 16px; font-weight: 700; color: var(--teal); }
+.oracle-result-num { font-size: 11px; color: var(--text3); margin-bottom: 4px; }
+
+/* ── RECORD DETAIL MODAL ── */
+.modal-overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(0,0,0,0.7); z-index: 200;
+  align-items: center; justify-content: center;
+  padding: 16px;
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  background: var(--card2);
+  border: 1px solid var(--border);
+  border-radius: 16px; padding: 20px;
+  max-width: 520px; width: 100%;
+  max-height: 90vh; overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+}
+.modal-header {
+  display: flex; justify-content: space-between;
+  align-items: center; margin-bottom: 16px;
+}
+.modal-title { font-size: 16px; font-weight: 700; color: var(--accent2); }
+.modal-close {
+  background: none; border: none;
+  color: var(--text3); font-size: 20px;
+  cursor: pointer; padding: 4px;
+}
+.modal-close:hover { color: var(--text); }
+
+/* ── RECORD LIST ── */
+.record-item {
+  background: var(--bg3); border-radius: 10px;
+  border: 1px solid var(--border); padding: 12px;
+  margin-bottom: 8px; cursor: pointer;
+  transition: border-color .15s;
+}
+.record-item:hover { border-color: var(--accent); }
+.record-item-date { font-size: 11px; color: var(--text3); margin-bottom: 6px; }
+.record-item-row { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+
+/* ── MONTH SUMMARY ── */
+.month-summary {
+  background: linear-gradient(135deg, var(--card), var(--bg3));
+  border: 1px solid var(--border);
+  border-radius: 14px; padding: 16px;
+  margin-bottom: 16px;
+}
+.summary-stats {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 8px; margin-top: 10px;
+}
+.stat-box {
+  background: var(--bg);
+  border-radius: 10px; padding: 10px;
+  text-align: center;
+}
+.stat-num { font-size: 22px; font-weight: 700; color: var(--accent2); }
+.stat-label { font-size: 10px; color: var(--text3); }
+
+/* ── ORACLE INNER LIGHT ── */
+.il-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 6px;
+}
+.il-card-item {
+  background: var(--bg3); border-radius: 8px;
+  border: 1px solid var(--border);
+  padding: 8px 10px; cursor: pointer;
+  transition: all .2s; font-size: 12px;
+}
+.il-card-item:hover { border-color: var(--teal); color: var(--teal); }
+.il-card-item.selected { border-color: var(--teal); background: rgba(45,212,191,0.1); color: var(--teal); }
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+/* ── UTILITY ── */
+.flex { display: flex; }
+.gap8 { gap: 8px; }
+.gap4 { gap: 4px; }
+.mt8 { margin-top: 8px; }
+.mt12 { margin-top: 12px; }
+.mt16 { margin-top: 16px; }
+.mb8 { margin-bottom: 8px; }
+.wrap { flex-wrap: wrap; }
+.center { text-align: center; }
+.text-sm { font-size: 12px; color: var(--text2); }
+.text-xs { font-size: 11px; color: var(--text3); }
+.text-accent { color: var(--accent2); }
+.text-gold { color: var(--gold); }
+.text-teal { color: var(--teal); }
+.text-red { color: var(--red); }
+.text-green { color: var(--green); }
+.divider { height: 1px; background: var(--border); margin: 12px 0; }
+
+.empty-state {
+  text-align: center; padding: 40px 20px;
+  color: var(--text3);
+}
+.empty-state .emoji { font-size: 40px; margin-bottom: 8px; }
+
+@media (max-width: 480px) {
+  .summary-stats { grid-template-columns: repeat(2,1fr); }
+  .turtle-grid { grid-template-columns: repeat(3,1fr); }
+  .cal-day { min-height: 44px; }
+}
 </style>
-
 </head>
 <body>
-<div class="app">
-<header>
-  <span class="logo-symbol">🔮</span>
-  <h1>塔羅牌學習系統</h1>
-  <div class="subtitle">Tarot Wisdom · Daily Oracle · Knowledge Archive</div>
-</header>
 
-<!-- 每日占卜 -->
-
-<div id="panel-daily" class="panel active">
-  <div class="card-box">
-    <h2>🌙 今日占卜</h2>
-    <label>今天抽到的牌</label>
-    <input type="text" id="daily-card" placeholder="例：星星、太陽、聖杯三…" oninput="onCardInput()">
-    <button class="picker-toggle" onclick="togglePicker('picker1','daily-card',null)">📋 從 78 張牌表選牌 ▾</button>
-    <div id="picker1" class="card-picker"></div>
-    <label>牌面方向</label>
-    <div class="ori-toggle">
-      <button class="ori-btn selected" id="ori-pos" onclick="selectOri('正位')">▲ 正位</button>
-      <button class="ori-btn" id="ori-neg" onclick="selectOri('逆位')">▽ 逆位</button>
-    </div>
-    <button class="btn btn-outline" style="margin-top:12px" onclick="generateFortune()">✨ 產生今日運勢</button>
-  </div>
-
-  <div class="fortune-card" id="fortune-display"></div>
-
-  <div class="card-box" id="record-form" style="display:none">
-    <h2>📝 今日紀錄</h2>
-    <label>今天發生了什麼？</label>
-    <textarea class="ta-lg" id="daily-event" placeholder="用幾句話描述今天的狀況、心情、遇到的事…"></textarea>
-    <button class="btn btn-gold" onclick="saveDailyRecord()">💾 儲存今日占卜紀錄</button>
-    <button class="btn btn-outline" style="margin-top:10px" onclick="clearDailyForm()">🗑 清除</button>
-  </div>
-</div>
-
-<!-- 牌義庫 -->
-
-<div id="panel-cards" class="panel">
-  <div class="search-wrap">
-    <span class="search-icon">🔍</span>
-    <input type="text" id="card-search" placeholder="搜尋牌名或關鍵詞…" oninput="renderCardLibrary()">
-  </div>
-  <div id="card-library-list"></div>
-</div>
-
-<!-- 占卜紀錄 -->
-
-<div id="panel-records" class="panel">
-  <div class="search-wrap">
-    <span class="search-icon">🔍</span>
-    <input type="text" id="record-search" placeholder="搜尋牌名或事件…" oninput="renderRecords()">
-  </div>
-  <div id="records-list"></div>
-</div>
-
-<!-- 進度 -->
-
-<div id="panel-progress" class="panel">
-  <div id="progress-content"></div>
-</div>
-
-<!-- 備份 -->
-
-<div id="panel-backup" class="panel">
-  <div class="card-box">
-    <h2>💾 備份管理</h2>
-    <div class="backup-grid">
-      <div class="backup-card">
-        <div class="backup-icon">📤</div>
-        <div class="backup-title">匯出備份</div>
-        <div class="backup-desc">下載 JSON 到裝置永久保存</div>
-        <button class="btn btn-gold btn-sm" onclick="exportData()">下載備份</button>
-      </div>
-      <div class="backup-card">
-        <div class="backup-icon">📥</div>
-        <div class="backup-title">匯入備份</div>
-        <div class="backup-desc">從 JSON 備份恢復紀錄</div>
-        <input type="file" id="import-file" accept=".json" style="display:none" onchange="importData(event)">
-        <button class="btn btn-outline btn-sm" onclick="document.getElementById('import-file').click()">選擇檔案</button>
-      </div>
-    </div>
-    <div id="backup-status-area"></div>
-    <div style="margin-top:14px;background:rgba(194,99,122,.06);border:1px solid rgba(194,99,122,.18);border-radius:12px;padding:15px">
-      <div style="font-size:.76rem;color:rgba(253,243,227,.34);margin-bottom:10px;line-height:1.65">⚠️ 清除所有占卜紀錄，不可復原</div>
-      <button class="btn btn-danger btn-sm" onclick="clearAll()">🗑 清除全部資料</button>
-    </div>
-  </div>
-</div>
-</div>
-
-<nav class="bottom-nav">
-  <button class="nav-item active" onclick="switchTab('daily')"><span class="nav-icon">🌙</span>每日占卜</button>
-  <button class="nav-item" onclick="switchTab('cards')"><span class="nav-icon">🃏</span>牌義庫</button>
-  <button class="nav-item" onclick="switchTab('records')"><span class="nav-icon">📜</span>占卜紀錄</button>
-  <button class="nav-item" onclick="switchTab('progress')"><span class="nav-icon">📊</span>進度</button>
-  <button class="nav-item" onclick="switchTab('backup')"><span class="nav-icon">💾</span>備份</button>
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-title">✨ 典典</div>
+  <button class="nav-btn active" onclick="showPage('calendar')">📅 月曆</button>
+  <button class="nav-btn" onclick="showPage('today')">🌙 今日記錄</button>
+  <button class="nav-btn" onclick="showPage('study')">📖 牌義學習</button>
+  <button class="nav-btn" onclick="showPage('oracle')">🔮 神諭卡</button>
+  <button class="nav-btn" onclick="showPage('turtles')">🐢 龍龜庫</button>
 </nav>
 
-<div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
-  <div class="modal" id="modal-content"><div class="modal-handle"></div></div>
+<!-- ===== PAGE: CALENDAR ===== -->
+<div class="page active" id="page-calendar">
+  <div class="month-summary" id="monthSummary"></div>
+
+  <div class="calendar-header">
+    <button class="cal-nav-btn" onclick="changeMonth(-1)">‹</button>
+    <div class="calendar-month-title" id="calMonthTitle"></div>
+    <button class="cal-nav-btn" onclick="changeMonth(1)">›</button>
+  </div>
+  <div class="cal-grid" id="calDayHeaders"></div>
+  <div class="cal-grid mt8" id="calGrid"></div>
+
+  <div class="section-title mt16">📋 本月紀錄</div>
+  <div id="monthRecordList"></div>
 </div>
-<div id="toast" class="toast"></div>
+
+<!-- ===== PAGE: TODAY RECORD ===== -->
+<div class="page" id="page-today">
+  <div class="section-title">🌙 今日占卜記錄</div>
+
+  <!-- DATE -->
+  <div class="card">
+    <div class="row">
+      <div class="col">
+        <label>日期</label>
+        <input type="date" id="recordDate">
+      </div>
+    </div>
+  </div>
+
+  <!-- QIANQIAN (錢錢 - 熊貓之道大牌) -->
+  <div class="card">
+    <div class="flex gap8 mb8" style="align-items:center;justify-content:space-between;">
+      <div style="font-size:14px;font-weight:700;color:var(--gold);">🐼 錢錢・晨間大牌</div>
+      <span class="badge qianqian">熊貓之道</span>
+    </div>
+    <label>抽到的大牌</label>
+    <select id="qqCard" onchange="updateQQPreview()">
+      <option value="">— 選擇牌 —</option>
+    </select>
+    <div id="qqCardPreview"></div>
+    <div class="pos-toggle mt8">
+      <div class="pos-btn" id="qqPosUp" onclick="setPos('qq','upright')">🌅 正位</div>
+      <div class="pos-btn" id="qqPosRev" onclick="setPos('qq','reversed')">🌒 逆位</div>
+    </div>
+    <!-- 龍龜 -->
+    <div class="mt12">
+      <label>🐢 今日陪伴龍龜（錢錢對應）</label>
+      <div class="turtle-grid mt8" id="qqTurtleGrid"></div>
+    </div>
+  </div>
+
+  <!-- DIANDIAN (典典 - 睡前) -->
+  <div class="card">
+    <div class="flex gap8 mb8" style="align-items:center;justify-content:space-between;">
+      <div style="font-size:14px;font-weight:700;color:var(--accent2);">🃏 典典・睡前練習</div>
+      <span class="badge diandian">典典塔羅</span>
+    </div>
+    <div class="row">
+      <div class="col">
+        <label>牌組</label>
+        <select id="ddDeck">
+          <option value="panda">熊貓之道</option>
+          <option value="rw">萊德偉特</option>
+        </select>
+      </div>
+      <div class="col">
+        <label>抽到的牌</label>
+        <select id="ddCard" onchange="updateDDCard()">
+          <option value="">— 選擇牌 —</option>
+        </select>
+      </div>
+    </div>
+    <div class="pos-toggle mt8">
+      <div class="pos-btn" id="ddPosUp" onclick="setPos('dd','upright')">🌅 正位</div>
+      <div class="pos-btn" id="ddPosRev" onclick="setPos('dd','reversed')">🌒 逆位</div>
+    </div>
+    <div id="ddCardPreview" class="mt8"></div>
+  </div>
+
+  <!-- ORACLE (神諭卡快選) -->
+  <div class="card">
+    <div class="flex gap8 mb8" style="align-items:center;justify-content:space-between;">
+      <div style="font-size:14px;font-weight:700;color:var(--teal);">🔮 神諭卡</div>
+      <span class="badge oracle">選填</span>
+    </div>
+    <select id="oracleType" onchange="updateOracleQuick()">
+      <option value="">— 不使用神諭卡 —</option>
+      <option value="inner">啟動內在光能神諭卡</option>
+      <option value="omen">預兆神諭卡</option>
+    </select>
+    <div id="oracleQuickPick" class="mt8"></div>
+  </div>
+
+  <!-- EVENT & NOTES -->
+  <div class="card">
+    <label>📝 今日事件</label>
+    <textarea id="eventText" placeholder="今天發生了什麼事？工作、感情、生活... 隨意記錄"></textarea>
+    <label class="mt8">✍️ 解析備註（對應分析）</label>
+    <textarea id="notesText" placeholder="這張牌如何呼應今天的事件？直覺感受、關鍵字..."></textarea>
+    <label class="mt8">🌟 驗證（事後回看）</label>
+    <select id="verifySelect">
+      <option value="">—</option>
+      <option value="✅">✅ 完全準確</option>
+      <option value="🔶">🔶 部分對應</option>
+      <option value="❓">❓ 待觀察</option>
+      <option value="❌">❌ 未對應</option>
+    </select>
+  </div>
+
+  <div class="flex gap8 mt8">
+    <button class="btn" onclick="saveRecord()" style="flex:1;">💾 儲存記錄</button>
+    <button class="btn secondary" onclick="clearTodayForm()">🔄 清除</button>
+  </div>
+  <div id="saveMsg" class="text-sm center mt8"></div>
+</div>
+
+<!-- ===== PAGE: STUDY ===== -->
+<div class="page" id="page-study">
+  <div class="section-title">📖 牌義學習庫</div>
+
+  <div class="study-tabs">
+    <button class="study-tab active" onclick="switchStudyTab('major')">大牌</button>
+    <button class="study-tab" onclick="switchStudyTab('wands')">權杖</button>
+    <button class="study-tab" onclick="switchStudyTab('cups')">聖杯</button>
+    <button class="study-tab" onclick="switchStudyTab('swords')">寶劍</button>
+    <button class="study-tab" onclick="switchStudyTab('pents')">錢幣</button>
+  </div>
+
+  <!-- Progress -->
+  <div class="card" id="studyProgress"></div>
+
+  <div id="studyPanelMajor" class="study-panel active"></div>
+  <div id="studyPanelWands" class="study-panel"></div>
+  <div id="studyPanelCups" class="study-panel"></div>
+  <div id="studyPanelSwords" class="study-panel"></div>
+  <div id="studyPanelPents" class="study-panel"></div>
+</div>
+
+<!-- ===== PAGE: ORACLE ===== -->
+<div class="page" id="page-oracle">
+  <div class="section-title">🔮 神諭卡</div>
+
+  <!-- Inner Light -->
+  <div class="oracle-section">
+    <div class="oracle-section-title">✨ 啟動內在光能神諭卡（44張）</div>
+    <div class="text-xs mb8">點擊牌名選取，可多選</div>
+    <div id="innerLightGrid" class="il-grid"></div>
+    <div id="innerLightSelected" class="mt8"></div>
+  </div>
+
+  <!-- Omen Oracle -->
+  <div class="oracle-section">
+    <div class="oracle-section-title">🌟 預兆神諭卡</div>
+
+    <!-- Group 1 -->
+    <div class="mb8">
+      <label style="color:var(--upright);font-weight:600;">生命之光 (1-44)</label>
+      <select id="omenG1" multiple size="4" style="height:80px;" onchange="calcOmenSum()">
+        <option value="">— 選牌 —</option>
+      </select>
+    </div>
+    <div class="mb8">
+      <label style="color:var(--gold);font-weight:600;">數字的力量 (45-66)</label>
+      <select id="omenG2" multiple size="3" style="height:60px;" onchange="calcOmenSum()">
+      </select>
+    </div>
+    <div class="mb8">
+      <label style="color:var(--pink);font-weight:600;">命運的預兆 (67-77)</label>
+      <select id="omenG3" multiple size="3" style="height:60px;" onchange="calcOmenSum()">
+      </select>
+    </div>
+
+    <div id="omenSumDisplay"></div>
+  </div>
+
+  <!-- Oracle Notes -->
+  <div class="oracle-section">
+    <div class="oracle-section-title">📝 神諭卡備註</div>
+    <textarea id="oracleNotes" placeholder="今日神諭卡帶給你的訊息..." style="min-height:80px;"></textarea>
+  </div>
+</div>
+
+<!-- ===== PAGE: TURTLES ===== -->
+<div class="page" id="page-turtles">
+  <div class="section-title">🐢 龍龜水晶庫</div>
+  <div class="card highlight center mb8" style="padding:20px;">
+    <div style="font-size:36px;margin-bottom:8px;">🐢✨</div>
+    <div style="font-size:16px;font-weight:700;color:var(--gold2);">14隻糖糖龍龜手串</div>
+    <div class="text-sm mt8">點擊龍龜查看詳細能量訊息</div>
+  </div>
+  <div class="turtle-grid" id="turtleLibrary"></div>
+</div>
+
+<!-- ===== MODAL: Day Detail ===== -->
+<div class="modal-overlay" id="dayModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="modalTitle"></div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div id="modalContent"></div>
+    <div class="flex gap8 mt12">
+      <button class="btn sm secondary" onclick="loadRecordToEdit()">✏️ 編輯</button>
+      <button class="btn sm danger" onclick="deleteCurrentRecord()">🗑️ 刪除</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MODAL: Turtle Detail ===== -->
+<div class="modal-overlay" id="turtleModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="turtleModalTitle"></div>
+      <button class="modal-close" onclick="closeTurtleModal()">✕</button>
+    </div>
+    <div id="turtleModalContent"></div>
+  </div>
+</div>
 
 <script>
-const TAROT_78={'大阿爾克那':['愚者(0)','魔術師(1)','女祭司(2)','女皇(3)','皇帝(4)','教皇(5)','戀人(6)','戰車(7)','力量(8)','隱士(9)','命運之輪(10)','正義(11)','吊人(12)','死神(13)','節制(14)','惡魔(15)','塔(16)','星星(17)','月亮(18)','太陽(19)','審判(20)','世界(21)'],'聖杯':['聖杯王牌','聖杯二','聖杯三','聖杯四','聖杯五','聖杯六','聖杯七','聖杯八','聖杯九','聖杯十','聖杯侍者','聖杯騎士','聖杯皇后','聖杯國王'],'權杖':['權杖王牌','權杖二','權杖三','權杖四','權杖五','權杖六','權杖七','權杖八','權杖九','權杖十','權杖侍者','權杖騎士','權杖皇后','權杖國王'],'寶劍':['寶劍王牌','寶劍二','寶劍三','寶劍四','寶劍五','寶劍六','寶劍七','寶劍八','寶劍九','寶劍十','寶劍侍者','寶劍騎士','寶劍皇后','寶劍國王'],'星幣':['星幣王牌','星幣二','星幣三','星幣四','星幣五','星幣六','星幣七','星幣八','星幣九','星幣十','星幣侍者','星幣騎士','星幣皇后','星幣國王']};
+// ═══════════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════════
 
-// ===== 牌義資料庫 =====
-const CARD_DATA={
-  '愚者':{num:'0 號大阿爾克那',posKw:'新開始・冒險・純真',negKw:'魯莽・逃避・準備不足',origin:'數字 0，代表無限與圓滿的起點。愚者是塔羅旅程的第一步，對應神話中「英雄出發」的原型——一個無所畏懼、尚未被世界定義的靈魂，踏出懸崖邊緣的第一步。',image:'想像一個背著小包袱的年輕人，站在懸崖邊，眼睛看著天空而不是腳下。記住：眼睛看天，腳踩懸崖。',tip:'不是因為準備好了才出發，而是出發之後才會準備好。',
-    fortune:{pos:{energy:'今天有新的機緣或想法即將萌芽，放輕鬆、保持開放，跟著直覺走。',note:'避免過度規劃，也不要因為「沒準備好」就裹足不前。',mantra:'✨ 世界比你想的更願意接住你。'},neg:{energy:'今天可能有些魯莽的衝動，或者相反地，用「還沒準備好」逃避某件事。',note:'停下來問問自己：我是真的沒準備好，還是在逃避？',mantra:'✨ 準備好的感覺，永遠在出發之後才會來。'}}},
-  '魔術師':{num:'1 號大阿爾克那',posKw:'顯化・意志力・掌握資源',negKw:'操弄・才能浪費・欺騙',origin:'數字 1，萬物起源。魔術師對應「創造者」原型，一手指天接收靈感，一手指地將其落實，頭頂∞代表無限的可能性。',image:'桌上四樣工具一樣不缺，他不是在等更好的條件，他現在就開始了。',tip:'你已經有了所有需要的東西，缺的只是開始。',
-    fortune:{pos:{energy:'今天你的能量充沛，手上的資源和能力剛好夠用，適合啟動新的事情。',note:'不要等待更好的時機，你現在就有足夠的條件。',mantra:'✨ 魔法從不等待，它在你拿起第一樣工具的瞬間開始。'},neg:{energy:'今天可能有才能卻沒發揮，或者把力氣用在不對的地方。',note:'注意是否有人（包括自己）在用話術或假象誤導判斷。',mantra:'✨ 真正的力量不需要偽裝，它自己會發光。'}}},
-  '女祭司':{num:'2 號大阿爾克那',posKw:'直覺・靜待・內在智慧',negKw:'壓抑直覺・逃避真相・忽視內心',origin:'數字 2，代表二元與平衡。女祭司對應「智慧守護者」原型，坐在意識與潛意識的邊界。',image:'她坐在那裡什麼都不做，但她什麼都知道。記住：沉默不是沒有答案，是答案還不到說出口的時候。',tip:'最深的智慧，往往藏在最安靜的等待裡。',
-    fortune:{pos:{energy:'今天不適合主動出擊，靜下來觀察和感受，答案會自然浮現。',note:'如果有什麼事情讓你感覺不對勁，相信那個感覺。',mantra:'✨ 安靜，是讓真相有機會說話的姿態。'},neg:{energy:'今天可能有重要的直覺被你壓下去了，或者在逃避某個你其實已經知道的答案。',note:'停下來，問問自己：我真正感覺到的是什麼？',mantra:'✨ 你已經知道答案了，只是還不敢承認。'}}},
-  '女皇':{num:'3 號大阿爾克那',posKw:'豐盛・創造・滋養',negKw:'匱乏感・過度付出・創造力受阻',origin:'數字 3，代表創造與豐盛的具現。女皇對應「大地之母」原型——她本身就是豐盛。',image:'她坐在大自然裡，周圍一切都在生長。她不需要做什麼，豐盛自然而來。',tip:'資源源源不絕而來，前提是你願意接受它。',
-    fortune:{pos:{energy:'今天豐盛的能量環繞著你，適合創作、享受、滋養自己。',note:'好好接受別人的好意，不要習慣性地推開。',mantra:'✨ 你值得被好好滋養，就從今天開始。'},neg:{energy:'今天可能給得太多卻忘了補充自己，或者有匱乏感揮之不去。',note:'先照顧好自己，才有餘力給予別人。',mantra:'✨ 空的杯子倒不出水，先把自己裝滿。'}}},
-  '皇帝':{num:'4 號大阿爾克那',posKw:'秩序・權威・穩固',negKw:'失控・過度威權・缺乏紀律',origin:'數字 4，代表穩固與結構。皇帝對應「父親」原型——他用秩序和規則建立安全的世界。',image:'女皇坐在花園裡，皇帝坐在光禿禿的山上。記住：岩石不是荒涼，是最堅固的基礎。',tip:'自由需要邊界，豐盛需要結構。',
-    fortune:{pos:{energy:'今天適合建立規則、做計畫、用紀律推進事情，是穩紮穩打的日子。',note:'把混亂的事情整理一下，給它一個清楚的結構。',mantra:'✨ 紀律不是限制，是讓你走得更遠的地基。'},neg:{energy:'今天可能有些事情失控，或者感覺被某個過於嚴格的規則壓著喘不過氣。',note:'管理自己，但不要用鞭打代替引導。',mantra:'✨ 最好的秩序，是讓人感到安全，而不是恐懼。'}}},
-  '教皇':{num:'5 號大阿爾克那',posKw:'傳統・精神指引・制度',negKw:'教條・反叛・打破規則',origin:'數字 5，代表變動與衝突的臨界點。教皇對應「精神導師」原型——他是神聖與世俗之間的橋梁。',image:'兩個人跪在他面前聽他說話，他舉手祝福。記住：皇帝說「照我說的做」，教皇說「讓我告訴你前人怎麼說」。',tip:'真正的智慧不是自己想出來的，是從千百年的傳承中提煉出來的。',
-    fortune:{pos:{energy:'今天適合遵循已有的方法，向有經驗的人請教，按部就班推進。',note:'不需要重新發明輪子，前人的智慧就是你的捷徑。',mantra:'✨ 傳統是前人用時間換來的智慧，值得被尊重。'},neg:{energy:'今天可能對某個規則或傳統感到窒息，想要打破框架。',note:'改變之前先確認你真的理解這個規則存在的原因。',mantra:'✨ 打破規則之前，先弄清楚規則為什麼存在。'}}},
-  '戀人':{num:'6 號大阿爾克那',posKw:'選擇・結合・價值觀一致',negKw:'錯誤選擇・價值觀衝突・逃避決定',origin:'數字 6，代表和諧與平衡的達成。戀人對應「選擇者」原型——這不只是愛情牌，更是「做出真心選擇」的牌。',image:'男人看女人，女人看天使，天使看著一切。記住：真正的愛，是三個層次同時存在——慾望、情感、靈性。缺一個，就不完整。',tip:'最重要的選擇，不是用腦袋想出來的，是用心感覺到的。',
-    fortune:{pos:{energy:'今天有重要的選擇或連結需要你用心面對，跟著真實的自己走。',note:'不要因為害怕做錯而逃避選擇，選了才有機會修正。',mantra:'✨ 最對的選擇，永遠是對自己誠實的那一個。'},neg:{energy:'今天可能面對一個不知道怎麼選的困境，或者感覺自己跟某個重要的事物失去連結。',note:'先停下來，弄清楚你真正想要的是什麼。',mantra:'✨ 不知道選什麼，是因為還沒搞清楚自己要什麼。'}}},
-  '戰車':{num:'7 號大阿爾克那',posKw:'意志力・掌控・勝利前進',negKw:'失控・方向錯誤・強迫執行',origin:'數字 7，代表挑戰與突破的關鍵時刻。戰車對應「征服者」原型——他不靠外力，靠的是純粹的意志力讓相反的力量統一向前。',image:'沒有韁繩，但兩隻獸往同一方向走。記住：真正的控制不是拉緊韁繩，是讓所有的力量都想往同一個地方去。',tip:'不是壓制內心的衝突，而是讓所有的力量都朝著同一個目標燃燒。',
-    fortune:{pos:{energy:'今天意志力強大，適合衝刺、突破、全力推進某件事。',note:'確認方向對了再衝，速度快的時候更要注意方向。',mantra:'✨ 當你知道要去哪裡，全世界都會為你讓路。'},neg:{energy:'今天可能有點失控，或者方向搞錯了還在硬衝，越努力越累。',note:'停下來問問：我現在衝的方向，是我真正想去的地方嗎？',mantra:'✨ 往錯誤的方向奔跑，只會讓你離目標更遠。'}}},
-  '力量':{num:'8 號大阿爾克那',posKw:'內在力量・柔軟・耐心',negKw:'內在力量耗盡・被恐懼支配・以蠻力代替柔軟',origin:'數字 8，代表無限循環的能量（頭頂的∞）。力量對應「慈悲者」原型——她不用武器，用愛讓最兇猛的獸低頭。',image:'她把手伸進獅子嘴裡，臉上是微笑不是恐懼。記住：獅子沒有被打敗，是被愛融化了。',tip:'真正的強大，不是讓對方害怕你，而是讓對方願意在你面前放下防衛。',
-    fortune:{pos:{energy:'今天用溫柔和耐心比用蠻力更有效，柔軟是今天最大的力量。',note:'遇到困難時不要硬碰硬，試試看用愛和理解化解。',mantra:'✨ 真正的強大，是在任何情況下都能保持溫柔。'},neg:{energy:'今天可能感覺內在力量快耗盡，或者在用蠻力硬撐一件讓你疲憊的事。',note:'今天需要的不是更努力，而是更溫柔地對待自己。',mantra:'✨ 你不需要用力氣來證明自己的價值。'}}},
-  '隱士':{num:'9 號大阿爾克那',posKw:'獨處・內省・尋找內在智慧',negKw:'過度孤立・拒絕內省・與世界脫節',origin:'數字 9，代表旅程接近完成，需要停下來沉澱。隱士對應「智者」原型——他不是逃離世界，是帶著所有經歷走到高處，用燈籠照亮自己也照亮後來者。',image:'燈只照腳下一小片，但他走得很穩。記住：不需要看到整條路，只需要看清楚眼前這一步。',tip:'不需要看見整條路，只需要讓燈光照亮你現在踩的這一步。',
-    fortune:{pos:{energy:'今天適合獨處、反思、聽聽自己內心的聲音，不需要熱鬧。',note:'給自己一段安靜的時間，你會找到一直在等待的答案。',mantra:'✨ 最清醒的答案，往往在最安靜的時刻浮現。'},neg:{energy:'今天可能把自己關得太緊，或者相反地，用忙碌逃避需要面對自己的時刻。',note:'適度的孤獨是充電，過度的孤立是逃避。',mantra:'✨ 走進自己，不是為了躲避世界，是為了更清醒地回到世界。'}}},
-  '命運之輪':{num:'10 號大阿爾克那',posKw:'命運轉折・時機・順勢而為',negKw:'抗拒變化・壞運循環・時機未到',origin:'數字 10，代表一個完整循環的結束與新循環的開始。命運之輪對應「命運」原型——沒有人能停止輪子，但智者知道如何順勢而為。',image:'斯芬克斯坐在頂端，看著上上下下的一切，不動如山。記住：智慧不是讓你永遠在頂端，是讓你在任何位置都能看清楚輪子在往哪裡轉。',tip:'輪子永遠在轉，聰明的人不是抓住頂端，而是學會隨著輪子流動。',
-    fortune:{pos:{energy:'今天有轉機出現，時機來了，順著這股流走，不要抗拒。',note:'如果有好事發生，大方接受，輪子轉到你這邊了。',mantra:'✨ 好運不是偶然，是你準備好了，輪子剛好轉到這裡。'},neg:{energy:'今天可能感覺事情卡住，或者壞運氣一直循環找不到出口。',note:'停止對抗，先接受現在的狀況，才能看清楚下一步怎麼走。',mantra:'✨ 輪子永遠在轉，現在在下面，不代表永遠在下面。'}}},
-  '正義':{num:'11 號大阿爾克那',posKw:'公平・因果・清醒判斷',negKw:'不公平・逃避責任・自我欺騙',origin:'數字 11，代表因果與平衡的法則。正義對應「裁判者」原型——她手持天秤衡量事實，手持寶劍執行裁決。她不帶情緒，只看真相。',image:'她坐著，左手天秤、右手寶劍，眼睛直視前方。記住：天秤不說謊，寶劍不手軟。',tip:'看清楚之後選擇沉默，是比吶喊更有力量的正義。',
-    fortune:{pos:{energy:'今天要用清醒和公平的眼光看事情，做出合理的判斷，不要偏袒任何一方（包括自己）。',note:'如果有什麼事情需要解決，就直接面對，公平處理。',mantra:'✨ 看清楚，然後行動。看清楚，然後放下。'},neg:{energy:'今天可能有點逃避責任，或者有些事情你知道是什麼情況，卻在騙自己。',note:'對自己誠實，是今天最需要的功課。',mantra:'✨ 最難承認的真相，往往是最需要面對的真相。'}}},
-  '吊人':{num:'12 號大阿爾克那',posKw:'暫停・換角度・自願犧牲換洞見',negKw:'拖延・抗拒放手・無謂犧牲',origin:'數字 12，代表自願的暫停與犧牲換來的洞見。吊人對應「暫停者」原型——他主動選擇倒掛，用不同的角度看世界。頭頂光環代表這個暫停是有價值的。',image:'他倒掛著臉上有光環和微笑。記住：他是自願的，而且他在這個不尋常的位置看到了別人看不到的東西。',tip:'有時候放慢腳步，是為了看見一直在那裡卻從未注意到的風景。',
-    fortune:{pos:{energy:'今天適合暫停、等待、換一個角度看事情，不要急著行動。',note:'這個暫停不是浪費時間，是在醞釀更重要的洞見。',mantra:'✨ 倒過來看，世界會給你從未見過的風景。'},neg:{energy:'今天可能有些事情一直拖著不解決，或者在做一些無謂的犧牲卻沒有得到任何回報。',note:'分清楚什麼是有意義的等待，什麼是逃避。',mantra:'✨ 該放手的事，握得越緊只會越痛。'}}},
-  '太陽':{num:'19 號大阿爾克那',posKw:'喜悅・清晰・活力充沛',negKw:'過度樂觀・自我膨脹・光芒被遮蔽',origin:'數字 19，接近塔羅旅程的終點。太陽對應「純粹喜悅」的原型——一個赤裸的孩子騎著白馬，在燦爛的太陽下奔跑。',image:'赤裸的孩子騎白馬在陽光下奔跑，什麼都不怕，什麼都不藏。記住：孩子不是因為無知才無畏，是因為完全活在當下才無畏。',tip:'陽光下沒有秘密，也不需要秘密。',
-    fortune:{pos:{energy:'今天是充滿活力和喜悅的日子，讓自己明亮一點，好事會跟著來。',note:'把快樂分享出去，今天的光能照亮很多人。',mantra:'✨ 今天，允許自己快樂，不需要理由。'},neg:{energy:'今天可能有點過度樂觀，或者某些事情遮住了你本來的光芒。',note:'保持真實，過於表演的快樂反而讓人疲憊。',mantra:'✨ 真正的光，是從裡面發出來的，不需要刻意展示。'}}},
-  '權杖八':{num:'權杖',posKw:'快速推進・訊息傳遞・行動力',negKw:'延誤・混亂・急躁失控',origin:'數字 8，代表力量與動能的高峰。權杖八對應「箭在弦上、一觸即發」的原型——事情已經啟動，正在空中飛行，無法回頭也不需要回頭。',image:'八支權杖同時斜插在空中飛射，沒有人拿著它們，它們自己在飛。記住：沒有人控制，但方向一致，速度極快。',tip:'在飛速之中，你從未真正錯過。',
-    fortune:{pos:{energy:'今天事情推進得飛快，訊息滿天飛，跟上節奏就好不要抗拒。',note:'多件事同時進行是今天的常態，保持彈性。',mantra:'✨ 在飛速之中，你從未真正錯過。'},neg:{energy:'今天可能事情亂成一鍋粥，或者因為太急躁讓事情更混亂。',note:'先停下來整理優先順序，再重新出發。',mantra:'✨ 慢一步，不是落後，是讓自己看得更清楚。'}}},
-  '權杖皇后':{num:'權杖',posKw:'行動力・務實・熱情自信',negKw:'衝動・控制欲・燃燒殆盡',origin:'宮廷牌中最有行動力的女性能量。權杖皇后對應「充滿熱情的創造者」原型——她知道自己要什麼，優雅而堅定地實現它，腳邊的黑貓代表她也有直覺與神秘的一面。',image:'她坐在王座上，一手握著權杖，腳邊有一隻黑貓。記住：她是把事情做完的那個人。',tip:'熱情是火，智慧是讓火燒得剛剛好。',
-    fortune:{pos:{energy:'今天你充滿行動力，適合把清單上的事情一件一件搞定。',note:'你今天是把事情做完的那個人，相信自己的節奏。',mantra:'✨ 把該做的做完，剩下的時間，就好好屬於自己。'},neg:{energy:'今天可能有點衝動，或者感覺快燒完了，能量快到極限。',note:'熱情很珍貴，不要讓它燃燒殆盡，今天適合煞車一下。',mantra:'✨ 知道什麼時候停下來，也是一種力量。'}}},
-  '聖杯四':{num:'聖杯',posKw:'冥想・不滿足・錯過機會',negKw:'覺醒・重新投入・接受新機會',origin:'數字 4，代表穩定與靜止。聖杯四對應「迷失在內心世界」的原型——一個人坐在樹下，面前三個聖杯，天上還有一隻手遞來第四個，但他沒有抬頭看見。',image:'他坐在樹下盯著三個杯子發呆，天上的手遞來第四個他都沒看見。記住：有時候我們最需要的禮物，就在我們沒有抬頭的那個方向。',tip:'抬起頭來，你以為沒有的，其實早就在那裡了。',
-    fortune:{pos:{energy:'今天可能對現狀感到不滿足，但機會可能就在你視線的邊緣，記得抬頭看。',note:'不要只盯著你沒有的，看看你已經有的。',mantra:'✨ 抬起頭來，你以為沒有的，其實早就在那裡了。'},neg:{energy:'今天適合從悶悶的狀態中走出來，重新投入生活，有新的可能在等你。',note:'今天特別適合接受一個之前習慣拒絕的邀請或機會。',mantra:'✨ 走出去，世界比你想像的更歡迎你。'}}},
-  '星幣國王':{num:'星幣',posKw:'財富穩固・務實成熟・豐盛管理',negKw:'守財奴・固執・過度物質主義',origin:'星幣花色最成熟的能量。星幣國王對應「富足智者」原型——他坐在豐盛的田野間，不是在追求財富，而是已經成為財富本身。他懂得如何讓資源流動、增長和分享。',image:'他坐在葡萄藤和鮮花圍繞的王座上，腳下是肥沃的土地。記住：他不緊抓財富，因為他知道豐盛自然會回來。',tip:'豐盛的人不是擁有最多的人，而是懂得流動的人。',
-    fortune:{pos:{energy:'今天豐盛的能量非常強，適合處理財務、收穫成果、讓資源流動。你付出的會自然回來。',note:'大方接受別人的好意和回饋，不需要客氣地推開。豐盛是雙向的。',mantra:'✨ 豐盛的人不是擁有最多的人，而是懂得流動的人。'},neg:{energy:'今天可能有點過度執著於物質或金錢，或者守得太緊讓資源無法流動。',note:'適度放手，財富只有流動才能增長，握太緊只會枯竭。',mantra:'✨ 放開手，才能接住更多。'}}},
-  '權杖四':{num:'權杖',posKw:'慶祝・穩定・有儀式感的節奏',negKw:'作息混亂・節奏失去・無法放鬆慶祝',origin:'數字 4，代表穩固與節奏。權杖四對應「慶祝者」原型——四支權杖搭建了一個花環拱門，人們在下面歡慶。代表努力有了成果，值得好好慶祝和享受。',image:'四支權杖搭成拱門，人們在花環下歡慶。記住：慶祝不是奢侈，是對努力的尊重。',tip:'給自己一個儀式感，讓完成的事情有個漂亮的句點。',
-    fortune:{pos:{energy:'今天適合慶祝小成就、建立有節奏的生活儀式、讓自己好好休息享受。',note:'給自己一點儀式感，哪怕只是泡杯好茶或好好吃一頓飯。',mantra:'✨ 值得被慶祝的事，就算只有自己知道，也要好好慶祝。'},neg:{energy:'今天作息可能有點亂，或者一直在衝刺卻沒有讓自己停下來喘口氣。',note:'減肥或健康目標需要的不是更嚴格的計畫，而是更規律的節奏。',mantra:'✨ 規律不是束縛，是讓你走得更遠的節拍器。'}}},
-  '權杖五':{num:'權杖',posKw:'競爭・衝突・混戰中的成長',negKw:'衝突平息・找到節奏・避免無謂爭鬥',origin:'數字 5，代表挑戰與衝突。權杖五對應「競技者」原型——五個人各拿一支權杖互相打鬥，看似混亂，其實是在磨練彼此。',image:'五個人拿著權杖互相揮打，沒有人真的受傷，但現場很亂。記住：這是練習，不是真正的戰爭。',tip:'衝突不是終點，是讓你變得更強的過程。',
-    fortune:{pos:{energy:'今天可能有些小衝突或競爭，但這是成長的一部分，不要逃避，直接面對。',note:'不是每場架都需要贏，但每場架都值得學到一件事。',mantra:'✨ 在混亂中找到自己的節奏，就是今天最大的勝利。'},neg:{energy:'今天衝突的能量平息了，適合收手、和解、找到共識，不要繼續無謂的爭鬥。',note:'已經夠亂了，今天不需要再製造更多衝突。把自己安全帶到終點就夠了。',mantra:'✨ 不是每件事都要贏，把自己安全帶到終點就夠了。'}}},
-  '星幣三':{num:'星幣',posKw:'合作・技藝・扎實執行',negKw:'缺乏合作・馬虎了事・方向不一致',origin:'數字 3，代表合作與技藝的展現。星幣三對應「工匠」原型——三個人在教堂前討論建造計畫，代表用技術和努力把想法變成現實，強調合作與專業。',image:'三個人看著同一張藍圖，沒有人單打獨鬥。記住：最好的作品不是一個人做出來的，是三個人對著同一張圖，一磚一瓦砌出來的。',tip:'不需要英雄式的衝刺，把每一塊磚砌好就夠了。',
-    fortune:{pos:{energy:'今天適合跟人合作、專注技藝、一步一步把事情做紮實。',note:'今天不需要英雄式的衝刺，把每一件小事做好就夠了。',mantra:'✨ 不需要英雄式的衝刺，把每一塊磚砌好就夠了。'},neg:{energy:'今天可能跟合作的人方向不一致，或者有事情做得太馬虎。',note:'對齊目標，確認大家在說同一件事，再繼續推進。',mantra:'✨ 方向一致，才能把力氣花在對的地方。'}}},
-};
-
-// 今日運勢生成
-let selectedOri='正位';
-let currentFortune=null;
-
-function onCardInput(){const fc=document.getElementById('fortune-display');fc.classList.remove('visible');fc.innerHTML='';document.getElementById('record-form').style.display='none';}
-function selectOri(ori){selectedOri=ori;document.getElementById('ori-pos').classList.toggle('selected',ori==='正位');document.getElementById('ori-neg').classList.toggle('selected',ori==='逆位')}
-
-function generateFortune(){
-  const cardName=document.getElementById('daily-card').value.trim();
-  if(!cardName){toast('請先輸入或選擇今天抽到的牌');return}
-  const data=CARD_DATA[cardName];
-  if(!data){toast('這張牌的運勢資料尚未建立，請直接填寫紀錄');document.getElementById('record-form').style.display='block';return}
-  const f=selectedOri==='正位'?data.fortune.pos:data.fortune.neg;
-  currentFortune=f;
-  const fc=document.getElementById('fortune-display');
-  fc.innerHTML=`
-    <div class="fortune-header">
-      <span class="fortune-card-name">《${cardName}》</span>
-      <span class="fortune-ori">${selectedOri}</span>
-    </div>
-    <div class="fortune-section">
-      <div class="fortune-label">⚡ 今日能量</div>
-      <div class="fortune-text">${f.energy}</div>
-    </div>
-    <div class="fortune-section">
-      <div class="fortune-label">⚠️ 今日注意</div>
-      <div class="fortune-text">${f.note}</div>
-    </div>
-    <div class="fortune-section" style="border:none;padding-bottom:0;margin-bottom:0">
-      <div class="fortune-label">🌿 療癒金句</div>
-      <div class="fortune-mantra">${f.mantra}</div>
-    </div>
-  `;
-  fc.classList.add('visible');
-  document.getElementById('record-form').style.display='block';
-}
-
-// 每日占卜儲存
-const KEYS={daily:'tarot_daily_v3',time:'tarot_backup_time',init:'tarot_init_v17'};
-let dailyRecords=[];
-
-function save(key,data){const s=JSON.stringify(data);try{localStorage.setItem(key,s)}catch(e){}try{sessionStorage.setItem(key,s)}catch(e){}}
-function load(key){try{const d=localStorage.getItem(key);if(d)return JSON.parse(d)}catch(e){}try{const d=sessionStorage.getItem(key);if(d)return JSON.parse(d)}catch(e){}return null}
-function saveRecords(){save(KEYS.daily,dailyRecords);save(KEYS.time,new Date().toISOString())}
-
-function loadData(){
-  const initialized=load(KEYS.init);
-  if(!initialized){
-    dailyRecords=PRELOAD_DAILY;
-    save(KEYS.daily,dailyRecords);save(KEYS.init,true);save(KEYS.time,new Date().toISOString());
-  }else{dailyRecords=load(KEYS.daily)||[]}
-}
-
-function saveDailyRecord(){
-  const card=document.getElementById('daily-card').value.trim();
-  const ev=document.getElementById('daily-event').value.trim();
-  if(!card){toast('請輸入牌名');return}
-  if(!ev){toast('請描述今天發生的事');return}
-  const data=CARD_DATA[card];
-  const f=currentFortune||(data?(selectedOri==='正位'?data.fortune.pos:data.fortune.neg):null);
-  const record={id:Date.now(),card,ori:selectedOri,event:ev,energy:f?f.energy:'',note:f?f.note:'',mantra:f?f.mantra:'',date:new Date().toLocaleDateString('zh-TW'),time:new Date().toLocaleTimeString('zh-TW',{hour:'2-digit',minute:'2-digit'})};
-  dailyRecords.unshift(record);if(dailyRecords.length>90)dailyRecords=dailyRecords.slice(0,90);
-  saveRecords();toast('占卜紀錄已儲存 ✓');
-}
-
-function clearDailyForm(){
-  document.getElementById('daily-card').value='';document.getElementById('daily-event').value='';
-  const fc=document.getElementById('fortune-display');fc.classList.remove('visible');fc.innerHTML='';
-  document.getElementById('record-form').style.display='none';
-  selectedOri='正位';document.getElementById('ori-pos').classList.add('selected');document.getElementById('ori-neg').classList.remove('selected');
-  currentFortune=null;toast('表單已清除');
-}
-
-// 牌義庫
-function renderCardLibrary(){
-  const el=document.getElementById('card-library-list');
-  const q=(document.getElementById('card-search')?.value||'').toLowerCase();
-  const cards=Object.entries(CARD_DATA).filter(([name,d])=>name.toLowerCase().includes(q)||(d.posKw||'').toLowerCase().includes(q)||(d.negKw||'').toLowerCase().includes(q));
-  if(!cards.length){el.innerHTML=`<div class="empty-state"><div class="empty-icon">🌑</div>找不到符合的牌</div>`;return}
-  el.innerHTML=cards.map(([name,d])=>`<div class="note-card" onclick="openCardDetail('${name}')"><div class="note-header"><span class="note-name">《${name}》<span style="font-size:.68rem;color:rgba(253,243,227,.38);font-family:'Noto Serif TC',serif"> ${d.num}</span></span></div><div class="note-kws">${(d.posKw||'').split('・').filter(Boolean).map(k=>`<span class="kw-pill">${k.trim()}</span>`).join('')}${(d.negKw||'').split('・').filter(Boolean).map(k=>`<span class="kw-pill neg">${k.trim()}</span>`).join('')}</div></div>`).join('');
-}
-
-function openCardDetail(name){
-  const d=CARD_DATA[name];if(!d)return;
-  const fp=d.fortune?.pos;const fn=d.fortune?.neg;
-  document.getElementById('modal-content').innerHTML=`<div class="modal-handle"></div><div class="modal-close-row"><h2>《${name}》· ${d.num}</h2><button class="modal-close" onclick="document.getElementById('modal-overlay').classList.remove('open')">✕</button></div>${d.origin?`<div class="m-section"><div class="m-label">🌀 原型</div><div class="m-value">${d.origin}</div></div><div class="m-divider"></div>`:''}<div class="m-section"><div class="m-label">▲ 正位</div><div class="m-kws">${(d.posKw||'').split('・').filter(Boolean).map(k=>`<span class="kw-pill">${k.trim()}</span>`).join('')}</div></div><div class="m-section"><div class="m-label">▽ 逆位</div><div class="m-kws">${(d.negKw||'').split('・').filter(Boolean).map(k=>`<span class="kw-pill neg">${k.trim()}</span>`).join('')}</div></div><div class="m-divider"></div>${fp?`<div class="m-section"><div class="m-label">⚡ 正位今日能量</div><div class="m-value">${fp.energy}</div></div><div class="m-section"><div class="m-label">⚠️ 正位注意</div><div class="m-value">${fp.note}</div></div><div class="m-section"><div class="m-label">🌿 正位療癒金句</div><div class="m-value" style="font-style:italic;color:var(--gold-light)">${fp.mantra}</div></div><div class="m-divider"></div>`:''} ${fn?`<div class="m-section"><div class="m-label">⚡ 逆位今日能量</div><div class="m-value">${fn.energy}</div></div><div class="m-section"><div class="m-label">⚠️ 逆位注意</div><div class="m-value">${fn.note}</div></div><div class="m-section"><div class="m-label">🌿 逆位療癒金句</div><div class="m-value" style="font-style:italic;color:var(--gold-light)">${fn.mantra}</div></div><div class="m-divider"></div>`:''}${d.image?`<div class="m-section"><div class="m-label">🖼 圖像記憶</div><div class="m-value" style="font-style:italic;color:var(--gold-light)">${d.image}</div></div>`:''}${d.tip?`<div class="m-section"><div class="m-label">✨ 箴言</div><div class="m-value">${d.tip}</div></div>`:''}`;
-  document.getElementById('modal-overlay').classList.add('open');
-}
-
-// 占卜紀錄
-function renderRecords(){
-  const el=document.getElementById('records-list');
-  const q=(document.getElementById('record-search')?.value||'').toLowerCase();
-  const filtered=dailyRecords.filter(d=>d.card.toLowerCase().includes(q)||(d.event||'').toLowerCase().includes(q));
-  if(!filtered.length){el.innerHTML=`<div class="empty-state"><div class="empty-icon">🌙</div>${q?'找不到符合的紀錄':'尚未建立任何占卜紀錄'}</div>`;return}
-  el.innerHTML=filtered.map(d=>`<div class="note-card" onclick="openRecord(${dailyRecords.indexOf(d)})"><div class="note-header"><span class="note-name">《${d.card}》${d.ori}</span><span class="note-date">${d.date}</span></div><div style="font-size:.78rem;color:rgba(253,243,227,.42);margin-top:5px;line-height:1.5">${d.event.length>55?d.event.slice(0,55)+'…':d.event}</div>${d.mantra?`<div style="font-size:.74rem;color:var(--gold-light);font-style:italic;margin-top:6px">${d.mantra}</div>`:''}</div>`).join('');
-}
-
-function openRecord(i){
-  const d=dailyRecords[i];
-  document.getElementById('modal-content').innerHTML=`<div class="modal-handle"></div><div class="modal-close-row"><h2>《${d.card}》${d.ori} · ${d.date}</h2><button class="modal-close" onclick="document.getElementById('modal-overlay').classList.remove('open')">✕</button></div><div class="m-section"><div class="m-label">📝 今日事件</div><div class="m-value">${d.event}</div></div>${d.energy||d.note||d.mantra?'<div class="m-divider"></div>':''}${d.energy?`<div class="m-section"><div class="m-label">⚡ 今日能量</div><div class="m-value">${d.energy}</div></div>`:''}${d.note?`<div class="m-section"><div class="m-label">⚠️ 今日注意</div><div class="m-value">${d.note}</div></div>`:''}${d.mapping?`<div class="m-section"><div class="m-label">🪞 生活映射</div><div class="m-value">${d.mapping.replace(/\n/g,'<br>')}</div></div>`:''}${d.hidden?`<div class="m-section"><div class="m-label">🌊 深層訊息</div><div class="m-value" style="font-style:italic">${d.hidden}</div></div>`:''}${d.action?`<div class="m-section"><div class="m-label">🎯 今日建議</div><div class="m-value">${d.action}</div></div>`:''}${d.mantra?`<div class="m-section" style="text-align:center"><div class="m-label">🌿 療癒金句</div><div class="m-value" style="color:var(--gold-light);font-style:italic">${d.mantra}</div></div>`:''}<div style="margin-top:16px"><button class="btn btn-danger btn-sm" onclick="deleteRecord(${i})">🗑 刪除紀錄</button></div>`;
-  document.getElementById('modal-overlay').classList.add('open');
-}
-function deleteRecord(i){if(!confirm('確定刪除這筆占卜紀錄？'))return;dailyRecords.splice(i,1);saveRecords();document.getElementById('modal-overlay').classList.remove('open');renderRecords();toast('已刪除')}
-
-// 進度
-function renderProgress(){
-  const total=Object.keys(CARD_DATA).length;
-  const dr=dailyRecords.length;
-  const learned=Object.keys(CARD_DATA).length;
-  document.getElementById('progress-content').innerHTML=`<div class="stat-grid"><div class="stat-box"><div class="stat-num">${learned}</div><div class="stat-label">已建牌義</div></div><div class="stat-box"><div class="stat-num">${dr}</div><div class="stat-label">占卜紀錄</div></div><div class="stat-box"><div class="stat-num">${Math.round(learned/78*100)}%</div><div class="stat-label">完成度</div></div></div><div class="card-box"><h2>📜 學習進度</h2><div class="prog-wrap"><div class="prog-label-row"><span>整體（${learned}/78 張）</span><span>${Math.round(learned/78*100)}%</span></div><div class="prog-bar-bg"><div class="prog-bar" style="width:${Math.round(learned/78*100)}%"></div></div></div><div class="prog-wrap"><div class="prog-label-row"><span>🌟 大阿爾克那</span><span>${Math.round(13/22*100)}%</span></div><div class="prog-bar-bg"><div class="prog-bar" style="width:${Math.round(13/22*100)}%;background:linear-gradient(90deg,#8b3a2a,var(--gold))"></div></div></div><div style="margin-top:14px;background:rgba(0,0,0,.2);border:1px solid var(--border);border-radius:12px;padding:14px"><div style="font-size:.75rem;color:var(--gold-light);margin-bottom:8px;letter-spacing:.06em">📖 已建牌義</div><div style="display:flex;flex-wrap:wrap;gap:6px">${Object.keys(CARD_DATA).map(name=>`<span style="background:rgba(200,135,58,.14);border:1px solid rgba(200,135,58,.25);border-radius:12px;padding:3px 9px;font-size:.7rem;color:rgba(253,243,227,.65)">${name}</span>`).join('')}</div></div></div>`;
-}
-
-// 備份
-function renderBackupStatus(){
-  const bt=load(KEYS.time);
-  document.getElementById('backup-status-area').innerHTML=`<div style="padding:13px 15px;background:rgba(0,0,0,.18);border-radius:12px;border:1px solid var(--border);margin-bottom:13px"><div style="font-size:.76rem;color:var(--gold-light);margin-bottom:6px">📂 目前狀態</div><div style="font-size:.86rem;color:rgba(253,243,227,.62);line-height:1.9">占卜紀錄：<strong style="color:var(--gold-light)">${dailyRecords.length} 筆</strong><br>最後更新：<strong style="color:var(--parchment)">${bt?new Date(bt).toLocaleString('zh-TW'):'—'}</strong></div><div style="margin-top:9px"><span class="status-pill ${dailyRecords.length>0?'status-ok':'status-warn'}">${dailyRecords.length>0?'✓ 建議定期匯出備份':'⚠ 尚未建立任何資料'}</span></div></div>`;
-}
-function exportData(){if(!dailyRecords.length){toast('目前沒有資料可匯出');return}const blob=new Blob([JSON.stringify({version:4,exported:new Date().toISOString(),dailyRecords},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`塔羅占卜備份_${new Date().toLocaleDateString('zh-TW').replace(/\//g,'-')}.json`;a.click();toast('備份已下載 ✓')}
-function importData(event){const file=event.target.files[0];if(!file)return;const reader=new FileReader();reader.onload=e=>{try{const data=JSON.parse(e.target.result);const iD=data.dailyRecords||[];if(!iD.length){toast('找不到有效資料');return}if(!confirm(`即將匯入 ${iD.length} 筆紀錄，確定嗎？`))return;let added=0;iD.forEach(d=>{if(!dailyRecords.find(x=>x.id===d.id)){dailyRecords.push(d);added++}});saveRecords();renderBackupStatus();toast(`成功匯入 ${added} 筆紀錄 ✓`)}catch(e){toast('檔案格式錯誤')}};reader.readAsText(file);event.target.value=''}
-function clearAll(){if(!confirm('確定清除所有資料？不可復原！'))return;dailyRecords=[];saveRecords();save(KEYS.init,true);renderBackupStatus();toast('所有資料已清除')}
-
-// 導航與選牌
-const TABS=['daily','cards','records','progress','backup'];
-function switchTab(tab){TABS.forEach((t,i)=>document.querySelectorAll('.nav-item')[i].classList.toggle('active',t===tab));document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));document.getElementById('panel-'+tab).classList.add('active');if(tab==='cards')renderCardLibrary();if(tab==='records')renderRecords();if(tab==='progress')renderProgress();if(tab==='backup')renderBackupStatus();window.scrollTo({top:0,behavior:'smooth'})}
-function buildPicker(id){const c=document.getElementById(id);let html='';for(const[suit,cards]of Object.entries(TAROT_78)){html+=`<div class="picker-section-title">${suit}</div><div class="card-chips">`;html+=cards.map(card=>`<span class="card-chip" onclick="pickCard(event,'${card}','${id}')">${card}</span>`).join('');html+='</div>'}c.innerHTML=html}
-function togglePicker(pickerId,inputId,numInputId){const p=document.getElementById(pickerId);if(!p.innerHTML)buildPicker(pickerId);p._inputId=inputId;p.classList.toggle('open')}
-function pickCard(e,card,pickerId){const p=document.getElementById(pickerId);const clean=card.replace(/\(\d+\)/,'').trim();document.getElementById(p._inputId).value=clean;p.querySelectorAll('.card-chip').forEach(c=>c.classList.remove('selected'));e.target.classList.add('selected');setTimeout(()=>p.classList.remove('open'),280);onCardInput()}
-function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2800)}
-function closeModal(e){if(e.target===document.getElementById('modal-overlay'))document.getElementById('modal-overlay').classList.remove('open')}
-
-// 預載每日紀錄
-const PRELOAD_DAILY=[
-  {id:1743696000001,card:'權杖八',ori:'正位',event:'差點來不及去演唱會現場，會後有陌生人發彩帶給我，逛了夜市，趕上火車回家，到家後下大雨',energy:'權杖八是塔羅中速度最快的牌，八支權杖同時在空中飛射，代表事情快速推進、來不及思考就已經發生，一切都在動態中。',note:'以為自己一直在「趕」，其實整天都在對的節奏裡。信任流動，不要跟速度對抗。',mantra:'✨ 在飛速之中，你從未真正錯過。',date:'2026/4/5',time:'週六'},
-  {id:1743782400001,card:'寶劍皇后',ori:'逆位',event:'早上抽牌，下午看到龍龜團購，看中五隻：藍磷灰1060、加勒比海昂方解石600等。已喊藍磷灰和加勒比海昂方解石。',energy:'寶劍皇后逆位提醒此刻思緒可能不如表面清晰，情緒或慾望正在悄悄影響判斷力。',note:'說「只是看看」卻喊了兩隻——塔羅牌不是魔法，是把已經知道但不想承認的事說出來。',mantra:'✨ 最清醒的判斷，是對自己誠實。',date:'2026/4/7',time:'今日'},
-  {id:1743868800001,card:'權杖皇后',ori:'正位',event:'處理完手機登入網路銀行密碼狀況，繳卡費、還債務、轉帳買龍龜，工作上把薪資表更新，晚上想吃熱滷味沒開改成魚酥羹麵，滑手機一晚上。',energy:'權杖皇后正位是塔羅中最有行動力、最務實的女性能量——她知道自己要什麼，然後一件一件把它完成。今天你就是她。',note:'今天做了很多務實的事，滑手機一晚上是你應得的。不需要每一刻都有生產力。',mantra:'✨ 把該做的做完，剩下的時間，就好好屬於自己。',date:'2026/4/8',time:'今日'},
-  {id:1743955200001,card:'聖杯四',ori:'逆位',event:'睡過頭11點才到公司。上午弄的工時表下午確認不用操作了。處理自提金額不符的事誤差605元五月補上。臨時決定月底去台南玩，朋友想當天來回，我想多住一晚。',energy:'聖杯四逆位說你今天從「悠哉坐著」的狀態醒來了，開始行動和面對。',note:'台南「多住一晚」的念頭，就是那隻從天上伸來的手。聽你內心的聲音。',mantra:'✨ 抬起頭來，你以為沒有的，其實早就在那裡了。',date:'2026/4/9',time:'今日'},
-  {id:1744041600001,card:'太陽',ori:'正位',event:'今天很熱公司開冷氣了。訂了下週跟朋友聚餐的餐廳和月底去台南的高鐵票，住宿由朋友的姊姊贊助。公司文件底部都潮濕發霉了。早上醒來眼睛無法對焦。趁還沒漲價買了噗幣。',energy:'太陽是塔羅中最正面的牌之一——光明、喜悅、活力、清晰。一切都攤在陽光下，就是純粹的能量向前衝。',note:'眼睛無法對焦是身體提醒你，光太強的時候也需要閉眼休息一下。',mantra:'✨ 陽光下沒有秘密，也不需要秘密。',date:'2026/4/10',time:'今日'},
-  {id:1744128000001,card:'正義',ori:'正位',event:'收到預訂的龍龜和衣服。下午整理之前泡水的公司文件。晚餐幫偶像慶生，結果餐點都不好吃也不夠熱。去美食街買紅葉蛋糕沒有經典口味。閱讀別人的塔羅日記。忍著沒有在線上吐槽老是喊口號沒有要改的社畜。',energy:'正義手持天秤與寶劍，她不偏不倚，看清楚事實之後做出裁決。今天你的能量就是這把天秤——什麼該說、什麼不該說，你都清楚地知道。',note:'「忍著沒有吐槽」不是委屈，是正義。你知道說了也沒用，所以選擇不浪費能量在無效的地方。',mantra:'✨ 看清楚之後選擇沉默，是比吶喊更有力量的正義。',date:'2026/4/11',time:'今日'},
-  {id:1744214400001,card:'星幣三',ori:'正位',event:'抽到權杖3重複所以又抽了張星幣3。大部分滑了手機。準備了午餐（吃完拉肚子）。晚上去夜市買牛排和奶茶。想買排骨酥售完、醃芭樂太多人不想排。去7-11買了明天的兩餐。中午貓掌黏到黏鼠板，用橄欖油清乾淨。將地面清出一塊空間。周邊的小公仔收納完畢。收納箱組裝完成。',energy:'星幣三是「工匠」的牌——按照藍圖一步一步把事情做好。不是衝刺，是扎實地把每一件事完成。',note:'拉肚子要注意，明天的兩餐已經備好了，讓腸胃休息一下。橄欖油清貓掌這件事記一下，以後用得到。',mantra:'✨ 不需要英雄式的衝刺，把每一塊磚砌好就夠了。',date:'2026/4/11',time:'今日'},
-  {id:1744300800001,card:'戀人',ori:'正位',event:'困擾幾天的表格今天找到方法解決了。晚上跟朋友吃飯，提早一小時下班。吃了好吃的港式飲茶，朋友送了葡吉羅宋，我帶了厚蛋捲分送一人一根。開始處理老闆交代的信貸問題，繳稅事宜詢問。晚上帶朋友去買手搖，獲得朋友肯定品味。抽選鬍子男演唱會中票了。成功拒絕手搖的誘惑，我很棒。',energy:'戀人正位是選擇、結合、價值觀一致的能量。今天你做了很多「對的選擇」——選擇去陪朋友、選擇分享、選擇拒絕誘惑。',note:'「我很棒」這句話說得非常對。今天你值得這樣肯定自己。',mantra:'✨ 最重要的選擇，不是別人給你的，是你用心感覺到的。',date:'2026/4/13',time:'今日'},
-  {id:1744387200001,card:'命運之輪',ori:'正位',event:'今天抽了三張牌，寶劍2逆、星幣8逆、權杖國王逆。早上遲到10:45才到。開始有認真工作。演唱會的票還沒讓掉。看到網路上一些不好的新聞（大部分是可怕的中國案子）。',energy:'命運之輪提醒你今天雖然三張牌全逆位，事情有點卡，但輪子一直在轉，這只是輪子轉到某個位置而已。',note:'三張逆位不代表壞事，代表今天能量有點亂，不要強行推進，順著流走。不好的新聞讓自己適度接觸就好，不需要全部吸收進來。',mantra:'✨ 輪子永遠在轉，現在在下面，不代表永遠在下面。',date:'2026/4/14',time:'今日'},
-  {id:1744473600001,card:'權杖五',ori:'逆位',event:'百老匯星光演唱會，臺北音樂流行中心，3樓3C13排3號$1,980，好多3又搭藍23。說好的貨運沒來，急急忙忙跑到公車站，忘記帶酒精，沒帶傘就下雨，時間還夠先去買不夜侯焙香鮮奶茶加豆花，悠哉去南港看雨傘買了晴雨兩用，出來就沒雨了。太早到先去尿尿，廁所有人在打扮佔洗手台。買了比較貴的水結果電影儲值有送水。拿完票以為時間卡得剛剛好結果還有一小時。扭蛋扭到唯一的桌子，扭兩次才有尼克。擲筊失敗抽到鬼滅之刃的忍，本體可愛但沒有義勇就沒有買。火車誤點。我們家的龍龜也是聽過歌舞劇的龜了。',energy:'權杖五正位是五個人互相打架、混戰一片。逆位是衝突平息了，但過程中有點狼狽——不是大敗，是一路磕磕碰碰最後還是到了。',note:'今天的「亂」不是真的亂，是很多小事同時在動，你一直在即時應對。龍龜聽過歌舞劇這件事反而是今天最值得記的事。',mantra:'✨ 不是每件事都要贏，把自己安全帶到終點就夠了。',date:'2026/4/15',time:'今日'},
-  {id:1744560000001,card:'星幣國王',ori:'正位',event:'出門參加龍龜聚會前抽了金幣國王，覺得收穫滿滿、財富自由。藍39車很滿，跟兩個A型的人吃飯。電梯遇到887，她先去5樓樂高。887送我龜龜油，結帳我先付，她們給現金。天氣很好還了朋友的傘。去買預備晚餐。表妹說下週六招待去看One Ok Rock演唱會！！震驚。晚上問跟老闆的關係抽愚者正位，應該還可以。問減肥改善方向抽到權杖四逆，需要作息調整。',energy:'星幣國王是四張國王裡最務實、最富足的一張——他不是在追求財富，他已經是財富本身。今天的你就是這個能量：穩穩的、收穫滿滿的、給予也接受都很自然。',note:'豐盛流動得很自然——送出去、收回來、帳清了。One Ok Rock演唱會邀請是今天最大的驚喜，財富不只是錢。作息調整是減肥最重要的功課，比節食更根本。',mantra:'✨ 豐盛的人不是擁有最多的人，而是懂得流動的人。',date:'2026/4/16',time:'今日'},
+const TURTLES = [
+  { id:'t1', emoji:'🟡', name:'焦糖', stone:'黃膠花＋小樹', energy:'吸引豐盛、帶來甜蜜機緣', color:'#fbbf24' },
+  { id:'t2', emoji:'⚫', name:'又玄', stone:'金運石', energy:'財運深厚、玄機暗藏、低調致富', color:'#a78bfa' },
+  { id:'t3', emoji:'🌟', name:'藏金', stone:'鈦晶', energy:'強力招財、增強氣場、快速顯化', color:'#fde68a' },
+  { id:'t4', emoji:'🌊', name:'天授', stone:'老礦天河石', energy:'溝通天地、智慧降臨、直覺開啟', color:'#7dd3fc' },
+  { id:'t5', emoji:'💙', name:'青嵐', stone:'藍絨晶', energy:'寧靜療癒、清理負能量、安心入眠', color:'#93c5fd' },
+  { id:'t6', emoji:'💜', name:'雙全', stone:'紫黃松子母龜', energy:'雙重能量、智慧與財富並進', color:'#c084fc' },
+  { id:'t7', emoji:'🟢', name:'葡萄糖', stone:'菜花玉', energy:'生命力旺盛、健康守護、成長滋養', color:'#4ade80' },
+  { id:'t8', emoji:'🍋', name:'檸檬糖', stone:'黃螢石', energy:'思維清晰、學習力提升、人際和諧', color:'#fef08a' },
+  { id:'t9', emoji:'🔵', name:'汽水糖', stone:'加勒比', energy:'療癒情緒、釋放壓力、輕盈自在', color:'#2dd4bf' },
+  { id:'t10', emoji:'🟤', name:'麥芽糖', stone:'老礦髮晶', energy:'強根固本、能量穩定、驅除障礙', color:'#d97706' },
+  { id:'t11', emoji:'🫐', name:'沙士糖', stone:'藍磷灰', energy:'啟動靈感、提升表達、吸引貴人', color:'#818cf8' },
+  { id:'t12', emoji:'🌈', name:'軟糖', stone:'糖果螢石', energy:'多彩能量、全面保護、帶來歡樂', color:'#f472b6' },
+  { id:'t13', emoji:'🌌', name:'星空糖', stone:'拉長石', energy:'魔法顯化、守護旅人、神秘洞察', color:'#6366f1' },
+  { id:'t14', emoji:'🟠', name:'琥珀糖', stone:'虎皮瑪瑙', energy:'勇氣行動、意志堅定、突破困境', color:'#f97316' },
 ];
 
-loadData();
-</script>
+const MAJOR_ARCANA = [
+  { num:'0', name:'愚者 The Fool', archetype:'新的開始・純真・冒險', up:['自由','新開始','勇氣'], rev:['魯莽','逃避','不計後果'], love:'正：一段純粹美好的相遇　逆：感情中逃避現實', work:'正：勇敢嘗試新機會　逆：行事魯莽易出錯', health:'正：充滿活力　逆：粗心大意小心意外', memory:'想像一個背著包袱的小孩踩在懸崖邊跳舞', star:'♈ 天王星', color:'#a8d8a8' },
+  { num:'1', name:'魔術師 The Magician', archetype:'意志・技能・顯化', up:['顯化','技能','行動力'], rev:['欺騙','濫用才能','缺乏專注'], love:'正：主動追求，展現魅力　逆：操控或被操控', work:'正：技能全開，好時機　逆：言過其實', health:'正：精力充沛，康復佳　逆：小心過勞', memory:'桌上擺著聖杯寶劍錢幣權杖，魔術師一手指天一手指地', star:'☿ 水星', color:'#ffd700' },
+  { num:'2', name:'女祭司 The High Priestess', archetype:'直覺・神秘・潛意識', up:['直覺','秘密','內在智慧'], rev:['壓抑直覺','祕密洩漏','表面化'], love:'正：等待，讓感情自然流露　逆：不願傾聽心聲', work:'正：信任直覺，靜待時機　逆：訊息不完整', health:'正：關注內在訊號　逆：忽視身體警示', memory:'月亮冠、石榴布幕、兩根柱子B和J之間靜靜端坐', star:'🌙 月亮', color:'#c9b8e8' },
+  { num:'3', name:'皇后 The Empress', archetype:'豐盛・母性・創造', up:['豐盛','滋養','創造力'], rev:['依賴','不孕','過度溺愛'], love:'正：關係滋養，可能懷孕　逆：過度依附', work:'正：創意旺盛，資源豐富　逆：揮霍或怠惰', health:'正：身體健康，生育旺　逆：注意婦科或過食', memory:'坐在麥田中的懷孕女王，周圍花草環繞', star:'♀ 金星', color:'#90ee90' },
+  { num:'4', name:'皇帝 The Emperor', archetype:'權威・結構・父性', up:['權威','穩定','掌控'], rev:['暴政','過度控制','父親議題'], love:'正：穩定關係，守護伴侶　逆：控制慾強', work:'正：擔任領導，建立規則　逆：官僚或剛愎', health:'正：強健體魄　逆：壓力造成心臟問題', memory:'坐在石頭寶座上的老國王，手持權杖和球', star:'♈ 牡羊座', color:'#ff6b6b' },
+  { num:'5', name:'教皇 The Hierophant', archetype:'傳統・信仰・導師', up:['傳統','精神導引','婚姻'], rev:['打破傳統','個人信仰','反叛'], love:'正：走入婚姻，傳統戀愛　逆：非傳統感情', work:'正：遵循規範，求教前輩　逆：打破體制', health:'正：遵循醫師指示　逆：另類療法', memory:'兩個修士跪在教皇前，教皇手持三重十字杖', star:'♉ 金牛座', color:'#dda0dd' },
+  { num:'6', name:'戀人 The Lovers', archetype:'選擇・愛情・價值觀', up:['愛情','選擇','和諧'], rev:['分離','錯誤選擇','內心衝突'], love:'正：愛情美好，重要選擇　逆：分手或猶豫不決', work:'正：與合夥人合作愉快　逆：價值觀衝突', health:'正：身心和諧　逆：生活失衡', memory:'亞當夏娃在天使庇佑下，面前有生命樹', star:'♊ 雙子座', color:'#ffd700' },
+  { num:'7', name:'戰車 The Chariot', archetype:'意志力・勝利・控制', up:['勝利','意志力','前進'], rev:['失控','方向不明','挫敗'], love:'正：積極追求，征服愛情　逆：強迫對方', work:'正：衝勁十足，克服困難　逆：方向混亂', health:'正：體力充沛　逆：過度操勞', memory:'國王乘坐沒有馬匹的戰車，靠意志力驅動黑白兩獅', star:'♋ 巨蟹座', color:'#87ceeb' },
+  { num:'8', name:'力量 Strength', archetype:'內在力量・勇氣・溫柔', up:['勇氣','耐心','內在力量'], rev:['自我懷疑','衝動','懦弱'], love:'正：溫柔包容伴侶　逆：過度壓抑自己', work:'正：以柔克剛，持久耐力　逆：失去信心', health:'正：療癒力強，生命力旺　逆：注意慢性病', memory:'女子溫柔地閉合獅子的嘴，頭上有無限符號∞', star:'♌ 獅子座', color:'#ffa500' },
+  { num:'9', name:'隱士 The Hermit', archetype:'獨處・智慧・內省', up:['內省','尋找答案','智慧'], rev:['孤立','拒絕幫助','封閉'], love:'正：需要獨處空間　逆：過度孤立逃避親密', work:'正：獨立作業，深度研究　逆：與世隔絕', health:'正：靜養修復　逆：過度孤立影響心理', memory:'老人在山頂舉著燈籠照路，手持長杖', star:'♍ 處女座', color:'#d3d3d3' },
+  { num:'10', name:'命運之輪 Wheel of Fortune', archetype:'命運・循環・轉機', up:['好運','轉機','命運流轉'], rev:['厄運','抗拒改變','壞時機'], love:'正：緣分到來，關係轉機　逆：分分合合', work:'正：好時機來臨，把握機會　逆：事業起伏', health:'正：病情好轉　逆：需注意復發', memory:'大輪子上有蛇有阿努比斯有獅身人面，四角有天使', star:'♃ 木星', color:'#ffd700' },
+  { num:'11', name:'正義 Justice', archetype:'公平・真相・因果', up:['公平','正義','誠實'], rev:['不公平','偏見','逃避責任'], love:'正：公平對待，理性關係　逆：一方付出不均', work:'正：依法合約，公正評價　逆：訴訟糾紛', health:'正：均衡健康　逆：醫療糾紛或不誠實', memory:'手持劍與天秤的女神端坐，背後有紫色簾幕', star:'♎ 天秤座', color:'#ff9999' },
+  { num:'12', name:'倒吊人 The Hanged Man', archetype:'暫停・犧牲・新視角', up:['暫停','犧牲','換個角度'], rev:['拖延','無謂犧牲','固執'], love:'正：靜待，以不同眼光看伴侶　逆：無謂的犧牲', work:'正：靜下來等待最佳時機　逆：停滯不前', health:'正：需要休養　逆：過度消耗', memory:'男子用一腳倒掛在樹上，臉上帶著安詳光環', star:'♆ 海王星', color:'#87ceeb' },
+  { num:'13', name:'死神 Death', archetype:'結束・轉化・新生', up:['結束','轉化','蛻變'], rev:['抗拒改變','停滯','拖延結束'], love:'正：舊關係結束，迎接新開始　逆：死而不放手', work:'正：轉職換跑道　逆：不敢放棄舊工作', health:'正：放下舊習慣　逆：拒絕治療', memory:'骷髏騎士揮舞黑旗，腳邊有國王倒地，背後太陽升起', star:'♏ 天蠍座', color:'#808080' },
+  { num:'14', name:'節制 Temperance', archetype:'平衡・融合・耐心', up:['平衡','調和','耐心'], rev:['失衡','衝動','過度放縱'], love:'正：穩定和諧的關係　逆：感情極端波動', work:'正：平衡工作生活　逆：急躁無法融合', health:'正：規律生活，身心均衡　逆：過度或不足', memory:'天使一腳踏水一腳踏地，兩杯間流動液體', star:'♐ 射手座', color:'#90ee90' },
+  { num:'15', name:'惡魔 The Devil', archetype:'束縛・物慾・陰影', up:['束縛','物質慾望','陰暗面'], rev:['解脫','覺醒','放下成癮'], love:'正：有毒關係，相互束縛　逆：從依賴關係中解脫', work:'正：被金錢或權力控制　逆：突破職場束縛', health:'正：成癮問題，壞習慣　逆：戒除惡習', memory:'山羊惡魔端坐，鍊子鬆散地套在兩個人的脖子上', star:'♑ 摩羯座', color:'#4a4a4a' },
+  { num:'16', name:'塔 The Tower', archetype:'突變・崩塌・啟示', up:['突變','破壞','啟示'], rev:['逃避改變','延後的危機','內部崩潰'], love:'正：感情突然破裂　逆：強迫維持破碎關係', work:'正：公司或計畫突然崩潰　逆：暗流湧動', health:'正：突發意外需注意　逆：內心崩潰', memory:'閃電打中高塔，兩人從塔頂跌落', star:'♂ 火星', color:'#ff4444' },
+  { num:'17', name:'星星 The Star', archetype:'希望・療癒・靈感', up:['希望','療癒','靈感'], rev:['絕望','自我懷疑','失去信心'], love:'正：美好希望，療癒後的愛　逆：失去信心', work:'正：靈感湧現，前景光明　逆：夢想破碎', health:'正：康復中，保持信心　逆：恢復緩慢', memory:'裸女在星空下，一腳在水中，兩壺水倒向天地', star:'♒ 水瓶座', color:'#ffd700' },
+  { num:'18', name:'月亮 The Moon', archetype:'幻象・潛意識・恐懼', up:['幻象','直覺','潛意識'], rev:['恐懼消散','真相浮現','混亂結束'], love:'正：感情迷霧，難辨真假　逆：真相終於浮現', work:'正：訊息不清，謹慎行事　逆：混亂局面漸清', health:'正：心理問題，睡眠障礙　逆：心理治療見效', memory:'月亮下，狼和狗對月嚎叫，螃蟹從水裡爬出', star:'♓ 雙魚座', color:'#9999ff' },
+  { num:'19', name:'太陽 The Sun', archetype:'成功・喜悅・光明', up:['成功','喜悅','活力'], rev:['過度自信','延遲成功','失去活力'], love:'正：幸福美滿的關係　逆：感情表面光鮮', work:'正：事業大放光彩　逆：成果延遲', health:'正：精力充沛，健康滿分　逆：注意過度曝曬', memory:'太陽下騎白馬的孩子，背後有大朵向日葵', star:'☀ 太陽', color:'#ffd700' },
+  { num:'20', name:'審判 Judgement', archetype:'喚醒・評估・救贖', up:['覺醒','評估','救贖'], rev:['自我批判','拒絕覺醒','恐懼審判'], love:'正：舊情復燃或深刻檢視　逆：反覆糾纏', work:'正：評估成果，轉換跑道　逆：逃避評斷', health:'正：重大健康決策　逆：忽視身體警示', memory:'天使吹號角，棺材中的人紛紛升起', star:'♇ 冥王星', color:'#d4af37' },
+  { num:'21', name:'世界 The World', archetype:'完成・整合・圓滿', up:['完成','圓滿','成就'], rev:['延遲完成','半途而廢','不完整'], love:'正：關係圓滿，走向婚姻　逆：遲遲無法完成', work:'正：大功告成，成就卓越　逆：差臨門一腳', health:'正：完全康復，身心整合　逆：尚需努力', memory:'女子被月桂花圈包圍在中央，四角有天使獅子牛鷹', star:'♄ 土星', color:'#a0d8ef' },
+];
 
+const MINOR_WANDS = [
+  { num:'Ace', name:'權杖Ace', up:['新開始','靈感','創意火花'], rev:['延遲','創意受阻','缺乏動力'], love:'正：熱情萌芽　逆：衝動後悔', work:'正：新計畫展開　逆：推遲啟動', health:'正：精力旺盛　逆：疲憊無力', memory:'手從雲中伸出握著開花的權杖' },
+  { num:'2', name:'權杖2', up:['規劃','未來藍圖','掌控全局'], rev:['猶豫','缺乏遠見','恐懼未知'], love:'正：規劃未來　逆：拒絕承諾', work:'正：長遠規劃中　逆：計畫延遲', health:'正：積極規劃健康　逆：擔憂未來', memory:'男人在城牆上凝視遠方，手持地球儀' },
+  { num:'3', name:'權杖3', up:['擴展','等待結果','視野開闊'], rev:['延誤','挫折','意外障礙'], love:'正：長距離關係　逆：等待令人沮喪', work:'正：事業擴展中　逆：貨物延遲', health:'正：康復好轉　逆：治療延誤', memory:'男人站在山丘望向遠海的船' },
+  { num:'4', name:'權杖4', up:['慶祝','和諧','家的喜悅'], rev:['不穩定','延後慶祝','家庭衝突'], love:'正：訂婚或喜慶　逆：家庭阻礙', work:'正：達成里程碑　逆：成果不穩', health:'正：身體恢復　逆：還需休養', memory:'四根權杖架起花環，背後有城堡和慶祝人群' },
+  { num:'5', name:'權杖5', up:['競爭','衝突','切磋'], rev:['避免衝突','和解','比賽結束'], love:'正：爭吵磨合　逆：息事寧人', work:'正：激烈競爭中　逆：解決爭議', health:'正：需要運動　逆：避免激烈競爭', memory:'五個人互相揮舞權杖，混戰一片' },
+  { num:'6', name:'權杖6', up:['勝利','認可','好消息'], rev:['延遲勝利','驕傲自大','遭人嫉妒'], love:'正：對方認可你　逆：感情問題解決延誤', work:'正：獲得表彰　逆：成功被他人搶先', health:'正：症狀改善　逆：恢復不如預期', memory:'戴桂冠的騎士領隊凱旋歸來' },
+  { num:'7', name:'權杖7', up:['堅守立場','挑戰','決心'], rev:['退讓','被壓倒','缺乏自信'], love:'正：為愛堅守　逆：關係失衡', work:'正：捍衛立場　逆：承受壓力放棄', health:'正：對抗病魔　逆：免疫力下降', memory:'一人站高地對抗下方六根權杖' },
+  { num:'8', name:'權杖8', up:['快速行動','消息迅速','箭在弦上'], rev:['延遲','溝通阻礙','倉促衝動'], love:'正：迅速發展　逆：訊息中斷', work:'正：事情快速推進　逆：行程延誤', health:'正：快速康復　逆：意外傷害', memory:'八根權杖同時在空中飛馳' },
+  { num:'9', name:'權杖9', up:['堅持','防禦','疲憊中的韌性'], rev:['偏執','疲憊放棄','過度防禦'], love:'正：受傷後保護自己　逆：多疑讓感情窒息', work:'正：撐過最後難關　逆：身心俱疲', health:'正：辛苦但在康復　逆：舊傷復發', memory:'帶傷的男人緊握一根，背後站著八根' },
+  { num:'10', name:'權杖10', up:['重擔','過勞','責任壓身'], rev:['卸下重擔','尋求幫助','工作延誤'], love:'正：感情讓你喘不過氣　逆：終於放下', work:'正：承擔太多　逆：重組職責', health:'正：過勞，需休息　逆：開始減壓', memory:'男子彎腰費力扛著十根權杖' },
+  { num:'Page', name:'權杖侍者', up:['探索','好消息','冒險精神'], rev:['壞消息','草率','缺乏目標'], love:'正：新鮮刺激　逆：不成熟衝動', work:'正：新計畫開始　逆：消息不實', health:'正：年輕活力　逆：衝動受傷', memory:'少年手持開花權杖眺望遠方' },
+  { num:'Knight', name:'權杖騎士', up:['衝勁','行動','冒險者'], rev:['魯莽','虎頭蛇尾','衝突'], love:'正：熱情追求　逆：喜新厭舊', work:'正：衝勁十足　逆：計畫半途而廢', health:'正：體力充沛　逆：意外受傷', memory:'騎士騎著跳躍馬匹手持火焰頭盔' },
+  { num:'Queen', name:'權杖皇后', up:['熱情','獨立','魅力四射'], rev:['嫉妒','佔有慾','任性'], love:'正：充滿魅力吸引對方　逆：嫉妒多疑', work:'正：領導能力強　逆：霸道難合作', health:'正：生命力旺盛　逆：注意婦科', memory:'皇后端坐花園，腳邊有黑貓，手持向日葵' },
+  { num:'King', name:'權杖國王', up:['領導','願景','成熟火元素'], rev:['獨裁','衝動','不實際'], love:'正：成熟男性典型　逆：控制慾', work:'正：老闆型人物　逆：剛愎自用', health:'正：精力旺盛　逆：肝火旺', memory:'威嚴國王坐在雕龍寶座上，背景是乾旱大地' },
+];
+
+const MINOR_CUPS = [
+  { num:'Ace', name:'聖杯Ace', up:['愛的開始','情感滋養','靈性禮物'], rev:['壓抑情感','失戀','枯竭'], love:'正：新戀情萌芽　逆：情感受阻', work:'正：直覺帶來靈感　逆：創意乾涸', health:'正：情緒健康　逆：情緒壓抑影響身體', memory:'白鴿將聖餅投入聖杯，滿杯溢出' },
+  { num:'2', name:'聖杯2', up:['互相吸引','夥伴關係','和解'], rev:['失衡關係','分手','誤解'], love:'正：雙方心意相通　逆：感情失衡', work:'正：合夥愉快　逆：合作破裂', health:'正：身心協調　逆：內心衝突', memory:'男女互相敬酒，頭上有翅膀的獅子守護' },
+  { num:'3', name:'聖杯3', up:['慶祝','友誼','豐收'], rev:['過度放縱','謠言','三角關係'], love:'正：與朋友慶祝感情　逆：三角關係', work:'正：團隊勝利慶祝　逆：八卦是非', health:'正：身心愉悅　逆：放縱傷身', memory:'三位女子高舉聖杯翩翩起舞' },
+  { num:'4', name:'聖杯4', up:['沉思','不滿足','冥想'], rev:['走出沉思','新機會','重新投入'], love:'正：感情麻木無感　逆：重燃熱情', work:'正：對工作感到倦怠　逆：接受新機會', health:'正：情緒低落　逆：走出抑鬱', memory:'男子坐在樹下，雲中伸出手給聖杯他卻無視' },
+  { num:'5', name:'聖杯5', up:['失落','後悔','悲傷'], rev:['走出悲傷','接受失去','重新振作'], love:'正：失戀悲傷　逆：走出舊情', work:'正：事業挫折　逆：重新出發', health:'正：悲傷影響健康　逆：心理療癒', memory:'黑袍男子哭泣，三杯倒地，身後兩杯仍立' },
+  { num:'6', name:'聖杯6', up:['回憶','童年','懷舊'], rev:['活在過去','幼稚','抗拒長大'], love:'正：舊情人再現　逆：拒絕成熟', work:'正：過去的人脈　逆：停留在舒適圈', health:'正：療癒童年傷口　逆：逃回過去', memory:'男孩送女孩白花，背景是古老村莊' },
+  { num:'7', name:'聖杯7', up:['幻想','太多選擇','迷惑'], rev:['看清幻象','做出選擇','現實'], love:'正：過多選擇不知從何選起　逆：看清對方本質', work:'正：計畫太多無從下手　逆：終於聚焦', health:'正：幻想影響判斷　逆：面對現實', memory:'七個聖杯飄在雲中，各裝著奇幻事物' },
+  { num:'8', name:'聖杯8', up:['離開','追求更高目標','放手'], rev:['害怕改變','放棄','逃避'], love:'正：放下已知的感情　逆：無法離開', work:'正：離職追尋意義　逆：無法踏出一步', health:'正：離開不健康環境　逆：逃避問題', memory:'男人在月光下背向八個杯子，走向山脈' },
+  { num:'9', name:'聖杯9', up:['願望成真','滿足','情感豐盛'], rev:['驕傲','願望落空','過度放縱'], love:'正：心想事成，幸福滿足　逆：驕傲失去', work:'正：工作順心如意　逆：自滿停滯', health:'正：健康如願　逆：放縱影響健康', memory:'胖男人坐在九個杯子前笑容滿面' },
+  { num:'10', name:'聖杯10', up:['圓滿家庭','永久幸福','情感完整'], rev:['破碎家庭','夢想與現實的落差','不和諧'], love:'正：家庭美滿，幸福婚姻　逆：家庭問題', work:'正：工作與生活和諧　逆：家事干擾工作', health:'正：幸福感帶來健康　逆：家庭壓力傷身', memory:'一家人在彩虹下舉手歡慶，背後有溫馨小屋' },
+  { num:'Page', name:'聖杯侍者', up:['直覺訊息','創意','情感表達'], rev:['情緒化','幼稚','壞消息'], love:'正：浪漫驚喜　逆：情緒不成熟', work:'正：創意新想法　逆：計畫不切實際', health:'正：關注身體訊號　逆：情緒影響健康', memory:'少年端著聖杯，杯中有一條魚探頭看他' },
+  { num:'Knight', name:'聖杯騎士', up:['追求','浪漫主義','情感邀請'], rev:['欺騙','情緒化','迷失'], love:'正：浪漫追求者　逆：花言巧語不可信', work:'正：有創意的提案　逆：計畫太過理想化', health:'正：療癒力強　逆：情緒波動大', memory:'騎士騎著緩步馬，手持聖杯輕輕前進' },
+  { num:'Queen', name:'聖杯皇后', up:['同理心','直覺','情感智慧'], rev:['情緒化','自欺欺人','依賴'], love:'正：溫柔體貼的伴侶　逆：情緒勒索', work:'正：善於傾聽帶領團隊　逆：過度感性', health:'正：情緒平穩身心健康　逆：過度敏感', memory:'皇后坐在海邊，抱著有天使的聖杯沉思' },
+  { num:'King', name:'聖杯國王', up:['情感成熟','智慧','慈悲'], rev:['情感操控','不穩定','壓抑'], love:'正：成熟穩定的愛　逆：情感操控', work:'正：以情感智慧領導　逆：情緒失控', health:'正：內心平靜　逆：情緒壓抑成疾', memory:'國王坐在波濤上的寶座，平靜看著海浪' },
+];
+
+const MINOR_SWORDS = [
+  { num:'Ace', name:'寶劍Ace', up:['真相','突破','清晰思維'], rev:['混亂','誤解','思維受阻'], love:'正：說清楚講明白　逆：謊言傷害', work:'正：清晰決策　逆：誤判形勢', health:'正：手術有益　逆：神經緊張', memory:'手從雲中伸出握劍，頂端有桂冠' },
+  { num:'2', name:'寶劍2', up:['兩難','暫時和平','逃避決定'], rev:['訊息揭露','做出選擇','不安'], love:'正：關係僵局　逆：真相浮現', work:'正：暫時停滯等資訊　逆：被迫做決定', health:'正：需要減壓　逆：壓力爆發', memory:'蒙眼女子雙臂交叉持兩劍，背後是月夜海洋' },
+  { num:'3', name:'寶劍3', up:['心碎','悲傷','痛苦'], rev:['走出心碎','療癒','放下痛苦'], love:'正：三角關係或分手　逆：走出痛苦', work:'正：被批評傷心　逆：從批評中成長', health:'正：心理創傷　逆：療癒中', memory:'三把劍刺穿紅心，背景是灰色暴風雨' },
+  { num:'4', name:'寶劍4', up:['休息','靜養','暫時退出'], rev:['重新出發','無法休息','逃避'], love:'正：需要獨處靜思　逆：強迫關係', work:'正：病假或休養期　逆：無法放鬆', health:'正：需要充分休息　逆：即使生病也無法休息', memory:'騎士躺在石棺上，牆上掛三劍，身旁一劍' },
+  { num:'5', name:'寶劍5', up:['衝突','羞辱','不公平勝利'], rev:['後悔','和解','避免衝突'], love:'正：爭吵後的勝利感　逆：關係疲憊', work:'正：職場鬥爭　逆：停止無謂競爭', health:'正：壓力造成緊張　逆：解除壓力', memory:'惡意男子撿起落敗者的劍，兩人悄然離去' },
+  { num:'6', name:'寶劍6', up:['過渡','離開困境','旅程'], rev:['無法離開','延誤出發','帶著行李前行'], love:'正：從困難關係過渡　逆：無法離開', work:'正：換工作或換環境　逆：轉換困難', health:'正：離開不良環境　逆：帶著舊傷前行', memory:'船夫渡載婦人與孩子過水，六劍插在船頭' },
+  { num:'7', name:'寶劍7', up:['策略','偷竊','秘密行動'], rev:['曝光','退回竊取之物','良心不安'], love:'正：不忠或有秘密　逆：謊言被揭穿', work:'正：策略行動但不夠正直　逆：秘密被發現', health:'正：心理負擔大　逆：釋放秘密', memory:'男子偷偷帶走五劍，回頭看剩下兩劍' },
+  { num:'8', name:'寶劍8', up:['受困','自我限制','無助'], rev:['突破限制','重獲自由','看清束縛'], love:'正：感覺被困在關係中　逆：終於脫身', work:'正：無法行動的困境　逆：解開束縛', health:'正：心理困住身體　逆：突破心理限制', memory:'蒙眼被綁女子站在劍陣中，其實可以走開' },
+  { num:'9', name:'寶劍9', up:['焦慮','惡夢','過度擔憂'], rev:['走出噩夢','尋求幫助','面對恐懼'], love:'正：深夜為感情焦慮　逆：停止自我折磨', work:'正：工作壓力引發焦慮　逆：壓力釋放', health:'正：焦慮失眠　逆：心理治療有效', memory:'女子從惡夢中驚坐起，牆上掛九把劍' },
+  { num:'10', name:'寶劍10', up:['結束','背叛','徹底失敗'], rev:['復甦','最壞已過','延長痛苦'], rev:['復甦','最壞已過','拒絕放棄'], love:'正：感情徹底終結　逆：新的開始', work:'正：失業或徹底失敗　逆：谷底反彈', health:'正：最嚴重的時刻　逆：開始好轉', memory:'男子趴地，背上插十把劍，遠方黎明升起' },
+  { num:'Page', name:'寶劍侍者', up:['好奇','警惕','消息靈通'], rev:['多話','謠言','粗心'], love:'正：觀察對方動向　逆：說話傷人', work:'正：蒐集情報　逆：傳播謠言', health:'正：機警敏銳　逆：神經過敏', memory:'少年站在山丘，高舉寶劍，風吹雲動' },
+  { num:'Knight', name:'寶劍騎士', up:['衝勁','直接','快速行動'], rev:['衝動魯莽','草率決定','攻擊性'], love:'正：直接表白　逆：口不擇言傷人', work:'正：快速衝刺達成目標　逆：衝動犯錯', health:'正：手術或急診　逆：意外受傷', memory:'騎士策馬衝刺，風雲激盪' },
+  { num:'Queen', name:'寶劍皇后', up:['獨立','清晰溝通','冷靜智慧'], rev:['苦澀','冷漠','殘忍'], love:'正：獨立自主的女性　逆：冷酷難親近', work:'正：理性決策，直言不諱　逆：刻薄難共事', health:'正：理性面對疾病　逆：壓抑情緒成疾', memory:'皇后高舉寶劍，眼神銳利注視前方' },
+  { num:'King', name:'寶劍國王', up:['權威','理智','公平判斷'], rev:['殘酷','專制','濫用權力'], love:'正：理性冷靜的伴侶　逆：威權控制', work:'正：公正領導　逆：以權力壓迫', health:'正：理性面對健康問題　逆：冷酷忽視情緒', memory:'國王高坐寶座，手持寶劍，眼神如刀' },
+];
+
+const MINOR_PENTS = [
+  { num:'Ace', name:'錢幣Ace', up:['物質機會','財富種子','新事業'], rev:['失去機會','財務陷阱','錯失良機'], love:'正：安穩踏實的感情基礎　逆：物質阻礙感情', work:'正：新財務機會　逆：投資失敗', health:'正：健康基礎好　逆：身體出問題', memory:'手從雲中托出金幣，下方有花園拱門' },
+  { num:'2', name:'錢幣2', up:['平衡','靈活應對','多工處理'], rev:['失衡','財務困難','雜亂無章'], love:'正：在感情與生活間平衡　逆：顧此失彼', work:'正：靈活處理多項任務　逆：手忙腳亂', health:'正：維持身心平衡　逆：壓力失衡', memory:'男子雜耍兩枚金幣，背後有船在波浪中起伏' },
+  { num:'3', name:'錢幣3', up:['合作','精通技藝','共同建設'], rev:['缺乏合作','工作品質差','衝突'], love:'正：共同建立未來　逆：合不來', work:'正：團隊合作達成目標　逆：各自為政', health:'正：與醫療團隊合作　逆：意見不合', memory:'工匠在教堂工作，兩人持圖樣討論' },
+  { num:'4', name:'錢幣4', up:['保守','守財','安全感'], rev:['吝嗇','貪婪','放開拳頭'], love:'正：安全但缺乏熱情　逆：放下控制', work:'正：穩健保守的財務策略　逆：抓太緊不放', health:'正：健康管理保守穩健　逆：過度節省影響健康', memory:'男子坐著緊抱金幣，一幣在頭上兩幣踩腳下' },
+  { num:'5', name:'錢幣5', up:['貧困','被排除在外','失業'], rev:['財務好轉','重新接受幫助','走出困境'], love:'正：關係中感到被遺棄　逆：重新被接納', work:'正：財務困難失業　逆：找到幫助', health:'正：缺乏醫療資源　逆：尋求援助', memory:'兩個乞丐在雪中走過亮燈的教堂窗外' },
+  { num:'6', name:'錢幣6', up:['給予','慈善','資源平衡'], rev:['不公平給予','操控','債務'], love:'正：在關係中付出與給予　逆：關係不平等', work:'正：獲得資助或給予他人　逆：被利用', health:'正：接受照顧或給予照顧　逆：單方付出', memory:'富人拿著秤給乞丐錢，旁邊有人跪地等待' },
+  { num:'7', name:'錢幣7', up:['耐心等待','評估','長期投資'], rev:['急躁','投資無回報','白費力氣'], love:'正：等待關係成熟　逆：感情付出沒回報', work:'正：評估長期成果　逆：努力看不到收穫', health:'正：耐心養生康復　逆：治療無效', memory:'農夫靠著鋤頭望著七株茂盛植物沉思' },
+  { num:'8', name:'錢幣8', up:['工藝','精進','磨練技能'], rev:['急功近利','錯誤學習','懶散'], love:'正：用心經營感情　逆：不願付出努力', work:'正：專注學習與精進　逆：粗製濫造', health:'正：建立健康習慣　逆：三分鐘熱度', memory:'工匠坐在板凳前專心打造金幣' },
+  { num:'9', name:'錢幣9', up:['豐盛','獨立自主','成就'], rev:['物質損失','過度依賴','假象繁榮'], love:'正：不需要依賴任何人的自信　逆：用財富掩蓋空虛', work:'正：自力更生的成就感　逆：依賴他人', health:'正：自我照顧做得好　逆：物質過剩但身心空虛', memory:'貴婦在葡萄園獨享豐收，頭戴假鳥' },
+  { num:'10', name:'錢幣10', up:['家族財富','世代傳承','圓滿'], rev:['家族問題','遺產糾紛','財務崩潰'], love:'正：穩固家庭與傳承　逆：家族干涉', work:'正：建立長久事業　逆：財務糾紛', health:'正：家族傳承健康習慣　逆：家族遺傳疾病', memory:'老人與家人在城門下，周圍有十枚金幣' },
+  { num:'Page', name:'錢幣侍者', up:['學習','新機會','實際計畫'], rev:['缺乏計畫','揮霍','拖延'], love:'正：慢慢建立感情基礎　逆：不切實際', work:'正：踏實學習新技能　逆：懶散不努力', health:'正：認真學習養生　逆：只說不做', memory:'少年高舉金幣仔細研究，站在田野中' },
+  { num:'Knight', name:'錢幣騎士', up:['勤奮','可靠','穩定前進'], rev:['怠惰','固執','停滯'], love:'正：可靠穩重的追求　逆：過於保守無趣', work:'正：努力實幹的工作態度　逆：缺乏彈性', health:'正：規律養生　逆：固執拒絕改變', memory:'騎士騎著靜止的馬，低頭凝視手中金幣' },
+  { num:'Queen', name:'錢幣皇后', up:['實際','豐盛','滋養他人'], rev:['過度保護','焦慮財務','工作狂'], love:'正：實際溫暖地照顧伴侶　逆：控制慾強', work:'正：務實理財能力強　逆：財務焦慮', health:'正：重視身體照顧　逆：過度焦慮', memory:'皇后坐在花叢中，膝上有金幣，兔子在腳邊' },
+  { num:'King', name:'錢幣國王', up:['財富','事業成功','成熟土元素'], rev:['貪婪','物質化','財務失控'], love:'正：穩定成熟的伴侶　逆：只顧賺錢', work:'正：事業有成，財務穩健　逆：貪婪', health:'正：財力支持好的醫療　逆：忽視健康只顧財富', memory:'國王坐在鑲金葡萄藤寶座上，腳下踩金幣' },
+];
+
+const INNER_LIGHT_CARDS = [
+  {g:'確認卡',cards:['永生的玫瑰 The Ever-unfolding Rose','否 No','是 Yes','你已經在做了 You\'re Already Doing It']},
+  {g:'詢問卡',cards:['校準你的生活 Align Your Life','回應召喚 Answer the Call','界線 Boundaries','崩解 The Crumbling','不要為了迎合而削弱你的光 Don\'t Dim to Fit in','鏡子 Mirror','女祭司 Priestess','星辰之母 Star Mother','星光種子 Starseed','信任不安感 Trust the Niggle','信任你的道路 Trust Your Path','女戰士 Warrior Woman']},
+  {g:'行動卡',cards:['打破鎖鍊 Break the Chain','與生命共舞 Dance with Life','深度的補給 Deep Replenishment','扎根 Get Grounded','點化 The Initiation','內在聖殿 Inner Temple','縱身一躍 Leap','玩耍 Play','分享你的聲音 Share Your Voice','玫瑰姊妹會 Sisterhood of the Rose','靈魂家族 Soul Family','休息一下 Take a Break']},
+  {g:'啟動卡',cards:['光的紀元 The Age of Light','耶穌的祖母，安娜 Anna, Grandmother of Jesus','覺醒 Awakening','誕生新時代 Birthing a New Age','光之議會 Council of Light','大匯聚 The Great Gathering','伊姆拉瑪 Imrama','地球守護者 Keepers of the Earth','光之柱 Pillar of Light','保護 Protection','蛻變 Transformation','掙脫 Unbound']},
+  {g:'傳送卡',cards:['阿卡莎 Akasha','列木里亞 Lemuria','參宿三星人 Mintakan','昴宿星團 Pleiades']},
+];
+
+const OMEN_G1 = [
+  {n:1,name:'愛'},{n:2,name:'女人'},{n:3,name:'男人'},{n:4,name:'家庭'},{n:5,name:'契約'},
+  {n:6,name:'協商、選擇'},{n:7,name:'偶然'},{n:8,name:'豐盛'},{n:9,name:'緩慢'},{n:10,name:'命運'},
+  {n:11,name:'聯盟'},{n:12,name:'孩童'},{n:13,name:'死亡、哀悼'},{n:14,name:'培養、知識'},{n:15,name:'誘惑'},
+  {n:16,name:'破產、倒閉'},{n:17,name:'成功'},{n:18,name:'祕密'},{n:19,name:'寧靜'},{n:20,name:'正義、平衡'},
+  {n:21,name:'旅行'},{n:22,name:'考驗'},{n:23,name:'大自然'},{n:24,name:'夏天'},{n:25,name:'城市'},
+  {n:26,name:'敵人'},{n:27,name:'孤獨'},{n:28,name:'誕生'},{n:29,name:'迅速、轉化'},{n:30,name:'春天'},
+  {n:31,name:'忠誠'},{n:32,name:'住院、治療'},{n:33,name:'提升'},{n:34,name:'網絡、人脈'},{n:35,name:'背信'},
+  {n:36,name:'分離'},{n:37,name:'秋天'},{n:38,name:'活力、力量'},{n:39,name:'冬天'},{n:40,name:'房屋'},
+  {n:41,name:'嫉妒'},{n:42,name:'疾病'},{n:43,name:'距離、道路'},{n:44,name:'經濟、協調'},
+];
+const OMEN_G2 = Array.from({length:22},(_,i)=>({n:i+45,name:`數字 ${i+1}`}));
+const OMEN_G3 = [
+  {n:67,name:'理解的關鍵'},{n:68,name:'業力考驗'},{n:69,name:'祈禱'},{n:70,name:'為你捎來的訊息'},
+  {n:71,name:'上天的庇護'},{n:72,name:'靈魂伴侶'},{n:73,name:'共時性'},{n:74,name:'人生的十字路口'},
+  {n:75,name:'命運之輪'},{n:76,name:'和平、平靜'},{n:77,name:'心愛的人正守護著你'},
+];
+
+// All tarot cards combined for selection
+const ALL_TAROT = [
+  ...MAJOR_ARCANA.map(c=>({...c, suit:'major'})),
+  ...MINOR_WANDS.map(c=>({...c, suit:'wands'})),
+  ...MINOR_CUPS.map(c=>({...c, suit:'cups'})),
+  ...MINOR_SWORDS.map(c=>({...c, suit:'swords'})),
+  ...MINOR_PENTS.map(c=>({...c, suit:'pents'})),
+];
+
+// ═══════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════
+
+let records = JSON.parse(localStorage.getItem('divRecords') || '{}');
+let calYear = new Date().getFullYear();
+let calMonth = new Date().getMonth();
+let currentModalDate = null;
+let selectedQQPos = '';
+let selectedDDPos = '';
+let selectedQQTurtle = null;
+let selectedILCards = new Set();
+
+// ═══════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════
+
+function init() {
+  // Set today's date
+  document.getElementById('recordDate').value = todayStr();
+
+  // Build deck selects
+  buildCardSelect('qqCard', MAJOR_ARCANA, true);
+  document.getElementById('ddDeck').addEventListener('change', buildDDSelect);
+  buildDDSelect();
+
+  // Build calendar
+  renderCalendar();
+
+  // Build study panels
+  renderStudyPanels();
+
+  // Build turtle grids
+  renderTurtleGrid('qqTurtleGrid', true);
+  renderTurtleLibrary();
+
+  // Build oracle
+  renderInnerLight();
+  buildOmenSelects();
+
+  // Cal day headers
+  const headers = ['日','一','二','三','四','五','六'];
+  const hEl = document.getElementById('calDayHeaders');
+  headers.forEach(h => {
+    const d = document.createElement('div');
+    d.className = 'cal-day-header';
+    d.textContent = h;
+    hEl.appendChild(d);
+  });
+}
+
+function todayStr() {
+  return new Date().toISOString().split('T')[0];
+}
+
+// ═══════════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════════
+
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  event.target.classList.add('active');
+
+  if (id === 'calendar') renderCalendar();
+}
+
+// ═══════════════════════════════════════════════
+// CARD SELECTS
+// ═══════════════════════════════════════════════
+
+function buildCardSelect(selId, cards, majorOnly) {
+  const sel = document.getElementById(selId);
+  sel.innerHTML = '<option value="">— 選擇牌 —</option>';
+  cards.forEach(c => {
+    const opt = document.createElement('option');
+    opt.value = c.name;
+    opt.textContent = (c.num ? `${c.num}. ` : '') + c.name;
+    sel.appendChild(opt);
+  });
+}
+
+function buildDDSelect() {
+  const deck = document.getElementById('ddDeck').value;
+  const cards = deck === 'panda' ? MAJOR_ARCANA : ALL_TAROT;
+  buildCardSelect('ddCard', deck === 'panda' ? MAJOR_ARCANA : ALL_TAROT, false);
+  if (deck !== 'panda') {
+    const sel = document.getElementById('ddCard');
+    sel.innerHTML = '<option value="">— 選擇牌 —</option>';
+    const groups = {
+      '✨ 大阿爾克那': MAJOR_ARCANA,
+      '🔥 權杖': MINOR_WANDS,
+      '💧 聖杯': MINOR_CUPS,
+      '⚔️ 寶劍': MINOR_SWORDS,
+      '🪙 錢幣': MINOR_PENTS,
+    };
+    Object.entries(groups).forEach(([g, arr]) => {
+      const grp = document.createElement('optgroup');
+      grp.label = g;
+      arr.forEach(c => {
+        const opt = document.createElement('option');
+        opt.value = c.name;
+        opt.textContent = c.name;
+        grp.appendChild(opt);
+      });
+      sel.appendChild(grp);
+    });
+  }
+}
+
+function updateQQPreview() {
+  const val = document.getElementById('qqCard').value;
+  const card = MAJOR_ARCANA.find(c => c.name === val);
+  const el = document.getElementById('qqCardPreview');
+  if (!card) { el.innerHTML = ''; return; }
+  el.innerHTML = `<div class="oracle-card-selected mt8">
+    <b>${card.star || ''} ${card.name}</b><br>
+    <span class="text-xs">${card.archetype}</span>
+  </div>`;
+}
+
+function updateDDCard() {
+  const val = document.getElementById('ddCard').value;
+  const card = ALL_TAROT.find(c => c.name === val);
+  const el = document.getElementById('ddCardPreview');
+  if (!card) { el.innerHTML = ''; return; }
+  el.innerHTML = `<div class="oracle-card-selected">
+    <b>${card.name}</b> — ${card.archetype || card.up.join('・')}
+  </div>`;
+}
+
+// ═══════════════════════════════════════════════
+// POSITION TOGGLE
+// ═══════════════════════════════════════════════
+
+function setPos(deck, pos) {
+  if (deck === 'qq') {
+    selectedQQPos = pos;
+    document.getElementById('qqPosUp').className = 'pos-btn' + (pos==='upright' ? ' selected-upright' : '');
+    document.getElementById('qqPosRev').className = 'pos-btn' + (pos==='reversed' ? ' selected-reversed' : '');
+  } else {
+    selectedDDPos = pos;
+    document.getElementById('ddPosUp').className = 'pos-btn' + (pos==='upright' ? ' selected-upright' : '');
+    document.getElementById('ddPosRev').className = 'pos-btn' + (pos==='reversed' ? ' selected-reversed' : '');
+  }
+}
+
+// ═══════════════════════════════════════════════
+// TURTLE GRID (today record)
+// ═══════════════════════════════════════════════
+
+function renderTurtleGrid(containerId, selectable) {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  el.innerHTML = '';
+  TURTLES.forEach(t => {
+    const d = document.createElement('div');
+    d.className = 'turtle-card';
+    d.id = 'tg_' + t.id;
+    d.innerHTML = `<div class="turtle-emoji">${t.emoji}</div>
+      <div class="turtle-name">${t.name}</div>
+      <div class="turtle-stone">${t.stone}</div>
+      <div class="turtle-energy">${t.energy.substring(0,12)}...</div>`;
+    if (selectable) {
+      d.onclick = () => selectTurtle(t.id);
+    }
+    el.appendChild(d);
+  });
+}
+
+function selectTurtle(id) {
+  selectedQQTurtle = id;
+  document.querySelectorAll('#qqTurtleGrid .turtle-card').forEach(c => c.classList.remove('selected'));
+  const el = document.getElementById('tg_' + id);
+  if (el) el.classList.add('selected');
+}
+
+// ═══════════════════════════════════════════════
+// TURTLE LIBRARY
+// ═══════════════════════════════════════════════
+
+function renderTurtleLibrary() {
+  const el = document.getElementById('turtleLibrary');
+  TURTLES.forEach(t => {
+    const d = document.createElement('div');
+    d.className = 'turtle-card';
+    d.style.borderColor = t.color + '44';
+    d.innerHTML = `<div class="turtle-emoji">${t.emoji}</div>
+      <div class="turtle-name" style="color:${t.color}">${t.name}</div>
+      <div class="turtle-stone">${t.stone}</div>
+      <div class="turtle-energy mt8" style="font-size:11px;color:var(--text2);">${t.energy}</div>`;
+    d.onclick = () => openTurtleModal(t);
+    el.appendChild(d);
+  });
+}
+
+function openTurtleModal(t) {
+  document.getElementById('turtleModalTitle').textContent = `${t.emoji} ${t.name}`;
+  document.getElementById('turtleModalContent').innerHTML = `
+    <div style="text-align:center;margin-bottom:16px;">
+      <div style="font-size:60px;margin-bottom:8px;">${t.emoji}</div>
+      <div style="font-size:20px;font-weight:700;color:${t.color}">${t.name}</div>
+    </div>
+    <div class="card" style="border-color:${t.color}44;">
+      <div class="text-xs mb8">水晶材質</div>
+      <div style="font-size:15px;font-weight:600;color:var(--text)">${t.stone}</div>
+    </div>
+    <div class="card">
+      <div class="text-xs mb8">✨ 能量訊息</div>
+      <div style="font-size:14px;color:var(--accent2);line-height:1.6">${t.energy}</div>
+    </div>`;
+  document.getElementById('turtleModal').classList.add('open');
+}
+
+function closeTurtleModal() {
+  document.getElementById('turtleModal').classList.remove('open');
+}
+
+// ═══════════════════════════════════════════════
+// ORACLE QUICK PICK
+// ═══════════════════════════════════════════════
+
+function updateOracleQuick() {
+  const type = document.getElementById('oracleType').value;
+  const el = document.getElementById('oracleQuickPick');
+  if (!type) { el.innerHTML = ''; return; }
+  if (type === 'inner') {
+    el.innerHTML = `<select id="oracleQuickSel" style="width:100%">
+      <option value="">— 選擇牌 —</option>
+      ${INNER_LIGHT_CARDS.flatMap(g=>g.cards.map(c=>`<option value="${c}">${c}</option>`)).join('')}
+    </select>`;
+  } else {
+    const allOmen = [...OMEN_G1, ...OMEN_G2, ...OMEN_G3];
+    el.innerHTML = `<select id="oracleQuickSel" style="width:100%">
+      <option value="">— 選擇牌 —</option>
+      ${allOmen.map(c=>`<option value="${c.n}.${c.name}">${c.n}. ${c.name}</option>`).join('')}
+    </select>`;
+  }
+}
+
+// ═══════════════════════════════════════════════
+// SAVE RECORD
+// ═══════════════════════════════════════════════
+
+function saveRecord() {
+  const date = document.getElementById('recordDate').value;
+  if (!date) { showSaveMsg('請選擇日期！', 'red'); return; }
+
+  const quickOracleSel = document.getElementById('oracleQuickSel');
+  const record = {
+    date,
+    qq: {
+      card: document.getElementById('qqCard').value,
+      pos: selectedQQPos,
+      turtle: selectedQQTurtle,
+    },
+    dd: {
+      deck: document.getElementById('ddDeck').value,
+      card: document.getElementById('ddCard').value,
+      pos: selectedDDPos,
+    },
+    oracle: {
+      type: document.getElementById('oracleType').value,
+      card: quickOracleSel ? quickOracleSel.value : '',
+    },
+    event: document.getElementById('eventText').value,
+    notes: document.getElementById('notesText').value,
+    verify: document.getElementById('verifySelect').value,
+    savedAt: new Date().toISOString(),
+  };
+
+  records[date] = record;
+  localStorage.setItem('divRecords', JSON.stringify(records));
+  showSaveMsg('✅ 記錄已儲存！', 'green');
+  renderCalendar();
+}
+
+function showSaveMsg(msg, color) {
+  const el = document.getElementById('saveMsg');
+  el.textContent = msg;
+  el.style.color = color === 'green' ? 'var(--green)' : 'var(--red)';
+  setTimeout(() => el.textContent = '', 3000);
+}
+
+function clearTodayForm() {
+  document.getElementById('qqCard').value = '';
+  document.getElementById('qqCardPreview').innerHTML = '';
+  document.getElementById('ddCard').value = '';
+  document.getElementById('ddCardPreview').innerHTML = '';
+  document.getElementById('oracleType').value = '';
+  document.getElementById('oracleQuickPick').innerHTML = '';
+  document.getElementById('eventText').value = '';
+  document.getElementById('notesText').value = '';
+  document.getElementById('verifySelect').value = '';
+  selectedQQPos = ''; selectedDDPos = '';
+  selectedQQTurtle = null;
+  document.getElementById('qqPosUp').className = 'pos-btn';
+  document.getElementById('qqPosRev').className = 'pos-btn';
+  document.getElementById('ddPosUp').className = 'pos-btn';
+  document.getElementById('ddPosRev').className = 'pos-btn';
+  document.querySelectorAll('#qqTurtleGrid .turtle-card').forEach(c=>c.classList.remove('selected'));
+}
+
+// ═══════════════════════════════════════════════
+// CALENDAR
+// ═══════════════════════════════════════════════
+
+function changeMonth(delta) {
+  calMonth += delta;
+  if (calMonth > 11) { calMonth = 0; calYear++; }
+  if (calMonth < 0) { calMonth = 11; calYear--; }
+  renderCalendar();
+}
+
+function renderCalendar() {
+  const monthNames = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+  document.getElementById('calMonthTitle').textContent = `${calYear} 年 ${monthNames[calMonth]}`;
+
+  const grid = document.getElementById('calGrid');
+  grid.innerHTML = '';
+
+  const firstDay = new Date(calYear, calMonth, 1).getDay();
+  const daysInMonth = new Date(calYear, calMonth+1, 0).getDate();
+  const today = todayStr();
+
+  // Empty cells
+  for (let i = 0; i < firstDay; i++) {
+    const d = document.createElement('div');
+    d.className = 'cal-day empty';
+    grid.appendChild(d);
+  }
+
+  for (let day = 1; day <= daysInMonth; day++) {
+    const dateStr = `${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+    const rec = records[dateStr];
+    const d = document.createElement('div');
+    d.className = 'cal-day' + (dateStr === today ? ' today' : '') + (rec ? ' has-record' : '');
+
+    let dotsHTML = '';
+    let turtleHTML = '';
+    if (rec) {
+      if (rec.qq?.card) dotsHTML += '<div class="cal-dot q" title="錢錢"></div>';
+      if (rec.dd?.card) dotsHTML += '<div class="cal-dot d" title="典典"></div>';
+      if (rec.oracle?.card) dotsHTML += '<div class="cal-dot o" title="神諭"></div>';
+      if (rec.qq?.turtle) {
+        const t = TURTLES.find(t=>t.id===rec.qq.turtle);
+        if (t) turtleHTML = `<div class="cal-turtle-mini">${t.emoji}</div>`;
+      }
+    }
+
+    d.innerHTML = `<div class="cal-day-num">${day}</div>
+      <div class="cal-dots">${dotsHTML}</div>
+      ${turtleHTML}`;
+
+    if (rec) d.onclick = () => openDayModal(dateStr);
+    grid.appendChild(d);
+  }
+
+  renderMonthSummary();
+  renderMonthRecordList();
+}
+
+function renderMonthSummary() {
+  const prefix = `${calYear}-${String(calMonth+1).padStart(2,'0')}`;
+  const monthRecs = Object.entries(records).filter(([d])=>d.startsWith(prefix));
+
+  const totalDays = monthRecs.length;
+  const qqCount = monthRecs.filter(([,r])=>r.qq?.card).length;
+  const ddCount = monthRecs.filter(([,r])=>r.dd?.card).length;
+  const verifyAccurate = monthRecs.filter(([,r])=>r.verify==='✅').length;
+
+  // Most used turtle
+  const turtleCounts = {};
+  monthRecs.forEach(([,r])=>{
+    if (r.qq?.turtle) turtleCounts[r.qq.turtle] = (turtleCounts[r.qq.turtle]||0)+1;
+  });
+  const topTurtleId = Object.entries(turtleCounts).sort((a,b)=>b[1]-a[1])[0]?.[0];
+  const topTurtle = TURTLES.find(t=>t.id===topTurtleId);
+
+  const monthNames = ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+  document.getElementById('monthSummary').innerHTML = `
+    <div class="flex gap8" style="align-items:center;justify-content:space-between;flex-wrap:wrap;">
+      <div>
+        <div style="font-size:13px;color:var(--text3);">本月總覽</div>
+        <div style="font-size:18px;font-weight:700;color:var(--accent2)">${calYear}年${monthNames[calMonth]}</div>
+      </div>
+      ${topTurtle ? `<div style="text-align:center;">
+        <div style="font-size:28px;">${topTurtle.emoji}</div>
+        <div style="font-size:10px;color:var(--gold);">本月守護龜</div>
+        <div style="font-size:11px;color:var(--text2)">${topTurtle.name}</div>
+      </div>` : ''}
+    </div>
+    <div class="summary-stats">
+      <div class="stat-box">
+        <div class="stat-num">${totalDays}</div>
+        <div class="stat-label">記錄天數</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num" style="color:var(--gold)">${qqCount}</div>
+        <div class="stat-label">錢錢記錄</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num" style="color:var(--accent2)">${ddCount}</div>
+        <div class="stat-label">典典記錄</div>
+      </div>
+    </div>
+    ${verifyAccurate > 0 ? `<div class="text-xs mt8" style="color:var(--green);">✅ 本月準確對應：${verifyAccurate} 次</div>` : ''}`;
+}
+
+function renderMonthRecordList() {
+  const prefix = `${calYear}-${String(calMonth+1).padStart(2,'0')}`;
+  const monthRecs = Object.entries(records)
+    .filter(([d])=>d.startsWith(prefix))
+    .sort((a,b)=>b[0].localeCompare(a[0]));
+
+  const el = document.getElementById('monthRecordList');
+  if (monthRecs.length === 0) {
+    el.innerHTML = '<div class="empty-state"><div class="emoji">🌙</div><div>本月尚無記錄</div></div>';
+    return;
+  }
+  el.innerHTML = monthRecs.map(([date, r]) => {
+    const t = r.qq?.turtle ? TURTLES.find(tt=>tt.id===r.qq.turtle) : null;
+    return `<div class="record-item" onclick="openDayModal('${date}')">
+      <div class="record-item-date">${date} ${r.verify||''}</div>
+      <div class="record-item-row">
+        ${r.qq?.card ? `<span class="badge qianqian">錢錢: ${r.qq.card.split(' ')[0]}</span>` : ''}
+        ${r.qq?.pos ? `<span class="badge ${r.qq.pos==='upright'?'upright':'reversed'}">${r.qq.pos==='upright'?'正':'逆'}</span>` : ''}
+        ${r.dd?.card ? `<span class="badge diandian">典典: ${r.dd.card.split(' ')[0]}</span>` : ''}
+        ${t ? `<span>${t.emoji}</span>` : ''}
+      </div>
+      ${r.event ? `<div class="text-xs mt8" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%">${r.event.substring(0,40)}${r.event.length>40?'...':''}</div>` : ''}
+    </div>`;
+  }).join('');
+}
+
+// ═══════════════════════════════════════════════
+// DAY MODAL
+// ═══════════════════════════════════════════════
+
+function openDayModal(dateStr) {
+  currentModalDate = dateStr;
+  const r = records[dateStr];
+  if (!r) return;
+
+  document.getElementById('modalTitle').textContent = `📅 ${dateStr}`;
+
+  const turtle = r.qq?.turtle ? TURTLES.find(t=>t.id===r.qq.turtle) : null;
+
+  document.getElementById('modalContent').innerHTML = `
+    ${r.qq?.card ? `<div class="card" style="margin-bottom:8px;">
+      <div class="flex gap8 mb8" style="align-items:center;justify-content:space-between;">
+        <span style="font-weight:700;color:var(--gold);">🐼 錢錢</span>
+        ${r.qq.pos ? `<span class="badge ${r.qq.pos==='upright'?'upright':'reversed'}">${r.qq.pos==='upright'?'🌅 正位':'🌒 逆位'}</span>` : ''}
+      </div>
+      <div style="font-size:14px;">${r.qq.card}</div>
+      ${turtle ? `<div class="mt8" style="display:flex;align-items:center;gap:8px;">
+        <span style="font-size:20px;">${turtle.emoji}</span>
+        <span style="font-size:12px;color:var(--gold)">${turtle.name}</span>
+        <span style="font-size:11px;color:var(--text3)">${turtle.stone}</span>
+      </div>` : ''}
+    </div>` : ''}
+
+    ${r.dd?.card ? `<div class="card" style="margin-bottom:8px;">
+      <div class="flex gap8 mb8" style="align-items:center;justify-content:space-between;">
+        <span style="font-weight:700;color:var(--accent2);">🃏 典典</span>
+        ${r.dd.pos ? `<span class="badge ${r.dd.pos==='upright'?'upright':'reversed'}">${r.dd.pos==='upright'?'🌅 正位':'🌒 逆位'}</span>` : ''}
+      </div>
+      <div style="font-size:14px;">${r.dd.card}</div>
+      <div style="font-size:11px;color:var(--text3)">${r.dd.deck==='panda'?'熊貓之道':'萊德偉特'}</div>
+    </div>` : ''}
+
+    ${r.oracle?.card ? `<div class="card" style="margin-bottom:8px;">
+      <div style="font-weight:700;color:var(--teal);margin-bottom:6px;">🔮 神諭卡</div>
+      <div style="font-size:13px;">${r.oracle.card}</div>
+    </div>` : ''}
+
+    ${r.event ? `<div class="card" style="margin-bottom:8px;">
+      <div class="text-xs mb4">📝 今日事件</div>
+      <div style="font-size:13px;line-height:1.6">${r.event}</div>
+    </div>` : ''}
+
+    ${r.notes ? `<div class="card" style="margin-bottom:8px;">
+      <div class="text-xs mb4">✍️ 解析備註</div>
+      <div style="font-size:13px;line-height:1.6">${r.notes}</div>
+    </div>` : ''}
+
+    ${r.verify ? `<div class="text-sm">驗證：${r.verify}</div>` : ''}
+  `;
+
+  document.getElementById('dayModal').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('dayModal').classList.remove('open');
+  currentModalDate = null;
+}
+
+function loadRecordToEdit() {
+  if (!currentModalDate) return;
+  const r = records[currentModalDate];
+  if (!r) return;
+
+  // Switch to today page and populate
+  showPage('today');
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.nav-btn')[1].classList.add('active');
+
+  document.getElementById('recordDate').value = r.date;
+  document.getElementById('qqCard').value = r.qq?.card || '';
+  updateQQPreview();
+  if (r.qq?.pos) setPos('qq', r.qq.pos);
+  if (r.qq?.turtle) selectTurtle(r.qq.turtle);
+
+  document.getElementById('ddDeck').value = r.dd?.deck || 'panda';
+  buildDDSelect();
+  setTimeout(()=>{
+    document.getElementById('ddCard').value = r.dd?.card || '';
+    updateDDCard();
+  }, 50);
+  if (r.dd?.pos) setPos('dd', r.dd.pos);
+
+  document.getElementById('oracleType').value = r.oracle?.type || '';
+  updateOracleQuick();
+
+  document.getElementById('eventText').value = r.event || '';
+  document.getElementById('notesText').value = r.notes || '';
+  document.getElementById('verifySelect').value = r.verify || '';
+
+  closeModal();
+}
+
+function deleteCurrentRecord() {
+  if (!currentModalDate) return;
+  if (!confirm(`確定刪除 ${currentModalDate} 的記錄？`)) return;
+  delete records[currentModalDate];
+  localStorage.setItem('divRecords', JSON.stringify(records));
+  closeModal();
+  renderCalendar();
+}
+
+// ═══════════════════════════════════════════════
+// STUDY PANELS
+// ═══════════════════════════════════════════════
+
+function renderStudyPanels() {
+  renderStudyCards('studyPanelMajor', MAJOR_ARCANA, true);
+  renderStudyCards('studyPanelWands', MINOR_WANDS, false);
+  renderStudyCards('studyPanelCups', MINOR_CUPS, false);
+  renderStudyCards('studyPanelSwords', MINOR_SWORDS, false);
+  renderStudyCards('studyPanelPents', MINOR_PENTS, false);
+
+  // Progress
+  const allCards = [...MAJOR_ARCANA, ...MINOR_WANDS, ...MINOR_CUPS, ...MINOR_SWORDS, ...MINOR_PENTS];
+  const total = allCards.length;
+  const learned = parseInt(localStorage.getItem('studyProgress') || '10');
+  const pct = Math.round(learned/total*100);
+  document.getElementById('studyProgress').innerHTML = `
+    <div class="flex gap8 mb8" style="align-items:center;justify-content:space-between;">
+      <div style="font-weight:600;color:var(--accent2)">學習進度</div>
+      <div class="text-xs">${learned} / ${total} 張（${pct}%）</div>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+    <div class="text-xs mt8">提示：學完一張可在備註欄標記 ✅</div>`;
+}
+
+function renderStudyCards(panelId, cards, isMajor) {
+  const el = document.getElementById(panelId);
+  el.innerHTML = cards.map(c => `
+    <div class="learn-card">
+      <div class="learn-card-header">
+        <div>
+          <div class="learn-card-title">${c.name}</div>
+          <div class="learn-card-num">${c.num ? `No.${c.num}` : ''} ${c.star||''}</div>
+          <div class="learn-card-archetype">${c.archetype || ''}</div>
+        </div>
+      </div>
+      <div style="font-size:11px;color:var(--text3);margin-bottom:4px;">正位關鍵詞</div>
+      <div class="keyword-row">
+        ${c.up.map(k=>`<span class="keyword up">${k}</span>`).join('')}
+      </div>
+      <div style="font-size:11px;color:var(--text3);margin-bottom:4px;margin-top:8px;">逆位關鍵詞</div>
+      <div class="keyword-row">
+        ${c.rev.map(k=>`<span class="keyword rev">${k}</span>`).join('')}
+      </div>
+      <table class="interp-table mt8">
+        <tr><td>💕 感情</td><td>${c.love}</td></tr>
+        <tr><td>💼 事業</td><td>${c.work}</td></tr>
+        <tr><td>🌿 健康</td><td>${c.health}</td></tr>
+      </table>
+      ${c.memory ? `<div class="memory-tip">${c.memory}</div>` : ''}
+    </div>`).join('');
+}
+
+function switchStudyTab(id) {
+  document.querySelectorAll('.study-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.study-panel').forEach(p=>p.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('studyPanel' + id.charAt(0).toUpperCase() + id.slice(1)).classList.add('active');
+}
+
+// ═══════════════════════════════════════════════
+// ORACLE: INNER LIGHT
+// ═══════════════════════════════════════════════
+
+function renderInnerLight() {
+  const el = document.getElementById('innerLightGrid');
+  INNER_LIGHT_CARDS.forEach(group => {
+    const hdr = document.createElement('div');
+    hdr.style.cssText = 'grid-column:1/-1;font-size:11px;color:var(--teal);font-weight:700;margin-top:8px;';
+    hdr.textContent = group.g;
+    el.appendChild(hdr);
+    group.cards.forEach(c => {
+      const d = document.createElement('div');
+      d.className = 'il-card-item';
+      d.textContent = c;
+      d.onclick = () => toggleILCard(c, d);
+      el.appendChild(d);
+    });
+  });
+}
+
+function toggleILCard(name, el) {
+  if (selectedILCards.has(name)) {
+    selectedILCards.delete(name);
+    el.classList.remove('selected');
+  } else {
+    selectedILCards.add(name);
+    el.classList.add('selected');
+  }
+  updateILSelected();
+}
+
+function updateILSelected() {
+  const el = document.getElementById('innerLightSelected');
+  if (selectedILCards.size === 0) { el.innerHTML = ''; return; }
+  el.innerHTML = `<div class="oracle-card-selected">
+    <div class="text-xs mb8">已選擇 ${selectedILCards.size} 張</div>
+    ${[...selectedILCards].map(c=>`<div>✨ ${c}</div>`).join('')}
+  </div>`;
+}
+
+// ═══════════════════════════════════════════════
+// ORACLE: OMEN
+// ═══════════════════════════════════════════════
+
+function buildOmenSelects() {
+  const s1 = document.getElementById('omenG1');
+  OMEN_G1.forEach(c => {
+    const opt = document.createElement('option');
+    opt.value = c.n;
+    opt.textContent = `${c.n}. ${c.name}`;
+    s1.appendChild(opt);
+  });
+  const s2 = document.getElementById('omenG2');
+  OMEN_G2.forEach(c => {
+    const opt = document.createElement('option');
+    opt.value = c.n;
+    opt.textContent = `${c.n}. ${c.name}`;
+    s2.appendChild(opt);
+  });
+  const s3 = document.getElementById('omenG3');
+  OMEN_G3.forEach(c => {
+    const opt = document.createElement('option');
+    opt.value = c.n;
+    opt.textContent = `${c.n}. ${c.name}`;
+    s3.appendChild(opt);
+  });
+}
+
+function calcOmenSum() {
+  const getVals = id => Array.from(document.getElementById(id).selectedOptions).map(o=>parseInt(o.value));
+  const nums = [...getVals('omenG1'), ...getVals('omenG2'), ...getVals('omenG3')];
+
+  if (nums.length === 0) {
+    document.getElementById('omenSumDisplay').innerHTML = '';
+    return;
+  }
+
+  const rawSum = nums.reduce((a,b)=>a+b, 0);
+
+  // Digit sum reduction to ≤77
+  let reduced = rawSum;
+  while (reduced > 77) {
+    reduced = String(reduced).split('').reduce((a,b)=>a+parseInt(b), 0);
+  }
+
+  const allOmen = [...OMEN_G1, ...OMEN_G2, ...OMEN_G3];
+  const resultCard = allOmen.find(c=>c.n===reduced);
+
+  document.getElementById('omenSumDisplay').innerHTML = `
+    <div class="oracle-sum-display">
+      <div class="oracle-sum-label">選取牌號：${nums.join(' + ')} = ${rawSum}</div>
+      ${rawSum !== reduced ? `<div class="oracle-sum-label">數字化簡：→ ${reduced}</div>` : ''}
+      <div class="oracle-sum-num">${reduced}</div>
+    </div>
+    ${resultCard ? `<div class="oracle-result-card">
+      <div class="oracle-result-num">No.${resultCard.n}</div>
+      <div class="oracle-result-name">${resultCard.name}</div>
+      <div class="text-xs mt8">✨ 這是你的對應牌</div>
+    </div>` : ''}`;
+}
+
+// ═══════════════════════════════════════════════
+// BOOT
+// ═══════════════════════════════════════════════
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
 </body>
 </html>
