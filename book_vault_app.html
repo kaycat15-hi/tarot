@@ -1,0 +1,515 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#1a1a2e;--paper:#f8f5f0;--spine:#2d3561;--gold:#c9a84c;--muted:#6b6b8a;
+  --card-bg:var(--color-background-primary);--surface:var(--color-background-secondary);
+  --border:var(--color-border-tertiary);--text:var(--color-text-primary);--sub:var(--color-text-secondary)
+}
+body{font-family:var(--font-sans);background:transparent;color:var(--text);min-height:100vh}
+.app{max-width:420px;margin:0 auto;padding:0 0 80px}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:14px 16px 10px;border-bottom:0.5px solid var(--border)}
+.topbar h1{font-size:17px;font-weight:500;letter-spacing:.3px}
+.topbar-right{display:flex;gap:8px}
+.icon-btn{width:36px;height:36px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--text);font-size:18px;transition:background .15s}
+.icon-btn:hover{background:var(--surface)}
+.tabs{display:flex;border-bottom:0.5px solid var(--border);background:var(--card-bg);position:sticky;top:0;z-index:10}
+.tab{flex:1;padding:10px 0;font-size:13px;font-weight:400;color:var(--sub);border:none;background:transparent;cursor:pointer;border-bottom:2px solid transparent;transition:all .15s}
+.tab.active{color:var(--text);border-bottom-color:var(--spine);font-weight:500}
+.content{padding:0 16px}
+.search-bar{display:flex;gap:8px;padding:12px 0 8px}
+.search-bar input{flex:1;height:36px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:var(--card-bg);color:var(--text);padding:0 12px;font-size:14px}
+.filter-row{display:flex;gap:6px;overflow-x:auto;padding-bottom:8px;scrollbar-width:none}
+.filter-row::-webkit-scrollbar{display:none}
+.chip{white-space:nowrap;padding:5px 12px;border-radius:20px;border:0.5px solid var(--border);background:transparent;color:var(--sub);font-size:12px;cursor:pointer;transition:all .15s}
+.chip.active{background:#2d3561;border-color:#2d3561;color:#fff}
+.book-list{display:flex;flex-direction:column;gap:10px;padding:8px 0}
+.book-card{background:var(--card-bg);border:0.5px solid var(--border);border-radius:var(--border-radius-lg);padding:12px 14px;cursor:pointer;transition:border-color .15s;display:flex;gap:12px;align-items:flex-start}
+.book-card:hover{border-color:var(--color-border-primary)}
+.book-spine{width:8px;border-radius:4px;flex-shrink:0;align-self:stretch;min-height:64px}
+.book-info{flex:1;min-width:0}
+.book-title{font-size:14px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.book-meta{font-size:12px;color:var(--sub);margin-top:3px}
+.book-tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+.tag{font-size:11px;padding:2px 8px;border-radius:10px;background:var(--surface);color:var(--sub)}
+.tag.status-unread{background:#faeeda;color:#633806}
+.tag.status-reading{background:#e6f1fb;color:#0c447c}
+.tag.status-done{background:#eaf3de;color:#27500a}
+.tag.status-drop{background:#fcebeb;color:#791f1f}
+.book-right{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0}
+.book-price{font-size:13px;font-weight:500}
+.stars{color:#c9a84c;font-size:13px;letter-spacing:1px}
+.empty{text-align:center;padding:40px 20px;color:var(--sub)}
+.empty i{font-size:40px;margin-bottom:12px;display:block}
+.fab{position:fixed;bottom:24px;right:24px;width:52px;height:52px;border-radius:50%;background:#2d3561;border:none;color:#fff;font-size:24px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 12px rgba(45,53,97,.3);z-index:100;transition:transform .15s}
+.fab:hover{transform:scale(1.05)}
+.modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;display:flex;align-items:flex-end}
+.modal{background:var(--card-bg);border-radius:20px 20px 0 0;width:100%;max-height:90vh;overflow-y:auto;padding:0 0 env(safe-area-inset-bottom)}
+.modal-handle{width:36px;height:4px;background:var(--border);border-radius:2px;margin:12px auto 4px}
+.modal-header{display:flex;align-items:center;justify-content:space-between;padding:8px 16px 12px;border-bottom:0.5px solid var(--border)}
+.modal-header h2{font-size:16px;font-weight:500}
+.modal-body{padding:16px}
+.form-section{margin-bottom:16px}
+.form-label{font-size:12px;color:var(--sub);margin-bottom:6px;display:block}
+.form-input{width:100%;height:38px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:var(--card-bg);color:var(--text);padding:0 12px;font-size:14px}
+.form-select{width:100%;height:38px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:var(--card-bg);color:var(--text);padding:0 10px;font-size:14px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.form-textarea{width:100%;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:var(--card-bg);color:var(--text);padding:8px 12px;font-size:14px;resize:vertical;min-height:70px}
+.chip-group{display:flex;flex-wrap:wrap;gap:6px}
+.chip-sel{padding:5px 12px;border-radius:20px;border:0.5px solid var(--border);background:transparent;color:var(--sub);font-size:12px;cursor:pointer;transition:all .15s}
+.chip-sel.active{background:#2d3561;border-color:#2d3561;color:#fff}
+.btn-primary{width:100%;height:44px;background:#2d3561;border:none;border-radius:var(--border-radius-lg);color:#fff;font-size:15px;font-weight:500;cursor:pointer;margin-top:8px;transition:opacity .15s}
+.btn-primary:hover{opacity:.9}
+.btn-scan{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;height:44px;border:1.5px dashed var(--color-border-secondary);border-radius:var(--border-radius-lg);background:transparent;color:var(--sub);font-size:14px;cursor:pointer;margin-bottom:10px;transition:all .15s}
+.btn-scan:hover{border-color:#2d3561;color:#2d3561}
+.isbn-row{display:flex;gap:8px}
+.isbn-row input{flex:1}
+.isbn-row button{height:38px;padding:0 14px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:transparent;color:var(--text);font-size:13px;cursor:pointer;white-space:nowrap}
+.isbn-row button:hover{background:var(--surface)}
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:14px 0}
+.stat-card{background:var(--surface);border-radius:var(--border-radius-md);padding:14px;text-align:center}
+.stat-num{font-size:22px;font-weight:500}
+.stat-label{font-size:12px;color:var(--sub);margin-top:2px}
+.stat-bar-row{background:var(--card-bg);border:0.5px solid var(--border);border-radius:var(--border-radius-lg);padding:14px;margin-bottom:10px}
+.stat-bar-title{font-size:13px;font-weight:500;margin-bottom:10px}
+.bar-item{margin-bottom:8px}
+.bar-label{display:flex;justify-content:space-between;font-size:12px;color:var(--sub);margin-bottom:3px}
+.bar-track{height:6px;background:var(--surface);border-radius:3px;overflow:hidden}
+.bar-fill{height:100%;border-radius:3px;background:#2d3561;transition:width .5s}
+.detail-modal{background:var(--card-bg);border-radius:20px 20px 0 0;width:100%;max-height:92vh;overflow-y:auto;padding:0 0 env(safe-area-inset-bottom)}
+.detail-hero{padding:20px 16px 14px;border-bottom:0.5px solid var(--border)}
+.detail-title{font-size:18px;font-weight:500;line-height:1.3;margin-bottom:4px}
+.detail-author{font-size:14px;color:var(--sub)}
+.detail-fields{padding:14px 16px}
+.field-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:0.5px solid var(--border);font-size:13px}
+.field-row:last-child{border-bottom:none}
+.field-key{color:var(--sub)}
+.field-val{font-weight:500;text-align:right;max-width:60%}
+.rating-row{display:flex;gap:4px}
+.star-btn{background:none;border:none;cursor:pointer;font-size:20px;color:#ddd;transition:color .1s}
+.star-btn.lit{color:#c9a84c}
+.delete-btn{width:100%;height:40px;border:0.5px solid var(--color-border-danger);border-radius:var(--border-radius-md);background:transparent;color:var(--color-text-danger);font-size:14px;cursor:pointer;margin-top:8px}
+.delete-btn:hover{background:var(--color-background-danger)}
+.lookup-hint{font-size:11px;color:var(--color-text-success);margin-top:4px;display:none}
+</style>
+
+<div class="app" id="app">
+  <div class="topbar">
+    <h1><i class="ti ti-books" aria-hidden="true" style="font-size:18px;vertical-align:-2px;margin-right:6px"></i>書庫 BookVault</h1>
+    <div class="topbar-right">
+      <button class="icon-btn" onclick="showImport()" title="匯入"><i class="ti ti-upload" aria-hidden="true"></i></button>
+      <button class="icon-btn" onclick="exportData()" title="匯出"><i class="ti ti-download" aria-hidden="true"></i></button>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('list',this)">書架</button>
+    <button class="tab" onclick="switchTab('stats',this)">統計</button>
+  </div>
+
+  <div class="content">
+    <div id="tab-list">
+      <div class="search-bar">
+        <input type="text" placeholder="搜尋書名、作者、系列…" id="searchInput" oninput="renderList()">
+      </div>
+      <div class="filter-row" id="filterRow"></div>
+      <div class="book-list" id="bookList"></div>
+    </div>
+
+    <div id="tab-stats" style="display:none">
+      <div class="stats-grid" id="statsGrid"></div>
+      <div id="statsBars"></div>
+    </div>
+  </div>
+</div>
+
+<button class="fab" onclick="openAdd()" aria-label="新增書籍"><i class="ti ti-plus" aria-hidden="true"></i></button>
+
+<div id="modalBg" class="modal-backdrop" style="display:none" onclick="closeModalBg(event)">
+  <div class="modal" id="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-header">
+      <h2 id="modalTitle">新增書籍</h2>
+      <button class="icon-btn" onclick="closeModal()"><i class="ti ti-x" aria-hidden="true"></i></button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<div id="detailBg" class="modal-backdrop" style="display:none" onclick="closeDetailBg(event)">
+  <div class="detail-modal" id="detailModal"></div>
+</div>
+
+<script>
+const SPINE_COLORS={
+  '漫畫':'#7F77DD','輕小說':'#1D9E75','小說':'#D85A30',
+  '圖像書':'#D4537E','知識書':'#378ADD','雜誌':'#BA7517','其他':'#888780'
+};
+const STATUS_MAP={'未讀':'status-unread','在讀':'status-reading','讀完':'status-done','棄追':'status-drop'};
+const TYPE_LIST=['漫畫','輕小說','小說','圖像書','知識書','雜誌','其他'];
+const READ_LIST=['未讀','在讀','讀完','棄追'];
+const FORMAT_LIST=['單行本','整套','全一冊','盒裝'];
+const VER_LIST=['普版','首刷書腰版','限刷限定版','首刷附錄版','特裝版'];
+const MEDIA_LIST=['實體書','電子書','圖書館借閱'];
+const NATURE_LIST=['本傳','外傳','公式'];
+const SERIAL_LIST=['連載中','已完結','斷尾'];
+
+let db=[];
+try{const s=localStorage.getItem('bookvault');if(s)db=JSON.parse(s)}catch(e){}
+
+let filterType='全部';
+let editingId=null;
+
+function save(){try{localStorage.setItem('bookvault',JSON.stringify(db))}catch(e){}}
+
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
+
+function switchTab(tab,el){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('tab-list').style.display=tab==='list'?'':'none';
+  document.getElementById('tab-stats').style.display=tab==='stats'?'':'none';
+  if(tab==='stats')renderStats();
+}
+
+function renderFilters(){
+  const row=document.getElementById('filterRow');
+  const types=['全部',...TYPE_LIST];
+  row.innerHTML=types.map(t=>`<button class="chip${t===filterType?' active':''}" onclick="setFilter('${t}')">${t}</button>`).join('');
+}
+
+function setFilter(t){filterType=t;renderFilters();renderList()}
+
+function renderList(){
+  const q=(document.getElementById('searchInput').value||'').toLowerCase();
+  let items=db.filter(b=>{
+    if(filterType!=='全部'&&b.type!==filterType)return false;
+    if(q&&!((b.title||'').toLowerCase().includes(q)||(b.author||'').toLowerCase().includes(q)||(b.series||'').toLowerCase().includes(q)))return false;
+    return true;
+  });
+  const list=document.getElementById('bookList');
+  if(!items.length){
+    list.innerHTML=`<div class="empty"><i class="ti ti-book-off" aria-hidden="true"></i>目前沒有書籍<br><small>點右下角 + 新增</small></div>`;
+    return;
+  }
+  list.innerHTML=items.map(b=>{
+    const sc=SPINE_COLORS[b.type]||'#888';
+    const st=STATUS_MAP[b.status]||'';
+    const stars=b.rating?'★'.repeat(b.rating)+'☆'.repeat(5-b.rating):'';
+    return`<div class="book-card" onclick="openDetail('${b.id}')">
+      <div class="book-spine" style="background:${sc}"></div>
+      <div class="book-info">
+        <div class="book-title">${b.title||'（無書名）'}${b.volume?' #'+b.volume:''}</div>
+        <div class="book-meta">${[b.author,b.publisher].filter(Boolean).join(' · ')}</div>
+        <div class="book-tags">
+          ${b.type?`<span class="tag">${b.type}</span>`:''}
+          ${b.status?`<span class="tag ${st}">${b.status}</span>`:''}
+          ${b.format?`<span class="tag">${b.format}</span>`:''}
+          ${b.media?`<span class="tag">${b.media}</span>`:''}
+          ${(b.tags||[]).map(t=>`<span class="tag">${t}</span>`).join('')}
+        </div>
+      </div>
+      <div class="book-right">
+        ${b.price?`<div class="book-price">NT$${parseInt(b.price).toLocaleString()}</div>`:''}
+        ${stars?`<div class="stars">${stars}</div>`:''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderStats(){
+  const total=db.length;
+  const totalMoney=db.reduce((s,b)=>s+(parseInt(b.price)||0),0);
+  const readDone=db.filter(b=>b.status==='讀完').length;
+  const reading=db.filter(b=>b.status==='在讀').length;
+  document.getElementById('statsGrid').innerHTML=`
+    <div class="stat-card"><div class="stat-num">${total}</div><div class="stat-label">藏書總計</div></div>
+    <div class="stat-card"><div class="stat-num">NT$${totalMoney.toLocaleString()}</div><div class="stat-label">總花費</div></div>
+    <div class="stat-card"><div class="stat-num">${readDone}</div><div class="stat-label">已讀完</div></div>
+    <div class="stat-card"><div class="stat-num">${reading}</div><div class="stat-label">在讀中</div></div>
+  `;
+  const typeCounts={};
+  TYPE_LIST.forEach(t=>typeCounts[t]=0);
+  db.forEach(b=>{if(b.type)typeCounts[b.type]=(typeCounts[b.type]||0)+1});
+  const max=Math.max(1,...Object.values(typeCounts));
+  const statusCounts={'未讀':0,'在讀':0,'讀完':0,'棄追':0};
+  db.forEach(b=>{if(b.status)statusCounts[b.status]=(statusCounts[b.status]||0)+1});
+  document.getElementById('statsBars').innerHTML=`
+    <div class="stat-bar-row">
+      <div class="stat-bar-title">依類型分布</div>
+      ${TYPE_LIST.map(t=>`<div class="bar-item">
+        <div class="bar-label"><span>${t}</span><span>${typeCounts[t]||0}</span></div>
+        <div class="bar-track"><div class="bar-fill" style="width:${Math.round((typeCounts[t]||0)/max*100)}%;background:${SPINE_COLORS[t]}"></div></div>
+      </div>`).join('')}
+    </div>
+    <div class="stat-bar-row">
+      <div class="stat-bar-title">依閱讀狀態</div>
+      ${['未讀','在讀','讀完','棄追'].map(s=>`<div class="bar-item">
+        <div class="bar-label"><span>${s}</span><span>${statusCounts[s]}</span></div>
+        <div class="bar-track"><div class="bar-fill" style="width:${Math.round(statusCounts[s]/(total||1)*100)}%"></div></div>
+      </div>`).join('')}
+    </div>
+  `;
+}
+
+function chipGroup(name,options,val){
+  return`<div class="chip-group">${options.map(o=>`<button type="button" class="chip-sel${o===val?' active':''}" onclick="formSelect('${name}','${o}',this)">${o}</button>`).join('')}</div>`;
+}
+
+let formData={};
+function formSelect(key,val,el){
+  formData[key]=val;
+  el.closest('.chip-group').querySelectorAll('.chip-sel').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function openAdd(){
+  editingId=null;
+  formData={status:'未讀',type:'漫畫',media:'實體書',format:'單行本',version:'普版',rating:0};
+  document.getElementById('modalTitle').textContent='新增書籍';
+  document.getElementById('modalBody').innerHTML=addForm(null);
+  document.getElementById('modalBg').style.display='flex';
+}
+
+function openEdit(id){
+  const b=db.find(x=>x.id===id);if(!b)return;
+  editingId=id;formData={...b};
+  document.getElementById('modalTitle').textContent='編輯書籍';
+  document.getElementById('modalBody').innerHTML=addForm(b);
+  document.getElementById('detailBg').style.display='none';
+  document.getElementById('modalBg').style.display='flex';
+}
+
+function addForm(b){
+  const v=b||{};
+  return`
+  <button class="btn-scan" onclick="handleScan()"><i class="ti ti-barcode" aria-hidden="true" style="font-size:20px"></i>掃描 ISBN 條碼</button>
+  <div class="form-section">
+    <label class="form-label">ISBN 手動輸入</label>
+    <div class="isbn-row">
+      <input class="form-input" id="f-isbn" type="text" inputmode="numeric" placeholder="9784088..." value="${v.isbn||''}">
+      <button onclick="lookupISBN()"><i class="ti ti-search" aria-hidden="true"></i> 查詢</button>
+    </div>
+    <div class="lookup-hint" id="lookupHint"><i class="ti ti-check"></i> 已自動帶入書名</div>
+  </div>
+  <div class="form-section">
+    <label class="form-label">書名 *</label>
+    <input class="form-input" id="f-title" type="text" placeholder="書名" value="${v.title||''}">
+  </div>
+  <div class="form-row">
+    <div>
+      <label class="form-label">作者</label>
+      <input class="form-input" id="f-author" type="text" placeholder="作者" value="${v.author||''}">
+    </div>
+    <div>
+      <label class="form-label">集數</label>
+      <input class="form-input" id="f-volume" type="text" inputmode="numeric" placeholder="01" value="${v.volume||''}">
+    </div>
+  </div>
+  <div class="form-section">
+    <label class="form-label">書籍類型</label>
+    ${chipGroup('type',TYPE_LIST,formData.type||v.type||'漫畫')}
+  </div>
+  <div class="form-section">
+    <label class="form-label">收藏形式</label>
+    ${chipGroup('media',MEDIA_LIST,formData.media||v.media||'實體書')}
+  </div>
+  <div class="form-section">
+    <label class="form-label">購入形式</label>
+    ${chipGroup('format',FORMAT_LIST,formData.format||v.format||'單行本')}
+  </div>
+  <div class="form-section">
+    <label class="form-label">版本</label>
+    ${chipGroup('version',VER_LIST,formData.version||v.version||'普版')}
+  </div>
+  <div class="form-section">
+    <label class="form-label">作品性質</label>
+    ${chipGroup('nature',NATURE_LIST,formData.nature||v.nature||'')}
+  </div>
+  <div class="form-section">
+    <label class="form-label">連載狀態</label>
+    ${chipGroup('serial',SERIAL_LIST,formData.serial||v.serial||'')}
+  </div>
+  <div class="form-section">
+    <label class="form-label">閱讀狀態</label>
+    ${chipGroup('status',READ_LIST,formData.status||v.status||'未讀')}
+  </div>
+  <div class="form-row">
+    <div>
+      <label class="form-label">出版社</label>
+      <input class="form-input" id="f-publisher" type="text" placeholder="出版社" value="${v.publisher||''}">
+    </div>
+    <div>
+      <label class="form-label">金額（NT$）</label>
+      <input class="form-input" id="f-price" type="text" inputmode="numeric" placeholder="180" value="${v.price||''}">
+    </div>
+  </div>
+  <div class="form-row">
+    <div>
+      <label class="form-label">系列名稱</label>
+      <input class="form-input" id="f-series" type="text" placeholder="系列名" value="${v.series||''}">
+    </div>
+    <div>
+      <label class="form-label">總集數</label>
+      <input class="form-input" id="f-totalvol" type="text" inputmode="numeric" placeholder="12" value="${v.totalvol||''}">
+    </div>
+  </div>
+  <div class="form-section">
+    <label class="form-label">評分</label>
+    <div class="rating-row" id="starRow">
+      ${[1,2,3,4,5].map(n=>`<button class="star-btn${(formData.rating||v.rating||0)>=n?' lit':''}" onclick="setRating(${n})" type="button">★</button>`).join('')}
+    </div>
+  </div>
+  <div class="form-section">
+    <label class="form-label">備註 / TAG（以逗號分隔）</label>
+    <textarea class="form-textarea" id="f-tags" placeholder="限定版、日文原版、生日禮物…">${(v.tags||[]).join(', ')}</textarea>
+  </div>
+  <button class="btn-primary" onclick="submitForm()">儲存書籍</button>`;
+}
+
+function setRating(n){
+  formData.rating=n;
+  document.querySelectorAll('#starRow .star-btn').forEach((b,i)=>{
+    b.classList.toggle('lit',i<n);
+  });
+}
+
+async function lookupISBN(){
+  const isbn=(document.getElementById('f-isbn').value||'').trim().replace(/-/g,'');
+  if(!isbn){alert('請輸入 ISBN');return}
+  try{
+    const r=await fetch(`https://openlibrary.org/api/books?bibkeys=ISBN:${isbn}&format=json&jscmd=data`);
+    const data=await r.json();
+    const key=`ISBN:${isbn}`;
+    if(data[key]){
+      const book=data[key];
+      if(book.title)document.getElementById('f-title').value=book.title;
+      if(book.authors&&book.authors.length)document.getElementById('f-author').value=book.authors.map(a=>a.name).join(', ');
+      if(book.publishers&&book.publishers.length)document.getElementById('f-publisher').value=book.publishers[0].name;
+      const hint=document.getElementById('lookupHint');
+      hint.style.display='block';
+      setTimeout(()=>hint.style.display='none',3000);
+    }else{alert('找不到此 ISBN 的資料，請手動輸入')}
+  }catch(e){alert('查詢失敗，請確認網路連線')}
+}
+
+function handleScan(){
+  if(!navigator.mediaDevices){alert('此裝置不支援相機掃碼，請手動輸入 ISBN');return}
+  alert('掃碼功能需要 https 環境及相機授權。請手動輸入 ISBN 後點「查詢」自動帶入書名。');
+}
+
+function submitForm(){
+  const title=document.getElementById('f-title').value.trim();
+  if(!title){alert('請輸入書名');return}
+  const tagsRaw=(document.getElementById('f-tags').value||'').split(',').map(t=>t.trim()).filter(Boolean);
+  const book={
+    id:editingId||uid(),
+    title,
+    isbn:(document.getElementById('f-isbn').value||'').trim(),
+    author:(document.getElementById('f-author').value||'').trim(),
+    volume:(document.getElementById('f-volume').value||'').trim(),
+    publisher:(document.getElementById('f-publisher').value||'').trim(),
+    price:(document.getElementById('f-price').value||'').trim(),
+    series:(document.getElementById('f-series').value||'').trim(),
+    totalvol:(document.getElementById('f-totalvol').value||'').trim(),
+    type:formData.type||'漫畫',
+    media:formData.media||'實體書',
+    format:formData.format||'單行本',
+    version:formData.version||'普版',
+    nature:formData.nature||'',
+    serial:formData.serial||'',
+    status:formData.status||'未讀',
+    rating:formData.rating||0,
+    tags:tagsRaw,
+    addedAt:editingId?(db.find(x=>x.id===editingId)||{}).addedAt||Date.now():Date.now()
+  };
+  if(editingId){const i=db.findIndex(x=>x.id===editingId);if(i>-1)db[i]=book}
+  else db.unshift(book);
+  save();closeModal();renderFilters();renderList();
+}
+
+function openDetail(id){
+  const b=db.find(x=>x.id===id);if(!b)return;
+  const sc=SPINE_COLORS[b.type]||'#888';
+  const stars=[1,2,3,4,5].map(n=>`<button class="star-btn${(b.rating||0)>=n?' lit':''}" onclick="rateBook('${b.id}',${n})" type="button">★</button>`).join('');
+  const fields=[
+    ['類型',b.type],['收藏形式',b.media],['購入形式',b.format],
+    ['版本',b.version],['出版社',b.publisher],['系列',b.series],
+    ['總集數',b.totalvol?b.totalvol+'集':''],['作品性質',b.nature],
+    ['連載狀態',b.serial],['閱讀狀態',b.status],
+    ['金額',b.price?'NT$'+parseInt(b.price).toLocaleString():''],
+    ['ISBN',b.isbn],['備註 TAG',(b.tags||[]).join(', ')],
+    ['收錄日期',b.addedAt?new Date(b.addedAt).toLocaleDateString('zh-TW'):'']
+  ].filter(([,v])=>v);
+  document.getElementById('detailModal').innerHTML=`
+    <div class="modal-handle"></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 16px 0">
+      <div style="display:flex;align-items:center;gap:8px">
+        <div style="width:6px;height:44px;border-radius:3px;background:${sc}"></div>
+        <div>
+          <div style="font-size:16px;font-weight:500">${b.title||'（無書名）'}${b.volume?' #'+b.volume:''}</div>
+          <div style="font-size:13px;color:var(--sub)">${b.author||''}</div>
+        </div>
+      </div>
+      <button class="icon-btn" onclick="closeDetail()"><i class="ti ti-x" aria-hidden="true"></i></button>
+    </div>
+    <div style="padding:10px 16px 4px">
+      <div style="display:flex;gap:6px">${stars}</div>
+    </div>
+    <div class="detail-fields">
+      ${fields.map(([k,v])=>`<div class="field-row"><span class="field-key">${k}</span><span class="field-val">${v}</span></div>`).join('')}
+    </div>
+    <div style="padding:0 16px 16px;display:flex;flex-direction:column;gap:8px">
+      <button class="btn-primary" style="margin-top:0" onclick="openEdit('${b.id}')"><i class="ti ti-edit" aria-hidden="true"></i> 編輯</button>
+      <button class="delete-btn" onclick="deleteBook('${b.id}')"><i class="ti ti-trash" aria-hidden="true"></i> 刪除這本書</button>
+    </div>
+  `;
+  document.getElementById('detailBg').style.display='flex';
+}
+
+function rateBook(id,n){
+  const b=db.find(x=>x.id===id);if(!b)return;
+  b.rating=n;save();openDetail(id);renderList();
+}
+
+function deleteBook(id){
+  if(!confirm('確定要刪除這本書嗎？'))return;
+  db=db.filter(x=>x.id!==id);
+  save();closeDetail();renderFilters();renderList();
+}
+
+function closeModal(){document.getElementById('modalBg').style.display='none';formData={}}
+function closeDetail(){document.getElementById('detailBg').style.display='none'}
+function closeModalBg(e){if(e.target===document.getElementById('modalBg'))closeModal()}
+function closeDetailBg(e){if(e.target===document.getElementById('detailBg'))closeDetail()}
+
+function exportData(){
+  const json=JSON.stringify(db,null,2);
+  const a=document.createElement('a');
+  a.href='data:application/json;charset=utf-8,'+encodeURIComponent(json);
+  a.download='bookvault_backup_'+new Date().toISOString().slice(0,10)+'.json';
+  a.click();
+}
+
+function showImport(){
+  const inp=document.createElement('input');inp.type='file';inp.accept='.json';
+  inp.onchange=e=>{
+    const f=e.target.files[0];if(!f)return;
+    const r=new FileReader();
+    r.onload=ev=>{
+      try{
+        const data=JSON.parse(ev.target.result);
+        if(!Array.isArray(data)){alert('格式錯誤');return}
+        if(confirm(`匯入 ${data.length} 本書籍？（將與現有資料合併）`)){
+          const existIds=new Set(db.map(b=>b.id));
+          data.forEach(b=>{if(!existIds.has(b.id))db.push(b)});
+          save();renderFilters();renderList();
+          alert(`匯入完成！書庫共 ${db.length} 本`);
+        }
+      }catch(e){alert('讀取失敗，請確認為正確的備份檔')}
+    };r.readAsText(f);
+  };inp.click();
+}
+
+renderFilters();renderList();
+</script>
