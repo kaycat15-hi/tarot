@@ -491,46 +491,35 @@ label { font-size: 12px; color: var(--text2); display: block; margin-bottom: 4px
   <!-- QIANQIAN (錢錢 - 熊貓之道大牌) -->
   <div class="card">
     <div class="flex gap8 mb8" style="align-items:center;justify-content:space-between;">
-      <div style="font-size:14px;font-weight:700;color:var(--gold);">🐼 錢錢・晨間大牌</div>
-      <span class="badge qianqian">熊貓之道</span>
+      <div style="font-size:14px;font-weight:700;color:var(--gold);">🐼 錢錢</div>
+      <span class="badge qianqian">熊貓之道・大牌</span>
     </div>
     <label>抽到的大牌</label>
     <select id="qqCard" onchange="updateQQPreview()">
       <option value="">— 選擇牌 —</option>
     </select>
     <div id="qqCardPreview"></div>
-    <div class="pos-toggle mt8">
-      <div class="pos-btn" id="qqPosUp" onclick="setPos('qq','upright')">🌅 正位</div>
-      <div class="pos-btn" id="qqPosRev" onclick="setPos('qq','reversed')">🌒 逆位</div>
-    </div>
-    <!-- 龍龜 -->
+    <!-- 龍龜推薦 -->
     <div class="mt12">
-      <label>🐢 今日陪伴龍龜（錢錢對應）</label>
+      <div class="flex gap8 mb8" style="align-items:center;justify-content:space-between;">
+        <label style="margin:0;">🐢 今日陪伴龍龜</label>
+        <span id="turtleSuggestBadge" class="text-xs" style="color:var(--teal);"></span>
+      </div>
+      <div id="turtleSuggestBox"></div>
       <div class="turtle-grid mt8" id="qqTurtleGrid"></div>
     </div>
   </div>
 
-  <!-- DIANDIAN (典典 - 睡前) -->
+  <!-- DIANDIAN (典典 - 萊德偉特) -->
   <div class="card">
     <div class="flex gap8 mb8" style="align-items:center;justify-content:space-between;">
-      <div style="font-size:14px;font-weight:700;color:var(--accent2);">🃏 典典・睡前練習</div>
-      <span class="badge diandian">典典塔羅</span>
+      <div style="font-size:14px;font-weight:700;color:var(--accent2);">🃏 典典</div>
+      <span class="badge diandian">萊德偉特・78張</span>
     </div>
-    <div class="row">
-      <div class="col">
-        <label>牌組</label>
-        <select id="ddDeck">
-          <option value="panda">熊貓之道</option>
-          <option value="rw">萊德偉特</option>
-        </select>
-      </div>
-      <div class="col">
-        <label>抽到的牌</label>
-        <select id="ddCard" onchange="updateDDCard()">
-          <option value="">— 選擇牌 —</option>
-        </select>
-      </div>
-    </div>
+    <label>抽到的牌</label>
+    <select id="ddCard" onchange="updateDDCard()">
+      <option value="">— 選擇牌 —</option>
+    </select>
     <div class="pos-toggle mt8">
       <div class="pos-btn" id="ddPosUp" onclick="setPos('dd','upright')">🌅 正位</div>
       <div class="pos-btn" id="ddPosRev" onclick="setPos('dd','reversed')">🌒 逆位</div>
@@ -819,6 +808,33 @@ const OMEN_G3 = [
   {n:75,name:'命運之輪'},{n:76,name:'和平、平靜'},{n:77,name:'心愛的人正守護著你'},
 ];
 
+// ── 錢錢大牌 → 推薦龍龜對應表 ──
+// 邏輯：依牌義能量與龍龜水晶屬性對應
+const QQ_TURTLE_MAP = {
+  '愚者 The Fool':          { id:'t14', reason:'琥珀糖・虎皮瑪瑙：勇氣踏出新旅程' },
+  '魔術師 The Magician':    { id:'t3',  reason:'藏金・鈦晶：強力顯化意志能量' },
+  '女祭司 The High Priestess':{ id:'t4', reason:'天授・老礦天河石：直覺與智慧降臨' },
+  '皇后 The Empress':       { id:'t1',  reason:'焦糖・黃膠花：滋養豐盛甜蜜機緣' },
+  '皇帝 The Emperor':       { id:'t10', reason:'麥芽糖・老礦髮晶：強根固本穩定掌控' },
+  '教皇 The Hierophant':    { id:'t6',  reason:'雙全・紫黃松子母龜：智慧與傳承雙全' },
+  '戀人 The Lovers':        { id:'t9',  reason:'汽水糖・加勒比：輕盈自在的愛' },
+  '戰車 The Chariot':       { id:'t14', reason:'琥珀糖・虎皮瑪瑙：意志堅定突破前行' },
+  '力量 Strength':          { id:'t7',  reason:'葡萄糖・菜花玉：生命力旺盛內在力量' },
+  '隱士 The Hermit':        { id:'t4',  reason:'天授・老礦天河石：內省智慧降臨' },
+  '命運之輪 Wheel of Fortune':{ id:'t2', reason:'又玄・金運石：財運玄機暗藏好運流轉' },
+  '正義 Justice':           { id:'t8',  reason:'檸檬糖・黃螢石：思維清晰人際和諧' },
+  '倒吊人 The Hanged Man':  { id:'t5',  reason:'青嵐・藍絨晶：靜心療癒換個角度' },
+  '死神 Death':             { id:'t13', reason:'星空糖・拉長石：神秘洞察蛻變新生' },
+  '節制 Temperance':        { id:'t9',  reason:'汽水糖・加勒比：釋放壓力輕盈平衡' },
+  '惡魔 The Devil':         { id:'t10', reason:'麥芽糖・老礦髮晶：驅除障礙破除束縛' },
+  '塔 The Tower':           { id:'t12', reason:'軟糖・糖果螢石：全面保護渡過突變' },
+  '星星 The Star':          { id:'t13', reason:'星空糖・拉長石：魔法顯化希望之光' },
+  '月亮 The Moon':          { id:'t5',  reason:'青嵐・藍絨晶：清理迷霧安定潛意識' },
+  '太陽 The Sun':           { id:'t3',  reason:'藏金・鈦晶：強力顯化光明成功' },
+  '審判 Judgement':         { id:'t6',  reason:'雙全・紫黃松子母龜：智慧與財富並進覺醒' },
+  '世界 The World':         { id:'t1',  reason:'焦糖・黃膠花：豐盛圓滿甜蜜機緣' },
+};
+
 // All tarot cards combined for selection
 const ALL_TAROT = [
   ...MAJOR_ARCANA.map(c=>({...c, suit:'major'})),
@@ -836,7 +852,6 @@ let records = JSON.parse(localStorage.getItem('divRecords') || '{}');
 let calYear = new Date().getFullYear();
 let calMonth = new Date().getMonth();
 let currentModalDate = null;
-let selectedQQPos = '';
 let selectedDDPos = '';
 let selectedQQTurtle = null;
 let selectedILCards = new Set();
@@ -851,8 +866,7 @@ function init() {
 
   // Build deck selects
   buildCardSelect('qqCard', MAJOR_ARCANA, true);
-  document.getElementById('ddDeck').addEventListener('change', buildDDSelect);
-  buildDDSelect();
+  buildDDSelectRW();
 
   // Build calendar
   renderCalendar();
@@ -863,6 +877,7 @@ function init() {
   // Build turtle grids
   renderTurtleGrid('qqTurtleGrid', true);
   renderTurtleLibrary();
+  // Remove auto-select in turtle grid since we handle it via suggestion now
 
   // Build oracle
   renderInnerLight();
@@ -911,32 +926,27 @@ function buildCardSelect(selId, cards, majorOnly) {
   });
 }
 
-function buildDDSelect() {
-  const deck = document.getElementById('ddDeck').value;
-  const cards = deck === 'panda' ? MAJOR_ARCANA : ALL_TAROT;
-  buildCardSelect('ddCard', deck === 'panda' ? MAJOR_ARCANA : ALL_TAROT, false);
-  if (deck !== 'panda') {
-    const sel = document.getElementById('ddCard');
-    sel.innerHTML = '<option value="">— 選擇牌 —</option>';
-    const groups = {
-      '✨ 大阿爾克那': MAJOR_ARCANA,
-      '🔥 權杖': MINOR_WANDS,
-      '💧 聖杯': MINOR_CUPS,
-      '⚔️ 寶劍': MINOR_SWORDS,
-      '🪙 錢幣': MINOR_PENTS,
-    };
-    Object.entries(groups).forEach(([g, arr]) => {
-      const grp = document.createElement('optgroup');
-      grp.label = g;
-      arr.forEach(c => {
-        const opt = document.createElement('option');
-        opt.value = c.name;
-        opt.textContent = c.name;
-        grp.appendChild(opt);
-      });
-      sel.appendChild(grp);
+function buildDDSelectRW() {
+  const sel = document.getElementById('ddCard');
+  sel.innerHTML = '<option value="">— 選擇牌 —</option>';
+  const groups = {
+    '✨ 大阿爾克那': MAJOR_ARCANA,
+    '🔥 權杖': MINOR_WANDS,
+    '💧 聖杯': MINOR_CUPS,
+    '⚔️ 寶劍': MINOR_SWORDS,
+    '🪙 錢幣': MINOR_PENTS,
+  };
+  Object.entries(groups).forEach(([g, arr]) => {
+    const grp = document.createElement('optgroup');
+    grp.label = g;
+    arr.forEach(c => {
+      const opt = document.createElement('option');
+      opt.value = c.name;
+      opt.textContent = c.name;
+      grp.appendChild(opt);
     });
-  }
+    sel.appendChild(grp);
+  });
 }
 
 function updateQQPreview() {
@@ -948,6 +958,32 @@ function updateQQPreview() {
     <b>${card.star || ''} ${card.name}</b><br>
     <span class="text-xs">${card.archetype}</span>
   </div>`;
+
+  // 推薦龍龜
+  const suggest = QQ_TURTLE_MAP[val];
+  const badgeEl = document.getElementById('turtleSuggestBadge');
+  const boxEl = document.getElementById('turtleSuggestBox');
+  if (suggest) {
+    const t = TURTLES.find(t => t.id === suggest.id);
+    badgeEl.textContent = '✨ 自動推薦';
+    boxEl.innerHTML = `<div style="
+      background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.25);
+      border-radius:10px;padding:10px 12px;display:flex;align-items:center;gap:10px;margin-bottom:8px;
+      cursor:pointer;" onclick="selectTurtle('${t.id}')">
+      <span style="font-size:28px;">${t.emoji}</span>
+      <div>
+        <div style="font-weight:700;color:var(--gold);font-size:13px;">${t.name}</div>
+        <div style="font-size:11px;color:var(--text3);">${t.stone}</div>
+        <div style="font-size:11px;color:var(--teal);margin-top:2px;">${suggest.reason}</div>
+      </div>
+    </div>
+    <div class="text-xs" style="color:var(--text3);margin-bottom:6px;">或手動選擇其他龍龜 ↓</div>`;
+    // auto-select
+    selectTurtle(t.id);
+  } else {
+    badgeEl.textContent = '';
+    boxEl.innerHTML = '';
+  }
 }
 
 function updateDDCard() {
@@ -965,15 +1001,9 @@ function updateDDCard() {
 // ═══════════════════════════════════════════════
 
 function setPos(deck, pos) {
-  if (deck === 'qq') {
-    selectedQQPos = pos;
-    document.getElementById('qqPosUp').className = 'pos-btn' + (pos==='upright' ? ' selected-upright' : '');
-    document.getElementById('qqPosRev').className = 'pos-btn' + (pos==='reversed' ? ' selected-reversed' : '');
-  } else {
-    selectedDDPos = pos;
-    document.getElementById('ddPosUp').className = 'pos-btn' + (pos==='upright' ? ' selected-upright' : '');
-    document.getElementById('ddPosRev').className = 'pos-btn' + (pos==='reversed' ? ' selected-reversed' : '');
-  }
+  selectedDDPos = pos;
+  document.getElementById('ddPosUp').className = 'pos-btn' + (pos==='upright' ? ' selected-upright' : '');
+  document.getElementById('ddPosRev').className = 'pos-btn' + (pos==='reversed' ? ' selected-reversed' : '');
 }
 
 // ═══════════════════════════════════════════════
@@ -1082,11 +1112,10 @@ function saveRecord() {
     date,
     qq: {
       card: document.getElementById('qqCard').value,
-      pos: selectedQQPos,
       turtle: selectedQQTurtle,
     },
     dd: {
-      deck: document.getElementById('ddDeck').value,
+      deck: 'rw',
       card: document.getElementById('ddCard').value,
       pos: selectedDDPos,
     },
@@ -1116,6 +1145,8 @@ function showSaveMsg(msg, color) {
 function clearTodayForm() {
   document.getElementById('qqCard').value = '';
   document.getElementById('qqCardPreview').innerHTML = '';
+  document.getElementById('turtleSuggestBadge').textContent = '';
+  document.getElementById('turtleSuggestBox').innerHTML = '';
   document.getElementById('ddCard').value = '';
   document.getElementById('ddCardPreview').innerHTML = '';
   document.getElementById('oracleType').value = '';
@@ -1123,10 +1154,8 @@ function clearTodayForm() {
   document.getElementById('eventText').value = '';
   document.getElementById('notesText').value = '';
   document.getElementById('verifySelect').value = '';
-  selectedQQPos = ''; selectedDDPos = '';
+  selectedDDPos = '';
   selectedQQTurtle = null;
-  document.getElementById('qqPosUp').className = 'pos-btn';
-  document.getElementById('qqPosRev').className = 'pos-btn';
   document.getElementById('ddPosUp').className = 'pos-btn';
   document.getElementById('ddPosRev').className = 'pos-btn';
   document.querySelectorAll('#qqTurtleGrid .turtle-card').forEach(c=>c.classList.remove('selected'));
@@ -1255,8 +1284,8 @@ function renderMonthRecordList() {
       <div class="record-item-date">${date} ${r.verify||''}</div>
       <div class="record-item-row">
         ${r.qq?.card ? `<span class="badge qianqian">錢錢: ${r.qq.card.split(' ')[0]}</span>` : ''}
-        ${r.qq?.pos ? `<span class="badge ${r.qq.pos==='upright'?'upright':'reversed'}">${r.qq.pos==='upright'?'正':'逆'}</span>` : ''}
         ${r.dd?.card ? `<span class="badge diandian">典典: ${r.dd.card.split(' ')[0]}</span>` : ''}
+        ${r.dd?.pos ? `<span class="badge ${r.dd.pos==='upright'?'upright':'reversed'}">${r.dd.pos==='upright'?'正':'逆'}</span>` : ''}
         ${t ? `<span>${t.emoji}</span>` : ''}
       </div>
       ${r.event ? `<div class="text-xs mt8" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%">${r.event.substring(0,40)}${r.event.length>40?'...':''}</div>` : ''}
@@ -1279,10 +1308,7 @@ function openDayModal(dateStr) {
 
   document.getElementById('modalContent').innerHTML = `
     ${r.qq?.card ? `<div class="card" style="margin-bottom:8px;">
-      <div class="flex gap8 mb8" style="align-items:center;justify-content:space-between;">
-        <span style="font-weight:700;color:var(--gold);">🐼 錢錢</span>
-        ${r.qq.pos ? `<span class="badge ${r.qq.pos==='upright'?'upright':'reversed'}">${r.qq.pos==='upright'?'🌅 正位':'🌒 逆位'}</span>` : ''}
-      </div>
+      <div style="font-weight:700;color:var(--gold);margin-bottom:6px;">🐼 錢錢</div>
       <div style="font-size:14px;">${r.qq.card}</div>
       ${turtle ? `<div class="mt8" style="display:flex;align-items:center;gap:8px;">
         <span style="font-size:20px;">${turtle.emoji}</span>
@@ -1339,15 +1365,10 @@ function loadRecordToEdit() {
   document.getElementById('recordDate').value = r.date;
   document.getElementById('qqCard').value = r.qq?.card || '';
   updateQQPreview();
-  if (r.qq?.pos) setPos('qq', r.qq.pos);
   if (r.qq?.turtle) selectTurtle(r.qq.turtle);
 
-  document.getElementById('ddDeck').value = r.dd?.deck || 'panda';
-  buildDDSelect();
-  setTimeout(()=>{
-    document.getElementById('ddCard').value = r.dd?.card || '';
-    updateDDCard();
-  }, 50);
+  document.getElementById('ddCard').value = r.dd?.card || '';
+  updateDDCard();
   if (r.dd?.pos) setPos('dd', r.dd.pos);
 
   document.getElementById('oracleType').value = r.oracle?.type || '';
