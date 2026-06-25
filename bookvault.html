@@ -8,6 +8,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="書庫">
 <title>書庫 BookVault</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{
@@ -178,13 +179,15 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Helvetica Ne
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
 /* ── Camera modal ── */
-#cameraModal{position:fixed;inset:0;background:#000;z-index:500;display:none;flex-direction:column}
+#cameraModal{position:fixed;inset:0;background:#111;z-index:500;display:none;flex-direction:column;padding-top:max(16px,env(safe-area-inset-top,16px))}
 #cameraModal.show{display:flex}
-#cameraVideo{width:100%;flex:1;object-fit:cover}
-.camera-bar{padding:16px;display:flex;gap:12px;align-items:center;background:#000}
-.camera-hint{color:#fff;font-size:13px;text-align:center;padding:10px;position:absolute;top:max(20px,env(safe-area-inset-top,20px));left:0;right:0}
-.scan-frame{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:240px;height:120px;border:2px solid rgba(255,255,255,.7);border-radius:8px;pointer-events:none}
-.camera-wrap{flex:1;position:relative;overflow:hidden}
+.camera-top-bar{display:flex;align-items:center;justify-content:space-between;padding:10px 16px 12px}
+#qr-reader{width:100%!important;background:#000;border:none!important}
+#qr-reader video{object-fit:cover}
+#qr-reader__scan_region{background:transparent!important}
+#qr-reader__dashboard{display:none!important}
+.camera-hint-text{color:#bbb;font-size:13px;text-align:center;padding:10px 16px}
+.camera-manual-row{padding:12px 16px calc(20px + env(safe-area-inset-bottom,0px))}
 </style>
 </head>
 <body>
@@ -267,15 +270,18 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Helvetica Ne
 
 <!-- Camera Modal -->
 <div id="cameraModal">
-  <div class="camera-wrap">
-    <video id="cameraVideo" autoplay playsinline muted></video>
-    <div class="scan-frame"></div>
-    <div class="camera-hint">將條碼對準框內</div>
+  <div class="camera-top-bar">
+    <div style="font-size:15px;font-weight:600;color:#fff">掃描 ISBN 條碼</div>
+    <button onclick="stopCamera()" style="background:rgba(255,255,255,.15);border:none;border-radius:8px;color:#fff;padding:6px 14px;font-size:14px;cursor:pointer">取消</button>
   </div>
-  <div class="camera-bar">
-    <button class="btn-secondary" style="width:auto;padding:0 20px;margin:0;flex:1" onclick="stopCamera()">取消</button>
-    <input class="form-input" id="cameraIsbnInput" type="text" inputmode="numeric" placeholder="手動輸入 ISBN" style="flex:2">
-    <button class="isbn-btn" onclick="cameraManualLookup()">查詢</button>
+  <div id="qr-reader"></div>
+  <div class="camera-hint-text">將書背條碼對準畫面中央</div>
+  <div class="camera-manual-row">
+    <span style="color:#aaa;font-size:12px">— 或手動輸入 ISBN —</span>
+    <div style="display:flex;gap:8px;margin-top:8px">
+      <input class="form-input" id="cameraIsbnInput" type="text" inputmode="numeric" placeholder="9784088…" style="flex:1;background:#222;border-color:#444;color:#fff">
+      <button class="isbn-btn" onclick="cameraManualLookup()" style="background:#2d3561;border-color:#2d3561;color:#fff">查詢</button>
+    </div>
   </div>
 </div>
 
@@ -486,7 +492,7 @@ function renderStats(){
 
 // ── Form helpers ──
 function chipGroup(name,opts,val){
-  return`<div class="chip-group">${opts.map(o=>`<button type="button" class="chip-opt${o===val?' active':''}" onclick="fSel('${name}','${o}',this)">${o}</button>`).join('')}</div>`;
+  return`<div class="chip-group">${opts.map(o=>`<button type="button" class="chip-opt${o===val?' active':''}" data-key="${name}" onclick="fSel('${name}','${o}',this)">${o}</button>`).join('')}</div>`;
 }
 function fSel(key,val,el){
   formData[key]=val;
@@ -618,24 +624,73 @@ function setRating(n){
   document.querySelectorAll('#starRow .star-btn').forEach((b,i)=>b.classList.toggle('lit',i<n));
 }
 
-async function lookupISBN(){
-  const isbn=(document.getElementById('f-isbn').value||'').trim().replace(/-/g,'');
+async function lookupISBN(isbnOverride){
+  const isbn=(isbnOverride||(document.getElementById('f-isbn')||{}).value||'').trim().replace(/-/g,'');
   if(!isbn){toast('請輸入 ISBN');return}
-  toast('查詢中…');
+  toast('查詢書籍資料中…');
+  // Try Google Books first, fallback to Open Library
   try{
-    const r=await fetch(`https://openlibrary.org/api/books?bibkeys=ISBN:${isbn}&format=json&jscmd=data`);
+    const r=await fetch(`https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}`);
     const data=await r.json();
+    if(data.totalItems>0){
+      const info=data.items[0].volumeInfo;
+      applyBookInfo({
+        title: info.title||'',
+        author: (info.authors||[]).join(', '),
+        publisher: info.publisher||'',
+        description: info.description||'',
+        categories: info.categories||[],
+        pageCount: info.pageCount||0,
+        language: info.language||''
+      });
+      return;
+    }
+  }catch(e){}
+  // Fallback: Open Library
+  try{
+    const r2=await fetch(`https://openlibrary.org/api/books?bibkeys=ISBN:${isbn}&format=json&jscmd=data`);
+    const data2=await r2.json();
     const key=`ISBN:${isbn}`;
-    if(data[key]){
-      const bk=data[key];
-      if(bk.title)document.getElementById('f-title').value=bk.title;
-      if(bk.authors&&bk.authors.length)document.getElementById('f-author').value=bk.authors.map(a=>a.name).join(', ');
-      if(bk.publishers&&bk.publishers.length)document.getElementById('f-publisher').value=bk.publishers[0].name;
-      const ok=document.getElementById('lookupOk');ok.style.display='block';
-      setTimeout(()=>ok.style.display='none',3000);
-      toast('✓ 資料帶入完成');
-    }else{toast('找不到此 ISBN，請手動輸入')}
-  }catch(e){toast('查詢失敗，請確認網路')}
+    if(data2[key]){
+      const bk=data2[key];
+      applyBookInfo({
+        title: bk.title||'',
+        author: (bk.authors||[]).map(a=>a.name).join(', '),
+        publisher: (bk.publishers||[]).map(p=>p.name).join(', ')
+      });
+      return;
+    }
+  }catch(e){}
+  toast('找不到此 ISBN 的資料，請手動輸入');
+}
+
+function applyBookInfo({title,author,publisher,categories,language}){
+  const setVal=(id,val)=>{const el=document.getElementById(id);if(el&&val)el.value=val};
+  setVal('f-title',title);
+  setVal('f-author',author);
+  setVal('f-publisher',publisher);
+  // 自動推測書籍類型
+  const cats=((categories||[]).join(' ')+' '+(title||'')).toLowerCase();
+  let guessType='';
+  if(/comic|manga|漫畫/.test(cats))guessType='漫畫';
+  else if(/light novel|輕小說/.test(cats))guessType='輕小說';
+  else if(/magazine|雜誌/.test(cats))guessType='雜誌';
+  else if(/novel|fiction|小說/.test(cats))guessType='小說';
+  else if(/art|design|photo|圖像/.test(cats))guessType='圖像書';
+  else if(/science|history|business|guide|知識/.test(cats))guessType='知識書';
+  if(guessType){
+    formData.type=guessType;
+    document.querySelectorAll('.chip-opt[data-key="type"]').forEach(b=>{
+      b.classList.toggle('active',b.textContent===guessType);
+    });
+  }
+  // 自動推測語言 tag
+  if(language==='ja'&&!(document.getElementById('f-tags').value||'').includes('日文')){
+    const tf=document.getElementById('f-tags');
+    if(tf)tf.value=(tf.value?tf.value+', ':'')+'日文原版';
+  }
+  const ok=document.getElementById('lookupOk');if(ok){ok.style.display='block';setTimeout(()=>ok.style.display='none',3000)}
+  toast('✓ 書籍資料帶入完成');
 }
 
 async function submitForm(){
@@ -758,56 +813,52 @@ async function doImport(e){
   }catch(err){toast('匯入失敗：格式不正確')}
 }
 
-// ── Camera / Barcode scanner ──
-let cameraStream=null;
-let barcodeDetector=null;
-let scanInterval=null;
+// ── Camera / Barcode scanner (html5-qrcode) ──
+let html5QrCode=null;
 
 async function startCamera(){
-  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){
-    toast('此裝置不支援相機，請手動輸入 ISBN');return;
-  }
   document.getElementById('cameraModal').classList.add('show');
   try{
-    cameraStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'},audio:false});
-    document.getElementById('cameraVideo').srcObject=cameraStream;
-    if('BarcodeDetector' in window){
-      barcodeDetector=new BarcodeDetector({formats:['ean_13','ean_8','isbn']});
-      scanInterval=setInterval(scanFrame,400);
+    if(!html5QrCode){
+      html5QrCode=new Html5Qrcode('qr-reader');
     }
+    await html5QrCode.start(
+      {facingMode:'environment'},
+      {fps:10,qrbox:{width:280,height:140},aspectRatio:1.0,formatsToSupport:[
+        Html5QrcodeSupportedFormats.EAN_13,
+        Html5QrcodeSupportedFormats.EAN_8,
+        Html5QrcodeSupportedFormats.UPC_A,
+        Html5QrcodeSupportedFormats.UPC_E
+      ]},
+      (decodedText)=>{
+        stopCamera();
+        const el=document.getElementById('f-isbn');
+        if(el)el.value=decodedText;
+        lookupISBN(decodedText);
+      },
+      ()=>{}
+    );
   }catch(err){
-    toast('無法開啟相機，請手動輸入 ISBN');
     stopCamera();
+    toast('無法開啟相機，請手動輸入 ISBN');
+    console.error(err);
   }
 }
 
-async function scanFrame(){
-  const video=document.getElementById('cameraVideo');
-  if(!video.videoWidth)return;
-  try{
-    const results=await barcodeDetector.detect(video);
-    if(results.length){
-      const code=results[0].rawValue;
-      stopCamera();
-      document.getElementById('f-isbn').value=code;
-      lookupISBN();
-    }
-  }catch(e){}
-}
-
-function stopCamera(){
-  if(scanInterval){clearInterval(scanInterval);scanInterval=null}
-  if(cameraStream){cameraStream.getTracks().forEach(t=>t.stop());cameraStream=null}
-  document.getElementById('cameraVideo').srcObject=null;
+async function stopCamera(){
   document.getElementById('cameraModal').classList.remove('show');
+  if(html5QrCode){
+    try{await html5QrCode.stop()}catch(e){}
+    try{html5QrCode.clear()}catch(e){}
+  }
 }
 
 function cameraManualLookup(){
-  const isbn=document.getElementById('cameraIsbnInput').value.trim();
+  const isbn=(document.getElementById('cameraIsbnInput').value||'').trim();
   if(!isbn){toast('請輸入 ISBN');return}
-  document.getElementById('f-isbn').value=isbn;
+  const el=document.getElementById('f-isbn');if(el)el.value=isbn;
   stopCamera();
-  lookupISBN();
+  lookupISBN(isbn);
 }
 
 // ── Boot ──
