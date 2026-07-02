@@ -6,298 +6,408 @@
 <title>手搖紀錄</title>
 <style>
 :root{
-  --c1:#FFFDF5; --c2:#FFF3C4; --c3:#FFE082; --c4:#F4C95D; --c5:#D9A441;
-  --tea:#6B4226; --tea-light:#9C6B3E; --line:#F0DDA0;
-  --pearl:#3E2B1F; --danger:#D97B66;
+  --c1:#FFFDF5; --c2:#FFF8DC; --c3:#FFE082; --c4:#F4C95D; --c5:#D9A441;
+  --tea:#5A3820; --tea2:#9C6B3E; --line:#EDD98A;
+  --pearl:#2E1F0F; --bg:rgba(255,255,255,.82); --danger:#C0392B;
+  --nav-h:62px;
 }
-*{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+*{box-sizing:border-box; -webkit-tap-highlight-color:transparent; margin:0; padding:0;}
+html,body{height:100%;}
 body{
-  margin:0; font-family:"PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif;
-  background:linear-gradient(160deg,var(--c1) 0%,var(--c2) 45%,var(--c3) 100%);
+  font-family:"PingFang TC","Noto Sans TC",sans-serif;
+  background:linear-gradient(170deg,var(--c1) 0%,var(--c2) 50%,var(--c3) 100%);
   background-attachment:fixed;
-  color:var(--pearl); min-height:100vh; padding-bottom:28px;
+  color:var(--pearl);
+  padding-bottom:calc(var(--nav-h) + env(safe-area-inset-bottom,0px));
 }
 
-/* ── header ── */
-header{padding:16px 16px 8px; text-align:center;}
-header h1{margin:0; font-size:19px; letter-spacing:2px; color:var(--tea);}
-header .sub{font-size:11px; color:var(--tea-light); margin-top:2px;}
-
-/* ── tabs sticky ── */
-.tabs{
-  position:sticky; top:0; z-index:20;
-  display:flex; gap:5px; padding:6px 12px;
-  background:rgba(255,248,220,.95); backdrop-filter:blur(6px);
-  border-bottom:1px solid var(--line);
+/* ══ BOTTOM NAV ══ */
+.bottom-nav{
+  position:fixed; bottom:0; left:0; right:0; z-index:100;
+  height:calc(var(--nav-h) + env(safe-area-inset-bottom,0px));
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  background:rgba(255,252,232,.97); backdrop-filter:blur(12px);
+  border-top:1px solid var(--line);
+  display:flex; align-items:flex-start; justify-content:space-around;
 }
-.tab{
-  flex:1; text-align:center; padding:8px 2px; border-radius:10px;
-  background:rgba(255,255,255,.5); color:var(--tea-light); font-size:13px;
-  border:1px solid var(--line); cursor:pointer; transition:.15s;
+.nav-item{
+  flex:1; display:flex; flex-direction:column; align-items:center;
+  justify-content:center; padding-top:10px; cursor:pointer; gap:3px;
 }
-.tab.active{
+.nav-icon{font-size:22px; line-height:1; color:var(--tea2);}
+.nav-lbl{font-size:11px; color:var(--tea2); font-weight:500;}
+.nav-item.active .nav-icon{color:var(--c5);}
+.nav-item.active .nav-lbl{color:var(--c5); font-weight:700;}
+.nav-add{
+  flex:1; display:flex; flex-direction:column; align-items:center;
+  justify-content:center; padding-top:6px; cursor:pointer; gap:3px;
+}
+.nav-add-circle{
+  width:46px; height:46px; border-radius:50%;
   background:linear-gradient(135deg,var(--c4),var(--c5));
-  color:#fff; font-weight:700; box-shadow:0 2px 6px rgba(217,164,65,.4);
+  display:flex; align-items:center; justify-content:center;
+  font-size:26px; color:#fff; line-height:1;
+  box-shadow:0 3px 10px rgba(217,164,65,.5);
+  margin-top:-18px;
 }
+.nav-add-circle.active-add{background:linear-gradient(135deg,#888,#555);}
+.nav-add .nav-lbl{font-size:11px; color:var(--tea2); font-weight:500;}
 
-/* ── pages ── */
-.page{display:none; padding:10px 12px 0;}
+/* ══ PAGES ══ */
+.page{display:none; padding:0 0 8px;}
 .page.active{display:block;}
 
-/* ── card ── */
-.card{
-  background:rgba(255,255,255,.78); border:1px solid var(--line);
-  border-radius:14px; padding:12px; margin-bottom:10px;
+/* ══ PAGE HEADER ══ */
+.pg-header{
+  padding:20px 18px 10px; text-align:center;
+  font-size:22px; font-weight:800; color:var(--tea); letter-spacing:1px;
 }
 
-/* ── form ── */
-.field{margin-bottom:9px;}
-.field label{display:block; font-size:11px; color:var(--tea-light); margin-bottom:3px; font-weight:700; letter-spacing:.3px;}
-.field input[type=text],
-.field input[type=number],
-.field textarea,
-.field input[type=date]{
-  width:100%; padding:8px 10px; border:1px solid var(--line); border-radius:9px;
-  background:#fffefa; font-size:13.5px; color:var(--pearl); font-family:inherit; outline:none;
+/* ══ CALENDAR ══ */
+.cal-wrap{padding:0 14px;}
+.cal-nav-row{
+  display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;
 }
-.field input:focus,.field textarea:focus{border-color:var(--c4);}
-.field textarea{resize:vertical; min-height:44px;}
-.chiprow{display:flex; flex-wrap:wrap; gap:4px;}
-.chip{
-  padding:5px 10px; border-radius:999px; border:1px solid var(--line); background:#fffefa;
-  font-size:11.5px; color:var(--tea-light); cursor:pointer; user-select:none;
+.cal-arrow{
+  background:none; border:none; font-size:22px; color:var(--tea2);
+  cursor:pointer; padding:4px 10px; line-height:1;
 }
-.chip.sel{background:linear-gradient(135deg,var(--c4),var(--c5)); color:#fff; border-color:var(--c5); font-weight:700;}
-.stars{font-size:26px; letter-spacing:4px; cursor:pointer; line-height:1.2;}
-.star{color:#e0d5b5;}
-.star.on{color:#E8A23D;}
-.btn{
-  width:100%; padding:11px; border:none; border-radius:10px; font-size:13.5px; font-weight:700;
-  background:linear-gradient(135deg,var(--c4),var(--c5)); color:#fff; cursor:pointer;
+.cal-month-lbl{font-size:18px; font-weight:700; color:var(--tea);}
+.cal-wd-row{
+  display:grid; grid-template-columns:repeat(7,1fr); text-align:center;
+  margin-bottom:4px;
 }
-.btn.secondary{background:#fff; color:var(--tea-light); border:1px solid var(--line); font-weight:600;}
-.btn.danger{background:var(--danger); color:#fff;}
-.row2{display:flex; gap:8px;}
-
-/* add-btn */
-.add-btn{
-  width:100%; padding:11px; border:none; border-radius:12px; font-size:13.5px; font-weight:700;
-  background:linear-gradient(135deg,var(--c4),var(--c5)); color:#fff; cursor:pointer;
-  margin-bottom:10px;
-}
-
-/* form panel – expands in-flow */
-.form-panel{display:none; margin-bottom:10px;}
-.form-panel.open{display:block;}
-
-/* custom confirm bar */
-.del-confirm{
-  display:none; background:#fff3f0; border:1px solid #f5c0b0;
-  border-radius:10px; padding:10px 12px; margin-top:8px; text-align:center;
-}
-.del-confirm.show{display:block;}
-.del-confirm p{margin:0 0 8px; font-size:12.5px; color:var(--danger); font-weight:600;}
-.del-confirm .row2{margin:0;}
-
-/* ── list records – compact ── */
-.record{
-  display:flex; gap:8px; padding:7px 1px; border-bottom:1px solid var(--line); cursor:pointer;
-}
-.record:last-child{border-bottom:none;}
-.rec-dot{width:4px; border-radius:3px; flex-shrink:0; align-self:stretch; min-height:14px;}
-.rec-info{flex:1; min-width:0;}
-.rec-top{display:flex; justify-content:space-between; align-items:baseline; gap:6px;}
-.rec-shop{font-weight:700; font-size:13.5px; color:var(--tea); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
-.rec-price{font-weight:700; color:var(--c5); font-size:13px; flex-shrink:0;}
-.rec-item{font-size:12px; color:var(--tea-light); margin-top:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
-.rec-meta{font-size:10.5px; color:#a08a5e; margin-top:2px;}
-.rec-stars{font-size:11px; color:#E8A23D; display:inline;}
-.rec-note{font-size:11px; color:#8a7654; margin-top:2px; font-style:italic;
-  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
-.rec-date{font-size:10px; color:#b5a778; margin-top:1px;}
-.empty{text-align:center; color:var(--tea-light); padding:28px 10px; font-size:12.5px;}
-
-/* ── calendar – NO sticky, fixed layout ── */
-.cal-head{display:flex; align-items:center; justify-content:space-between; margin-bottom:7px;}
-.cal-nav{background:none; border:none; font-size:20px; color:var(--tea); cursor:pointer; padding:2px 8px; line-height:1;}
-.cal-lbl{font-weight:700; color:var(--tea); font-size:14px;}
-.cal-grid{display:grid; grid-template-columns:repeat(7,1fr); gap:3px; text-align:center;}
-.cal-wd{font-size:10px; color:var(--tea-light); padding-bottom:3px;}
+.cal-wd{font-size:12px; color:var(--tea2); padding:4px 0; font-weight:500;}
+.cal-grid{display:grid; grid-template-columns:repeat(7,1fr); gap:4px;}
 .cal-cell{
-  height:34px; border-radius:7px; display:flex; flex-direction:column;
+  height:42px; border-radius:10px; display:flex; flex-direction:column;
   align-items:center; justify-content:center;
-  font-size:11px; color:var(--pearl); background:rgba(255,255,255,.4); cursor:pointer;
+  font-size:14px; font-weight:500; color:var(--pearl);
+  background:rgba(255,255,255,.5); cursor:pointer; position:relative;
 }
 .cal-cell.empty{background:none; cursor:default;}
-.cal-cell.has{background:linear-gradient(135deg,#FFE9A8,var(--c4)); font-weight:700;}
-.cal-cell .camt{font-size:7.5px; color:rgba(62,43,31,.6); line-height:1.1; margin-top:0;}
-.cal-cell.today{outline:2px solid var(--c5); outline-offset:-1px;}
-.cal-cell.sel{outline:2px solid var(--tea); outline-offset:-1px;}
-.month-total{
-  text-align:center; padding:9px; border-radius:10px; margin-top:8px;
-  background:linear-gradient(135deg,var(--c4),var(--c5)); color:#fff;
+.cal-cell.other-month{color:#ccc; background:rgba(255,255,255,.2);}
+.cal-cell.has{
+  background:linear-gradient(145deg,#FFE9A8,var(--c4)); font-weight:700;
 }
-.month-total .mnum{font-size:20px; font-weight:800;}
-.month-total .mlbl{font-size:10.5px; opacity:.85;}
-.day-title{font-weight:700; color:var(--tea); font-size:12.5px; margin-bottom:6px;}
+.cal-cell .cal-dot{
+  width:5px; height:5px; border-radius:50%;
+  background:var(--c5); position:absolute; bottom:4px;
+}
+.cal-cell.has .cal-dot{background:var(--tea);}
+.cal-cell.today{
+  background:linear-gradient(135deg,var(--c4),var(--c5));
+  color:#fff; font-weight:800;
+}
+.cal-cell.today .cal-dot{background:#fff;}
+.cal-cell.sel{outline:2.5px solid var(--tea); outline-offset:0;}
 
-/* ── stats ── */
-.stat-mode-row{display:flex; gap:6px; margin-bottom:8px;}
-.stat-mode-row button{
-  flex:1; padding:7px; border-radius:9px; border:1px solid var(--line); background:#fffefa;
-  color:var(--tea-light); font-size:12.5px; cursor:pointer;
+.month-box{
+  margin:14px 0 10px; padding:14px 18px; border-radius:14px;
+  background:rgba(255,255,255,.6); border:1px solid var(--line);
+  display:flex; justify-content:space-between; align-items:center;
 }
-.stat-mode-row button.active{
-  background:linear-gradient(135deg,var(--c4),var(--c5)); color:#fff; border-color:var(--c5); font-weight:700;
+.month-box .mb-lbl{font-size:13px; color:var(--tea2);}
+.month-box .mb-num{font-size:24px; font-weight:800; color:var(--c5);}
+
+/* day detail */
+.day-section{padding:0 14px;}
+.day-title{
+  font-size:13px; font-weight:700; color:var(--tea2); margin-bottom:6px;
 }
-.stat-nav-row{display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;}
-.stat-nav-row button{
-  background:none; border:1px solid var(--line); border-radius:9px;
-  font-size:14px; color:var(--tea-light); cursor:pointer; padding:6px 14px;
+.day-card{
+  background:var(--bg); border:1px solid var(--line);
+  border-radius:14px; overflow:hidden;
 }
-.stat-lbl{font-weight:700; color:var(--tea); font-size:14px; flex:1; text-align:center;}
-.legend-row{display:flex; align-items:center; gap:7px; padding:5px 0; font-size:12.5px; border-bottom:1px solid var(--line);}
+
+/* ══ RECORD ITEM ══ */
+.rec-item{
+  display:flex; gap:10px; padding:12px 14px; border-bottom:1px solid #f5e9c0;
+  cursor:pointer; align-items:stretch;
+}
+.rec-item:last-child{border-bottom:none;}
+.rec-bar{width:4px; border-radius:3px; flex-shrink:0; align-self:stretch; min-height:20px;}
+.rec-body{flex:1; min-width:0;}
+.rec-row1{display:flex; justify-content:space-between; align-items:center; gap:8px;}
+.rec-shop{font-size:16px; font-weight:700; color:var(--tea);}
+.rec-price{font-size:15px; font-weight:700; color:var(--c5); flex-shrink:0;}
+.rec-stars{font-size:13px; color:#E8A23D; margin-left:4px;}
+.rec-row2{font-size:13px; color:var(--tea2); margin-top:3px;}
+.rec-tags{display:flex; gap:5px; margin-top:5px; flex-wrap:wrap;}
+.rec-tag{
+  padding:3px 9px; border-radius:999px; font-size:11.5px; font-weight:500;
+  background:#E8F4FF; color:#4A80B0; border:1px solid #C2DDEE;
+}
+.rec-note-txt{font-size:12px; color:#957a4a; margin-top:4px; font-style:italic;}
+.empty-state{text-align:center; padding:32px 16px; color:var(--tea2); font-size:14px;}
+
+/* ══ ADD FORM PAGE ══ */
+.form-page-wrap{padding:0 18px 12px;}
+.form-field{
+  display:flex; align-items:center; gap:14px;
+  border-bottom:1px solid var(--line); padding:14px 0;
+}
+.form-field .fi{font-size:20px; width:26px; text-align:center; flex-shrink:0; color:var(--tea2);}
+.form-field input, .form-field textarea{
+  flex:1; border:none; background:transparent; font-size:16px;
+  color:var(--pearl); font-family:inherit; outline:none;
+  min-width:0;
+}
+.form-field input::placeholder,.form-field textarea::placeholder{color:#bba876;}
+.form-field textarea{resize:none; height:22px; line-height:1.4;}
+.form-section-lbl{
+  font-size:15px; font-weight:700; color:var(--tea);
+  padding:14px 0 8px;
+}
+.star-row{display:flex; gap:6px; padding-bottom:4px;}
+.star-btn{font-size:32px; color:#e0d5b5; cursor:pointer; line-height:1;}
+.star-btn.on{color:#E8A23D;}
+.chip-group{display:flex; flex-wrap:wrap; gap:7px; padding-bottom:6px;}
+.chip{
+  padding:8px 14px; border-radius:999px; font-size:14px;
+  border:1.5px solid var(--line); background:rgba(255,255,255,.7);
+  color:var(--tea2); cursor:pointer; user-select:none; font-weight:500;
+  display:flex; align-items:center; gap:5px;
+}
+.chip.sel{
+  background:linear-gradient(135deg,var(--c4),var(--c5));
+  color:#fff; border-color:var(--c5); font-weight:700;
+}
+.chip.sel::before{content:"✓ ";}
+
+/* action buttons */
+.action-row{display:flex; gap:10px; margin-top:18px;}
+.btn{
+  flex:1; padding:14px; border:none; border-radius:13px; font-size:15px;
+  font-weight:700; cursor:pointer;
+}
+.btn-primary{background:linear-gradient(135deg,var(--c4),var(--c5)); color:#fff;}
+.btn-secondary{background:rgba(255,255,255,.8); color:var(--tea2); border:1.5px solid var(--line);}
+.btn-danger{background:var(--danger); color:#fff; width:100%; margin-top:10px;}
+.del-confirm{
+  display:none; background:#fff5f5; border:1px solid #f5c0b0;
+  border-radius:12px; padding:12px 14px; margin-top:10px; text-align:center;
+}
+.del-confirm.show{display:block;}
+.del-confirm p{font-size:13px; color:var(--danger); font-weight:600; margin-bottom:10px;}
+.del-confirm .action-row{margin-top:0;}
+
+/* ══ STATS PAGE ══ */
+.stats-wrap{padding:0 14px;}
+.seg-ctrl{
+  display:flex; border-radius:12px; overflow:hidden;
+  border:1.5px solid var(--line); margin-bottom:12px;
+}
+.seg-btn{
+  flex:1; padding:10px; text-align:center; font-size:14px;
+  background:transparent; color:var(--tea2); cursor:pointer; font-weight:500;
+  border:none;
+}
+.seg-btn.active{
+  background:linear-gradient(135deg,var(--c4),var(--c5));
+  color:#fff; font-weight:700;
+}
+.stat-nav{
+  display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;
+}
+.stat-nav button{
+  background:none; border:1.5px solid var(--line); border-radius:10px;
+  font-size:16px; color:var(--tea2); cursor:pointer; padding:6px 16px;
+}
+.stat-lbl{font-size:17px; font-weight:700; color:var(--tea);}
+.pie-wrap{text-align:center; margin-bottom:10px;}
+canvas#pieChart{max-width:220px;}
+.legend-list{margin:10px 0;}
+.legend-row{
+  display:flex; align-items:center; gap:8px; padding:6px 0;
+  border-bottom:1px solid var(--line); font-size:14px;
+}
 .legend-row:last-child{border-bottom:none;}
-.legend-sw{width:10px; height:10px; border-radius:2px; flex-shrink:0;}
-.legend-nm{flex:1; color:var(--pearl);}
-.legend-vl{color:var(--tea-light); font-size:11px; white-space:nowrap;}
-.stat-box{display:flex; justify-content:space-between; padding:7px 0; border-bottom:1px dashed var(--line); font-size:12.5px;}
-.stat-box:last-child{border-bottom:none;}
-.stat-box .k{color:var(--tea-light);}
-.stat-box .v{font-weight:700; color:var(--tea);}
+.legend-dot{width:12px; height:12px; border-radius:50%; flex-shrink:0;}
+.legend-nm{flex:1; font-weight:600; color:var(--pearl);}
+.legend-amt{color:var(--tea2); font-size:13px;}
+.stat-summary{
+  background:var(--bg); border:1px solid var(--line); border-radius:14px;
+  padding:4px 14px; margin-top:10px;
+}
+.srow{
+  display:flex; justify-content:space-between; align-items:center;
+  padding:11px 0; border-bottom:1px dashed var(--line); font-size:14px;
+}
+.srow:last-child{border-bottom:none;}
+.srow .sk{color:var(--tea2);}
+.srow .sv{font-weight:700; color:var(--tea); font-size:15px;}
 </style>
 </head>
 <body>
 
-<header>
-  <h1>🧋 手搖紀錄</h1>
-  <div class="sub">記錄每一杯的甜蜜時光</div>
-</header>
-
-<div class="tabs">
-  <div class="tab active" data-page="list">紀錄</div>
-  <div class="tab" data-page="cal">月曆</div>
-  <div class="tab" data-page="stats">統計</div>
+<!-- ══ CALENDAR PAGE ══ -->
+<div class="page active" id="page-cal">
+  <div class="pg-header">手搖日記</div>
+  <div class="cal-wrap">
+    <div class="cal-nav-row">
+      <button class="cal-arrow" id="calPrev">‹</button>
+      <div class="cal-month-lbl" id="calLabel"></div>
+      <button class="cal-arrow" id="calNext">›</button>
+    </div>
+    <div class="cal-wd-row">
+      <div class="cal-wd">週日</div><div class="cal-wd">週一</div><div class="cal-wd">週二</div>
+      <div class="cal-wd">週三</div><div class="cal-wd">週四</div><div class="cal-wd">週五</div><div class="cal-wd">週六</div>
+    </div>
+    <div class="cal-grid" id="calGrid"></div>
+    <div class="month-box">
+      <div class="mb-lbl" id="calMonthLbl">本月總飲料花費</div>
+      <div class="mb-num" id="calMonthTotal">$0</div>
+    </div>
+  </div>
+  <div class="day-section" id="daySection" style="display:none;">
+    <div class="day-title" id="dayTitle"></div>
+    <div class="day-card" id="dayCard"></div>
+  </div>
 </div>
 
-<!-- ══ LIST ══ -->
-<div class="page active" id="page-list">
-
-  <button class="add-btn" id="addBtn">＋ 新增一筆紀錄</button>
-
-  <div class="form-panel card" id="formPanel">
-    <div style="font-weight:700;color:var(--tea);font-size:14px;margin-bottom:10px;" id="formTitle">新增紀錄</div>
-    <div class="field"><label>日期</label><input type="date" id="f_date"></div>
-    <div class="field"><label>店名</label><input type="text" id="f_shop" placeholder="例如：50嵐"></div>
-    <div class="field"><label>品名</label><input type="text" id="f_item" placeholder="例如：四季春青茶"></div>
-    <div class="field"><label>金額</label><input type="number" id="f_price" placeholder="0" inputmode="numeric"></div>
-    <div class="field"><label>冰塊</label><div class="chiprow" id="iceChips"></div></div>
-    <div class="field"><label>甜度</label><div class="chiprow" id="sugarChips"></div></div>
-    <div class="field"><label>評價</label><div class="stars" id="starRow"></div></div>
-    <div class="field"><label>評語</label><textarea id="f_note" placeholder="這杯喝起來如何呢？"></textarea></div>
-    <div class="row2">
-      <button class="btn secondary" id="btnCancel">取消</button>
-      <button class="btn" id="btnSave">儲存</button>
+<!-- ══ ADD / EDIT PAGE ══ -->
+<div class="page" id="page-add">
+  <div class="pg-header" id="addPageTitle">新增紀錄</div>
+  <div class="form-page-wrap">
+    <div class="form-field">
+      <span class="fi">📅</span>
+      <input type="date" id="f_date">
     </div>
-    <!-- 刪除按鈕 + 自訂確認列（不用 confirm()） -->
-    <button class="btn danger" id="btnDelete" style="display:none;margin-top:8px;">刪除這筆紀錄</button>
+    <div class="form-field">
+      <span class="fi">🏪</span>
+      <input type="text" id="f_shop" placeholder="店名">
+    </div>
+    <div class="form-field">
+      <span class="fi">🧋</span>
+      <input type="text" id="f_item" placeholder="品項">
+    </div>
+    <div class="form-field">
+      <span class="fi">💰</span>
+      <input type="number" id="f_price" placeholder="金額" inputmode="numeric">
+    </div>
+    <div class="form-field">
+      <span class="fi">📝</span>
+      <textarea id="f_note" placeholder="評語"></textarea>
+    </div>
+
+    <div class="form-section-lbl">評價</div>
+    <div class="star-row" id="starRow"></div>
+
+    <div class="form-section-lbl">冰塊</div>
+    <div class="chip-group" id="iceChips"></div>
+
+    <div class="form-section-lbl">甜度</div>
+    <div class="chip-group" id="sugarChips"></div>
+
+    <div class="action-row">
+      <button class="btn btn-secondary" id="btnCancel">取消</button>
+      <button class="btn btn-primary" id="btnSave">儲存</button>
+    </div>
+    <button class="btn btn-danger" id="btnDelete" style="display:none;">刪除這筆紀錄</button>
     <div class="del-confirm" id="delConfirm">
-      <p>確定要刪除這筆紀錄嗎？</p>
-      <div class="row2">
-        <button class="btn secondary" id="btnDelNo">取消</button>
-        <button class="btn danger" id="btnDelYes">確定刪除</button>
+      <p>確定要刪除嗎？</p>
+      <div class="action-row">
+        <button class="btn btn-secondary" id="btnDelNo">取消</button>
+        <button class="btn btn-danger" id="btnDelYes" style="margin-top:0;flex:1;">確定刪除</button>
       </div>
     </div>
   </div>
-
-  <div class="card" id="listCard">
-    <div class="empty">尚無紀錄，點上方按鈕新增第一筆吧！</div>
-  </div>
 </div>
 
-<!-- ══ CALENDAR ══ -->
-<div class="page" id="page-cal">
-  <div class="card">
-    <div class="cal-head">
-      <button class="cal-nav" id="calPrev">‹</button>
-      <div class="cal-lbl" id="calLabel"></div>
-      <button class="cal-nav" id="calNext">›</button>
-    </div>
-    <div class="cal-grid" id="calGrid"></div>
-    <div class="month-total">
-      <div class="mnum" id="calMonthTotal">$0</div>
-      <div class="mlbl">本月消費總額</div>
-    </div>
-  </div>
-  <div class="card" id="calDayCard" style="display:none;">
-    <div id="calDayList"></div>
-  </div>
-</div>
-
-<!-- ══ STATS ══ -->
+<!-- ══ STATS PAGE ══ -->
 <div class="page" id="page-stats">
-  <div class="stat-mode-row">
-    <button class="active" data-mode="month">月份</button>
-    <button data-mode="year">年度</button>
+  <div class="pg-header">統計分析</div>
+  <div class="stats-wrap">
+    <div class="seg-ctrl">
+      <button class="seg-btn active" data-mode="month">本月累計</button>
+      <button class="seg-btn" data-mode="year">全年累積</button>
+    </div>
+    <div class="stat-nav">
+      <button id="statPrev">‹</button>
+      <div class="stat-lbl" id="statLabel"></div>
+      <button id="statNext">›</button>
+    </div>
+    <div class="pie-wrap">
+      <canvas id="pieChart" width="220" height="220"></canvas>
+    </div>
+    <div class="legend-list" id="legend"></div>
+    <div class="stat-summary" id="statSummary"></div>
   </div>
-  <div class="stat-nav-row">
-    <button id="statPrev">‹</button>
-    <div class="stat-lbl" id="statLabel"></div>
-    <button id="statNext">›</button>
-  </div>
-  <div class="card">
-    <canvas id="pieChart" style="display:block;margin:0 auto;"></canvas>
-    <div id="legend" style="margin-top:10px;"></div>
-  </div>
-  <div class="card" id="statSummary"></div>
 </div>
+
+<!-- ══ BOTTOM NAV ══ -->
+<nav class="bottom-nav">
+  <div class="nav-item active" data-nav="cal">
+    <div class="nav-icon">📅</div>
+    <div class="nav-lbl">手搖日記</div>
+  </div>
+  <div class="nav-add" data-nav="add">
+    <div class="nav-add-circle" id="navAddCircle">＋</div>
+    <div class="nav-lbl">新增紀錄</div>
+  </div>
+  <div class="nav-item" data-nav="stats">
+    <div class="nav-icon">📊</div>
+    <div class="nav-lbl">統計分析</div>
+  </div>
+</nav>
 
 <script>
 const ICE   = ["正常","少冰","微冰","去冰","常溫","溫","熱"];
 const SUGAR = ["全糖","少糖","半糖","微糖","一分糖","無糖","固定"];
-const STORE_KEY = "drinkLogRecords_v1";
-const PALETTE = ["#C9881F","#D9A441","#B5742A","#E8A95E","#8C6230",
-                 "#E8C16C","#A66A1E","#DCC07A","#6B4226","#F0DDA0"];
+const KEY   = "drinkLogRecords_v1";
+const PAL   = ["#C9881F","#D9502A","#B5742A","#7B3FA0","#2A7BC9","#3DAA6A","#E8A95E","#C94A75","#6B4226","#2AA8A0"];
 
-let records = JSON.parse(localStorage.getItem(STORE_KEY)||"[]");
+let records = JSON.parse(localStorage.getItem(KEY)||"[]");
 let editingId = null;
-let calYear, calMonth, today, selectedDayKey=null;
+let calYear, calMonth, today, selectedDay=null;
 let statMode="month", statYear, statMonth;
 const shopColors={};
+let curNav="cal";
 
-function colorForShop(name){
-  if(!shopColors[name]){
-    const taken=Object.values(shopColors);
-    shopColors[name]=PALETTE.find(c=>!taken.includes(c))||PALETTE[Object.keys(shopColors).length%PALETTE.length];
+function colorForShop(n){
+  if(!shopColors[n]){
+    const t=Object.values(shopColors);
+    shopColors[n]=PAL.find(c=>!t.includes(c))||PAL[Object.keys(shopColors).length%PAL.length];
   }
-  return shopColors[name];
+  return shopColors[n];
 }
-function save(){ localStorage.setItem(STORE_KEY,JSON.stringify(records)); }
+function save(){ localStorage.setItem(KEY,JSON.stringify(records)); }
 function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,7); }
 function fmt(n){ return "$"+Number(n||0).toLocaleString(); }
 function esc(s){ return (s||"").replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 
-/* tabs */
-document.querySelectorAll(".tab").forEach(t=>{
-  t.onclick=()=>{
-    document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
-    document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));
-    t.classList.add("active");
-    document.getElementById("page-"+t.dataset.page).classList.add("active");
-    if(t.dataset.page==="cal") renderCalendar();
-    if(t.dataset.page==="stats") renderStats();
-  };
+/* ── nav ── */
+let curIce=ICE[0], curSugar=SUGAR[0], curStars=0;
+
+function switchPage(name){
+  curNav=name;
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+  document.getElementById("page-"+name).classList.add("active");
+  document.querySelectorAll(".nav-item").forEach(x=>x.classList.remove("active"));
+  const ni=document.querySelector(`.nav-item[data-nav="${name}"]`);
+  if(ni) ni.classList.add("active");
+  const ac=document.getElementById("navAddCircle");
+  ac.classList.toggle("active-add", name==="add");
+  if(name==="cal") renderCalendar();
+  if(name==="stats") renderStats();
+}
+document.querySelectorAll(".nav-item[data-nav], .nav-add[data-nav]").forEach(el=>{
+  el.addEventListener("click",()=>{
+    const n=el.dataset.nav;
+    if(n==="add") openAdd(null);
+    else switchPage(n);
+  });
 });
 
-/* chips */
-let curIce=ICE[0],curSugar=SUGAR[0],curStars=0;
-function buildChips(el,opts,onPick,getSel){
+/* ── chips & stars ── */
+function buildChips(el, opts, onPick, getSel){
   el.innerHTML="";
   opts.forEach(o=>{
     const c=document.createElement("div");
     c.className="chip"+(getSel()===o?" sel":"");
     c.textContent=o;
-    c.onclick=()=>{onPick(o);refreshChips();};
+    c.onclick=()=>{onPick(o); refreshChips();};
     el.appendChild(c);
   });
 }
@@ -310,20 +420,16 @@ function renderStars(){
   const row=document.getElementById("starRow"); row.innerHTML="";
   for(let i=1;i<=5;i++){
     const s=document.createElement("span");
-    s.className="star"+(i<=curStars?" on":""); s.textContent="★";
-    s.onclick=()=>{curStars=(curStars===i?i-1:i);renderStars();};
+    s.className="star-btn"+(i<=curStars?" on":""); s.textContent="★";
+    s.onclick=()=>{curStars=(curStars===i?i-1:i); renderStars();};
     row.appendChild(s);
   }
 }
 
-/* form */
-const formPanel=document.getElementById("formPanel");
-const addBtn=document.getElementById("addBtn");
-const delConfirm=document.getElementById("delConfirm");
-
-function openForm(record){
+/* ── add/edit form ── */
+function openAdd(record){
   editingId=record?record.id:null;
-  document.getElementById("formTitle").textContent=record?"編輯紀錄":"新增紀錄";
+  document.getElementById("addPageTitle").textContent=record?"編輯紀錄":"新增紀錄";
   document.getElementById("f_date").value =record?record.date:new Date().toISOString().slice(0,10);
   document.getElementById("f_shop").value =record?record.shop:"";
   document.getElementById("f_item").value =record?record.item:"";
@@ -334,20 +440,16 @@ function openForm(record){
   curStars=record?record.stars:0;
   refreshChips();
   document.getElementById("btnDelete").style.display=record?"block":"none";
-  delConfirm.classList.remove("show");
-  formPanel.classList.add("open");
-  addBtn.style.display="none";
-  formPanel.scrollIntoView({behavior:"smooth",block:"nearest"});
+  document.getElementById("delConfirm").classList.remove("show");
+  switchPage("add");
+  window.scrollTo(0,0);
 }
-function closeForm(){
-  formPanel.classList.remove("open");
-  delConfirm.classList.remove("show");
-  addBtn.style.display="";
+function closeAdd(){
+  const prev = (curNav==="add") ? "cal" : curNav;
+  switchPage("cal");
 }
 
-addBtn.onclick=()=>openForm(null);
-document.getElementById("btnCancel").onclick=closeForm;
-
+document.getElementById("btnCancel").onclick=closeAdd;
 document.getElementById("btnSave").onclick=()=>{
   const shop =document.getElementById("f_shop").value.trim();
   const item =document.getElementById("f_item").value.trim();
@@ -362,67 +464,61 @@ document.getElementById("btnSave").onclick=()=>{
   } else {
     records.push({id:uid(),shop,item,price,date,note,ice:curIce,sugar:curSugar,stars:curStars});
   }
-  save(); closeForm(); renderList(); renderCalendar(); renderStats();
+  save(); closeAdd(); renderCalendar(); renderStats();
 };
-
-/* 刪除：自訂確認，不用 confirm() */
 document.getElementById("btnDelete").onclick=()=>{
-  delConfirm.classList.add("show");
+  document.getElementById("delConfirm").classList.add("show");
 };
 document.getElementById("btnDelNo").onclick=()=>{
-  delConfirm.classList.remove("show");
+  document.getElementById("delConfirm").classList.remove("show");
 };
 document.getElementById("btnDelYes").onclick=()=>{
   records=records.filter(r=>r.id!==editingId);
-  save(); closeForm(); renderList(); renderCalendar(); renderStats();
+  save(); closeAdd(); renderCalendar(); renderStats();
 };
 
-/* list */
-function makeRecord(r, showDate){
+/* ── record item builder ── */
+function makeRecItem(r, showDate){
   colorForShop(r.shop);
-  const div=document.createElement("div"); div.className="record";
+  const div=document.createElement("div"); div.className="rec-item";
+  const stars="★".repeat(r.stars||0)+"☆".repeat(5-(r.stars||0));
+  const dateStr=showDate? r.date.slice(5).replace("-","/")+` - ` : "";
   div.innerHTML=`
-    <div class="rec-dot" style="background:${shopColors[r.shop]}"></div>
-    <div class="rec-info">
-      <div class="rec-top">
-        <div class="rec-shop">${esc(r.shop)}</div>
+    <div class="rec-bar" style="background:${shopColors[r.shop]}"></div>
+    <div class="rec-body">
+      <div class="rec-row1">
+        <div><span class="rec-shop">${esc(r.shop)}</span><span class="rec-stars">${stars}</span></div>
         <div class="rec-price">${fmt(r.price)}</div>
       </div>
-      ${r.item?`<div class="rec-item">${esc(r.item)}</div>`:""}
-      <div class="rec-meta">🧊${r.ice} ・ 🍯${r.sugar} &nbsp;<span class="rec-stars">${"★".repeat(r.stars||0)}${"☆".repeat(5-(r.stars||0))}</span></div>
-      ${r.note?`<div class="rec-note">「${esc(r.note)}」</div>`:""}
-      ${showDate?`<div class="rec-date">${r.date}</div>`:""}
+      ${(r.item||showDate)?`<div class="rec-row2">${dateStr}${esc(r.item||"")}</div>`:""}
+      <div class="rec-tags">
+        ${r.ice?`<span class="rec-tag">${r.ice}</span>`:""}
+        ${r.sugar?`<span class="rec-tag">${r.sugar}</span>`:""}
+      </div>
+      ${r.note?`<div class="rec-note-txt">「${esc(r.note)}」</div>`:""}
     </div>`;
   return div;
 }
 
-function renderList(){
-  const card=document.getElementById("listCard");
-  if(!records.length){ card.innerHTML='<div class="empty">尚無紀錄，點上方按鈕新增第一筆吧！</div>'; return; }
-  card.innerHTML="";
-  [...records].sort((a,b)=>b.date.localeCompare(a.date)).forEach(r=>{
-    const div=makeRecord(r,true);
-    div.onclick=()=>openForm(r);
-    card.appendChild(div);
-  });
-}
-
-/* calendar */
+/* ── calendar ── */
 function initCal(){
   const n=new Date(); calYear=n.getFullYear(); calMonth=n.getMonth();
   today=n.toISOString().slice(0,10);
 }
-document.getElementById("calPrev").onclick=()=>{calMonth--;if(calMonth<0){calMonth=11;calYear--;}renderCalendar();};
-document.getElementById("calNext").onclick=()=>{calMonth++;if(calMonth>11){calMonth=0;calYear++;}renderCalendar();};
+document.getElementById("calPrev").onclick=()=>{
+  calMonth--; if(calMonth<0){calMonth=11;calYear--;} selectedDay=null; renderCalendar();
+};
+document.getElementById("calNext").onclick=()=>{
+  calMonth++; if(calMonth>11){calMonth=0;calYear++;} selectedDay=null; renderCalendar();
+};
 
 function renderCalendar(){
-  document.getElementById("calLabel").textContent=`${calYear} 年 ${calMonth+1} 月`;
+  document.getElementById("calLabel").textContent=`${calYear}年${calMonth+1}月`;
+  document.getElementById("calMonthLbl").textContent=`${calMonth+1}月總飲料花費`;
   const grid=document.getElementById("calGrid"); grid.innerHTML="";
-  ["日","一","二","三","四","五","六"].forEach(w=>{
-    const d=document.createElement("div"); d.className="cal-wd"; d.textContent=w; grid.appendChild(d);
-  });
   const startDow=new Date(calYear,calMonth,1).getDay();
   const dim=new Date(calYear,calMonth+1,0).getDate();
+  const prevDim=new Date(calYear,calMonth,0).getDate();
   const byDay={};let tot=0;
   records.forEach(r=>{
     const d=new Date(r.date);
@@ -432,53 +528,58 @@ function renderCalendar(){
     }
   });
   document.getElementById("calMonthTotal").textContent=fmt(tot);
+  // prev month ghost
   for(let i=0;i<startDow;i++){
-    const c=document.createElement("div"); c.className="cal-cell empty"; grid.appendChild(c);
+    const c=document.createElement("div"); c.className="cal-cell other-month";
+    c.textContent=prevDim-startDow+1+i; grid.appendChild(c);
   }
   for(let d=1;d<=dim;d++){
     const key=`${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
     const has=byDay[key];
     const cell=document.createElement("div");
-    cell.className="cal-cell"+(has?" has":"")+(key===today?" today":"")+(key===selectedDayKey?" sel":"");
-    let s=0; if(has) has.forEach(r=>s+=Number(r.price)||0);
-    cell.innerHTML=`<div>${d}</div>`+(has?`<div class="camt">${s}</div>`:"");
-    cell.onclick=()=>{ selectedDayKey=(selectedDayKey===key?null:key); renderCalendar(); renderDayDetail(); };
+    let cls="cal-cell"+(has?" has":"")+(key===today?" today":"")+(key===selectedDay?" sel":"");
+    cell.className=cls; cell.textContent=d;
+    if(has){ const dot=document.createElement("div"); dot.className="cal-dot"; cell.appendChild(dot); }
+    cell.onclick=()=>{ selectedDay=(selectedDay===key?null:key); renderCalendar(); renderDayDetail(); };
     grid.appendChild(cell);
+  }
+  // next month ghost
+  const total=startDow+dim; const rem=total%7===0?0:7-(total%7);
+  for(let i=1;i<=rem;i++){
+    const c=document.createElement("div"); c.className="cal-cell other-month";
+    c.textContent=i; grid.appendChild(c);
   }
   renderDayDetail();
 }
 function renderDayDetail(){
-  const list=records.filter(r=>r.date===selectedDayKey);
-  const card=document.getElementById("calDayCard");
-  const box=document.getElementById("calDayList");
-  if(!selectedDayKey||!list.length){ card.style.display="none"; return; }
-  card.style.display="block"; box.innerHTML=`<div class="day-title">${selectedDayKey}</div>`;
+  const list=records.filter(r=>r.date===selectedDay);
+  const sec=document.getElementById("daySection");
+  const card=document.getElementById("dayCard");
+  if(!selectedDay||!list.length){ sec.style.display="none"; return; }
+  sec.style.display="block";
+  document.getElementById("dayTitle").textContent=
+    `${selectedDay.slice(5).replace("-","/")} 的紀錄`;
+  card.innerHTML="";
   list.forEach(r=>{
-    const div=makeRecord(r,false);
-    div.onclick=()=>{
-      document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
-      document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));
-      document.querySelector('[data-page="list"]').classList.add("active");
-      document.getElementById("page-list").classList.add("active");
-      openForm(r);
-    };
-    box.appendChild(div);
+    const el=makeRecItem(r,false);
+    el.onclick=()=>openAdd(r);
+    card.appendChild(el);
   });
 }
 
-/* stats */
+/* ── stats ── */
 function initStats(){ const n=new Date(); statYear=n.getFullYear(); statMonth=n.getMonth(); }
-document.querySelectorAll(".stat-mode-row button").forEach(b=>{
+document.querySelectorAll(".seg-btn").forEach(b=>{
   b.onclick=()=>{
-    document.querySelectorAll(".stat-mode-row button").forEach(x=>x.classList.remove("active"));
+    document.querySelectorAll(".seg-btn").forEach(x=>x.classList.remove("active"));
     b.classList.add("active"); statMode=b.dataset.mode; renderStats();
   };
 });
 document.getElementById("statPrev").onclick=()=>{
-  statMode==="month"?(--statMonth<0&&(statMonth=11,statYear--)):statYear--;renderStats();
+  statMode==="month"?(--statMonth<0&&(statMonth=11,statYear--)):statYear--; renderStats();
 };
 document.getElementById("statNext").onclick=()=>{
-  statMode==="month"?(++statMonth>11&&(statMonth=0,statYear++)):statYear++;renderStats();
+  statMode==="month"?(++statMonth>11&&(statMonth=0,statYear++)):statYear++; renderStats();
 };
 
 function renderStats(){
@@ -490,64 +591,78 @@ function renderStats(){
       ?(d.getFullYear()===statYear&&d.getMonth()===statMonth)
       :d.getFullYear()===statYear;
   });
-  const byShop={}; let total=0;
-  filtered.forEach(r=>{colorForShop(r.shop); byShop[r.shop]=(byShop[r.shop]||0)+(Number(r.price)||0); total+=Number(r.price)||0;});
+  const byShop={}; let total=0; let cups=filtered.length;
+  filtered.forEach(r=>{
+    colorForShop(r.shop);
+    byShop[r.shop]=(byShop[r.shop]||0)+(Number(r.price)||0);
+    total+=Number(r.price)||0;
+  });
   const entries=Object.entries(byShop).sort((a,b)=>b[1]-a[1]);
-  drawPie(entries,total);
+  drawPie(entries, total, cups);
   const legend=document.getElementById("legend"); legend.innerHTML="";
-  if(!entries.length){ legend.innerHTML='<div class="empty">這段期間還沒有紀錄</div>'; }
+  if(!entries.length){
+    legend.innerHTML='<div class="empty-state">這段期間還沒有紀錄</div>';
+  }
   entries.forEach(([shop,amt])=>{
+    const pct=total?((amt/total)*100).toFixed(0):0;
     const row=document.createElement("div"); row.className="legend-row";
-    const pct=total?((amt/total)*100).toFixed(1):0;
-    row.innerHTML=`<div class="legend-sw" style="background:${shopColors[shop]}"></div>
-      <div class="legend-nm">${esc(shop)}</div><div class="legend-vl">${fmt(amt)} (${pct}%)</div>`;
+    row.innerHTML=`<div class="legend-dot" style="background:${shopColors[shop]}"></div>
+      <div class="legend-nm">${esc(shop)}</div>
+      <div class="legend-amt">${fmt(amt)} (${pct}%)</div>`;
     legend.appendChild(row);
   });
-  const n=filtered.length;
-  const avgP=n?Math.round(total/n):0;
-  const avgS=n?(filtered.reduce((s,r)=>s+(r.stars||0),0)/n).toFixed(1):0;
+  const avgP=cups?Math.round(total/cups):0;
+  const avgS=cups?(filtered.reduce((s,r)=>s+(r.stars||0),0)/cups).toFixed(1):0;
   const topShop=entries.length?entries[0][0]:"—";
   const sc={},ic={};
   filtered.forEach(r=>{ sc[r.sugar]=(sc[r.sugar]||0)+1; ic[r.ice]=(ic[r.ice]||0)+1; });
   const fs=Object.entries(sc).sort((a,b)=>b[1]-a[1])[0];
   const fi=Object.entries(ic).sort((a,b)=>b[1]-a[1])[0];
   document.getElementById("statSummary").innerHTML=`
-    <div class="stat-box"><div class="k">總消費</div><div class="v">${fmt(total)}</div></div>
-    <div class="stat-box"><div class="k">杯數</div><div class="v">${n} 杯</div></div>
-    <div class="stat-box"><div class="k">平均單價</div><div class="v">${fmt(avgP)}</div></div>
-    <div class="stat-box"><div class="k">平均評價</div><div class="v">${avgS} ★</div></div>
-    <div class="stat-box"><div class="k">最常光顧</div><div class="v">${esc(topShop)}</div></div>
-    <div class="stat-box"><div class="k">偏好甜度</div><div class="v">${fs?fs[0]:"—"}</div></div>
-    <div class="stat-box"><div class="k">偏好冰塊</div><div class="v">${fi?fi[0]:"—"}</div></div>`;
+    <div class="srow"><div class="sk">總消費</div><div class="sv">${fmt(total)}</div></div>
+    <div class="srow"><div class="sk">杯數</div><div class="sv">${cups} 杯</div></div>
+    <div class="srow"><div class="sk">平均單價</div><div class="sv">${fmt(avgP)}</div></div>
+    <div class="srow"><div class="sk">平均評價</div><div class="sv">${avgS} ★</div></div>
+    <div class="srow"><div class="sk">最常光顧</div><div class="sv">${esc(topShop)}</div></div>
+    <div class="srow"><div class="sk">偏好甜度</div><div class="sv">${fs?fs[0]:"—"}</div></div>
+    <div class="srow"><div class="sk">偏好冰塊</div><div class="sv">${fi?fi[0]:"—"}</div></div>`;
 }
 
-function drawPie(entries,total){
+function drawPie(entries, total, cups){
   const canvas=document.getElementById("pieChart");
   const dpr=window.devicePixelRatio||1;
-  const w=canvas.parentElement.clientWidth||260;
-  const size=Math.min(w-24,220);
+  const size=220;
   canvas.style.width=size+"px"; canvas.style.height=size+"px";
   canvas.width=size*dpr; canvas.height=size*dpr;
   const ctx=canvas.getContext("2d"); ctx.scale(dpr,dpr);
-  const cx=size/2,cy=size/2,r=size/2-8;
+  const cx=size/2, cy=size/2, r=size/2-10;
   ctx.clearRect(0,0,size,size);
   if(!total||!entries.length){
-    ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.fillStyle="#F5EBC8";ctx.fill();
-    ctx.fillStyle="#B5A074";ctx.font="12px sans-serif";ctx.textAlign="center";ctx.fillText("尚無資料",cx,cy+4);
-    return;
+    ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2);
+    ctx.fillStyle="#F0E6C0"; ctx.fill();
+    ctx.fillStyle="#9C6B3E"; ctx.font="13px PingFang TC,sans-serif";
+    ctx.textAlign="center"; ctx.fillText("尚無資料",cx,cy+5); return;
   }
   let start=-Math.PI/2;
   entries.forEach(([shop,amt])=>{
     const slice=(amt/total)*Math.PI*2;
-    ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,r,start,start+slice);ctx.closePath();
-    ctx.fillStyle=shopColors[shop];ctx.fill();
+    ctx.beginPath(); ctx.moveTo(cx,cy);
+    ctx.arc(cx,cy,r,start,start+slice); ctx.closePath();
+    ctx.fillStyle=shopColors[shop]; ctx.fill();
     start+=slice;
   });
-  ctx.beginPath();ctx.arc(cx,cy,r*.52,0,Math.PI*2);ctx.fillStyle="#FFFDF5";ctx.fill();
-  ctx.fillStyle="#6B4226";ctx.font="bold 14px sans-serif";ctx.textAlign="center";ctx.fillText(fmt(total),cx,cy+5);
+  ctx.beginPath(); ctx.arc(cx,cy,r*.55,0,Math.PI*2);
+  ctx.fillStyle="#FFFDF5"; ctx.fill();
+  // center text: 本月累積 / 杯數
+  const modeLabel = statMode==="month"?"本月累積":"本年累積";
+  ctx.fillStyle="#9C6B3E"; ctx.font=`500 13px PingFang TC,sans-serif`;
+  ctx.textAlign="center"; ctx.fillText(modeLabel,cx,cy-8);
+  ctx.fillStyle="#D9A441"; ctx.font=`bold 22px PingFang TC,sans-serif`;
+  ctx.fillText(`${cups} 杯`,cx,cy+16);
 }
 
-initCal(); initStats(); refreshChips(); renderList(); renderCalendar(); renderStats();
+/* init */
+initCal(); initStats(); refreshChips(); renderCalendar(); renderStats();
 </script>
 </body>
 </html>
