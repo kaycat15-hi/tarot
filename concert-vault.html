@@ -101,7 +101,7 @@ button{cursor:pointer;}
 .list-row{
   display:flex;background:var(--surface);border-radius:var(--radius);overflow:hidden;
   box-shadow:var(--shadow);margin-bottom:10px;border-left:5px solid var(--ink-soft);
-  min-height:92px;position:relative;
+  height:90px;position:relative;
 }
 .list-row.status-seen{border-left-color:var(--green);}
 .list-row.status-purchased{border-left-color:var(--accent);}
@@ -109,13 +109,13 @@ button{cursor:pointer;}
 .list-row.type-movie{border-left-color:var(--purple);}
 .list-row.urgent{border-left-color:var(--orange);}
 .list-row.multi-show{background:linear-gradient(100deg,#fbf3e7,var(--surface) 55%);}
-.list-row img.thumb{width:38%;object-fit:cover;flex-shrink:0;}
-.list-row .thumb-fallback{width:38%;flex-shrink:0;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:26px;color:var(--line);}
-.list-mid{flex:1;padding:10px 12px;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;}
-.list-mid .artist{font-size:18px;font-weight:700;font-family:'DM Sans';white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.list-row img.thumb{width:38%;height:100%;object-fit:cover;flex-shrink:0;display:block;}
+.list-row .thumb-fallback{width:38%;height:100%;flex-shrink:0;background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:26px;color:var(--line);}
+.list-mid{flex:1;padding:8px 12px;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:2px;overflow:hidden;}
+.list-mid .artist{font-size:17px;font-weight:700;font-family:'DM Sans';white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .list-mid .title-sm{font-size:11px;color:var(--ink-soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.list-mid .venue-sm{font-size:11px;color:var(--ink-soft);}
-.list-mid .badges{display:flex;gap:4px;margin-top:3px;}
+.list-mid .venue-sm{font-size:11px;color:var(--ink-soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.list-mid .badges{display:flex;gap:4px;margin-top:3px;overflow:hidden;white-space:nowrap;}
 .badge{font-size:10px;padding:2px 7px;border-radius:20px;background:var(--bg);color:var(--ink-soft);}
 .badge.seen{background:var(--green);color:#fff;}
 .list-date{
@@ -352,8 +352,7 @@ textarea.code-area{width:100%;min-height:120px;font-family:monospace;font-size:1
       <button class="menu-toggle" id="menuToggle">☰</button>
       <input class="search-box" id="searchBox" type="text" placeholder="搜尋藝人、場地、標籤…">
       <div class="view-switch" id="viewSwitch">
-        <button data-view="list" class="active">條列</button>
-        <button data-view="grid">格狀</button>
+        <button data-view="grid" class="active">格狀</button>
         <button data-view="ticket">票根</button>
         <button data-view="calendar">日曆</button>
       </div>
@@ -592,7 +591,7 @@ async function ensureInit(){
 /* ---------- State ---------- */
 const state={
   events:[],
-  view:'list',
+  view:'grid',
   nav:'all',
   typeFilter:'all',
   statusFilter:'all',
@@ -744,7 +743,7 @@ function renderGridCard(ev){
     </div>
     <div class="grid-info">
       <div class="artist">${escapeHtml(ev.artist||ev.title||'未命名')}</div>
-      <div class="meta">${escapeHtml(ev.venue||ev.city||'')} · ${ev.date}</div>
+      <div class="meta">${ev.type==='movie'?escapeHtml(ev.titleEn||ev.venue||''):escapeHtml(ev.venue||ev.city||'')} · ${ev.date}</div>
     </div>
   </div>`;
 }
@@ -760,7 +759,19 @@ function renderTicketRow(ev){
   const classes=['ticket-row',statusClass(ev)];
   if(isUrgent(ev)) classes.push('urgent');
   const src=firstImg(ev);
-  const seatStr=[ev.seat&&ev.seat.section,ev.seat&&ev.seat.row?('排'+ev.seat.row):'',ev.seat&&ev.seat.number?(ev.seat.number+'號'):''].filter(Boolean).join(' ');
+  const isMovie=ev.type==='movie';
+  const seatStr = isMovie
+    ? [ev.hall,ev.seat&&ev.seat.number].filter(Boolean).join(' · ')
+    : [ev.seat&&ev.seat.section,ev.seat&&ev.seat.row?('排'+ev.seat.row):'',ev.seat&&ev.seat.number?(ev.seat.number+'號'):''].filter(Boolean).join(' ');
+  const midLines = isMovie
+    ? `<div class="t-title">${escapeHtml(ev.titleEn||'')}</div>
+       <div class="t-line">${escapeHtml(ev.venue||'')}${ev.screenType?(' · '+escapeHtml(ev.screenType)):''} ${ev.showTime?('· '+fmtTimeWithTz(ev.showTime,ev.timezone)):''}</div>
+       ${seatStr?`<div class="t-line">🎬 ${escapeHtml(seatStr)}</div>`:''}
+       ${ev.duration?`<div class="t-line">片長 ${escapeHtml(String(ev.duration))} 分鐘</div>`:''}`
+    : `<div class="t-title">${escapeHtml(ev.title)}</div>
+       <div class="t-line">${escapeHtml(ev.venue||ev.city||'')} ${ev.showTime?('· '+fmtTimeWithTz(ev.showTime,ev.timezone)):''}</div>
+       ${seatStr?`<div class="t-line">💺 ${escapeHtml(seatStr)}</div>`:''}
+       ${ev.standing?`<div class="t-standing">站位序號：${escapeHtml(ev.standing)}</div>`:''}`;
   return `<div class="${classes.join(' ')}" data-id="${ev.id}">
     <div class="ticket-imgcol">
       ${src?`<img src="${src}" alt="">`:'<div class="no-img">🎫</div>'}
@@ -768,10 +779,7 @@ function renderTicketRow(ev){
     </div>
     <div class="ticket-mid">
       <div class="artist">${escapeHtml(ev.artist||ev.title||'未命名')}</div>
-      <div class="t-title">${escapeHtml(ev.title)}</div>
-      <div class="t-line">${escapeHtml(ev.venue||ev.city||'')} ${ev.showTime?('· '+fmtTimeWithTz(ev.showTime,ev.timezone)):''}</div>
-      ${seatStr?`<div class="t-line">💺 ${escapeHtml(seatStr)}</div>`:''}
-      ${ev.standing?`<div class="t-standing">站位序號：${escapeHtml(ev.standing)}</div>`:''}
+      ${midLines}
     </div>
     <div class="ticket-right">
       <div class="cd-num">${daysUntil(ev.date)>=0?daysUntil(ev.date):'—'}</div>
@@ -896,6 +904,7 @@ function blankDraft(){
     presaleReminder:'off',showReminder:'off',
     notes:'',setlist:[],images:[],link:'',tags:[],
     director:'',cast:'',screenType:'',
+    titleEn:'',releaseDate:'',hall:'',duration:'',companion:'',
   };
 }
 function openForm(editId){
@@ -904,6 +913,11 @@ function openForm(editId){
   if(!state.formDraft.entryTime) state.formDraft.entryTime={period:'AM',hour:'',min:'00'};
   if(!state.formDraft.showTime) state.formDraft.showTime={period:'PM',hour:'',min:'00'};
   if(!state.formDraft.seat) state.formDraft.seat={section:'',row:'',number:''};
+  if(state.formDraft.titleEn===undefined) state.formDraft.titleEn='';
+  if(state.formDraft.releaseDate===undefined) state.formDraft.releaseDate='';
+  if(state.formDraft.hall===undefined) state.formDraft.hall='';
+  if(state.formDraft.duration===undefined) state.formDraft.duration='';
+  if(state.formDraft.companion===undefined) state.formDraft.companion='';
   state.formPage=1;
   document.getElementById('formTitle').textContent = editId ? '編輯記錄' : '新增記錄';
   renderForm();
@@ -938,7 +952,7 @@ function renderForm(){
   const mem=loadMemory();
   const isMovie=d.type==='movie';
 
-  const page1=`
+  const page1Concert=`
     <div class="type-select" id="typeSelect">
       <button data-type="concert" class="${d.type==='concert'?'active':''}">🎤 演唱會</button>
       <button data-type="movie" class="${d.type==='movie'?'active':''}">🎬 電影</button>
@@ -946,17 +960,10 @@ function renderForm(){
     </div>
     <div class="field-group"><label>活動抬頭</label><input type="text" id="f_title" value="${escapeHtml(d.title)}"></div>
     <div class="field-group autocomplete-wrap">
-      <label>${isMovie?'片名':'藝人／片名'}</label>
+      <label>藝人／片名</label>
       <input type="text" id="f_artist" autocomplete="off" value="${escapeHtml(d.artist)}">
       <div class="autocomplete-list" id="ac_artist"></div>
     </div>
-    ${isMovie?`
-    <div class="field-row">
-      <div class="field-group"><label>導演</label><input type="text" id="f_director" value="${escapeHtml(d.director)}"></div>
-      <div class="field-group"><label>主演</label><input type="text" id="f_cast" value="${escapeHtml(d.cast)}"></div>
-    </div>
-    <div class="field-group"><label>院線／平台</label><input type="text" id="f_screenType" value="${escapeHtml(d.screenType)}"></div>
-    `:''}
     <div class="field-group"><label>演出日期</label><input type="date" id="f_date" value="${d.date}"></div>
     <div class="field-row">
       <div class="field-group"><label>場地</label><input type="text" id="f_venue" value="${escapeHtml(d.venue)}"></div>
@@ -985,8 +992,39 @@ function renderForm(){
     <div class="field-group"><label>開演時間</label>${timeRowHtml('showTime',d.showTime)}</div>
   `;
 
+  const page1Movie=`
+    <div class="type-select" id="typeSelect">
+      <button data-type="concert" class="${d.type==='concert'?'active':''}">🎤 演唱會</button>
+      <button data-type="movie" class="${d.type==='movie'?'active':''}">🎬 電影</button>
+      <button data-type="other" class="${d.type==='other'?'active':''}">📌 其他</button>
+    </div>
+    <div class="field-group autocomplete-wrap">
+      <label>片名（中文）</label>
+      <input type="text" id="f_artist" autocomplete="off" value="${escapeHtml(d.artist)}">
+      <div class="autocomplete-list" id="ac_artist"></div>
+    </div>
+    <div class="field-group"><label>片名（英文）</label><input type="text" id="f_titleEn" value="${escapeHtml(d.titleEn)}"></div>
+    <div class="field-row">
+      <div class="field-group"><label>場次日期</label><input type="date" id="f_date" value="${d.date}"></div>
+      <div class="field-group"><label>上映日期</label><input type="date" id="f_releaseDate" value="${d.releaseDate}"></div>
+    </div>
+    <div class="field-group"><label>場次時間</label>${timeRowHtml('showTime',d.showTime)}</div>
+    <div class="field-row">
+      <div class="field-group"><label>影城</label><input type="text" id="f_venue" value="${escapeHtml(d.venue)}"></div>
+      <div class="field-group"><label>版本</label><input type="text" id="f_screenType" placeholder="數位／IMAX／3D…" value="${escapeHtml(d.screenType)}"></div>
+    </div>
+    <div class="field-row">
+      <div class="field-group"><label>影廳</label><input type="text" id="f_hall" value="${escapeHtml(d.hall)}"></div>
+      <div class="field-group"><label>座位</label><input type="text" id="f_movieSeat" value="${escapeHtml(d.seat.number)}"></div>
+    </div>
+    <div class="field-row">
+      <div class="field-group"><label>導演</label><input type="text" id="f_director" value="${escapeHtml(d.director)}"></div>
+      <div class="field-group"><label>主演</label><input type="text" id="f_cast" value="${escapeHtml(d.cast)}"></div>
+    </div>
+  `;
+
   const methods=['一般購票','抽籤中籤','預售搶票','轉售購入','贈票','兌換票','媒體票','其他'];
-  const page2=`
+  const page2Concert=`
     <div class="field-group">
       <label>購票狀態</label>
       <div class="status-btns" id="statusBtns">
@@ -1048,6 +1086,39 @@ function renderForm(){
     <div class="field-group"><label>官網／票務連結</label><input type="text" id="f_link" value="${escapeHtml(d.link)}"></div>
     <div class="field-group"><label>標籤（逗號分隔）</label><input type="text" id="f_tags" value="${escapeHtml((d.tags||[]).join(', '))}"></div>
   `;
+
+  const page2Movie=`
+    <div class="field-group">
+      <label>購票狀態</label>
+      <div class="status-btns" id="statusBtns">
+        <button data-status="unpurchased" class="${d.ticketStatus==='unpurchased'?'active':''}">未購票</button>
+        <button data-status="purchased" class="${d.ticketStatus==='purchased'?'active':''}">已購票</button>
+        <button data-status="seen" class="${d.ticketStatus==='seen'?'active':''}">已看</button>
+      </div>
+    </div>
+    <div class="field-group">
+      <label>票價</label>
+      <div class="field-row">
+        <div style="flex:1;"><select id="f_currency">
+          ${['TWD','JPY','USD','KRW','HKD','CNY'].map(c=>`<option value="${c}" ${d.currency===c?'selected':''}>${c}</option>`).join('')}
+        </select></div>
+        <div style="flex:2;"><input type="number" id="f_price" placeholder="票價" value="${d.price}"></div>
+      </div>
+    </div>
+    <div class="field-group"><label>片長（分鐘）</label><input type="number" id="f_duration" value="${escapeHtml(d.duration)}"></div>
+    <div class="field-group"><label>同行</label><input type="text" id="f_companion" placeholder="與誰一起看（選填，不填也可寫進備註）" value="${escapeHtml(d.companion)}"></div>
+    <div class="field-group"><label>備註</label><textarea id="f_notes">${escapeHtml(d.notes)}</textarea></div>
+    <div class="field-group">
+      <label>圖片（可多張）</label>
+      <div class="upload-box" id="uploadBox">點擊或拖曳上傳圖片</div>
+      <input type="file" id="f_images" accept="image/*" multiple style="display:none;">
+      <div class="img-thumbs" id="imgThumbs"></div>
+    </div>
+    <div class="field-group"><label>官網／訂票連結</label><input type="text" id="f_link" value="${escapeHtml(d.link)}"></div>
+  `;
+
+  const page1 = isMovie ? page1Movie : page1Concert;
+  const page2 = isMovie ? page2Movie : page2Concert;
 
   document.getElementById('formBody').innerHTML =
     `<div class="form-page ${state.formPage===1?'active':''}" id="page1">${page1}</div>
@@ -1118,12 +1189,18 @@ function bindFormEvents(){
   };
   bind('f_title','title');
   bind('f_artist','artist');
+  bind('f_titleEn','titleEn');
   bind('f_director','director');
   bind('f_cast','cast');
   bind('f_screenType','screenType');
   bind('f_date','date');
+  bind('f_releaseDate','releaseDate');
   bind('f_venue','venue');
   bind('f_city','city');
+  bind('f_hall','hall');
+  bind('f_movieSeat','seat.number');
+  bind('f_duration','duration');
+  bind('f_companion','companion');
   bind('f_organizer','organizer');
   bind('f_platform','platform');
   bind('f_timezoneCustom','timezoneCustom');
@@ -1286,15 +1363,19 @@ function renderDetail(){
   if(!ev) return;
   const isMovie=ev.type==='movie';
   const src=firstImg(ev);
-  const seatStr=[ev.seat&&ev.seat.section,ev.seat&&ev.seat.row?('排'+ev.seat.row):'',ev.seat&&ev.seat.number?(ev.seat.number+'號'):''].filter(Boolean).join(' ');
+  const seatStr = isMovie
+    ? [ev.hall,ev.seat&&ev.seat.number].filter(Boolean).join(' · ')
+    : [ev.seat&&ev.seat.section,ev.seat&&ev.seat.row?('排'+ev.seat.row):'',ev.seat&&ev.seat.number?(ev.seat.number+'號'):''].filter(Boolean).join(' ');
   const total=(Number(ev.price)||0)+(Number(ev.fee)||0);
 
   const stubInfoCells = isMovie ? `
       <div class="cell"><label>場次</label><div class="val">${ev.date}${ev.showTime&&ev.showTime.hour?'<br>'+fmtTimeWithTz(ev.showTime,ev.timezone):''}</div></div>
-      <div class="cell"><label>影城</label><div class="val">${escapeHtml(ev.venue||ev.city||'')}</div></div>
+      <div class="cell"><label>上映日期</label><div class="val">${escapeHtml(ev.releaseDate||'—')}</div></div>
+      <div class="cell"><label>影城</label><div class="val">${escapeHtml(ev.venue||ev.city||'—')}</div></div>
       <div class="cell"><label>版本</label><div class="val">${escapeHtml(ev.screenType||'—')}</div></div>
-      <div class="cell"><label>影廳</label><div class="val accent">${escapeHtml(ev.seat.section||'—')}</div></div>
-      <div class="cell"><label>座位</label><div class="val accent">${escapeHtml(seatStr||'—')}</div></div>
+      <div class="cell"><label>影廳</label><div class="val accent">${escapeHtml(ev.hall||'—')}</div></div>
+      <div class="cell"><label>座位</label><div class="val accent">${escapeHtml(ev.seat&&ev.seat.number||'—')}</div></div>
+      <div class="cell"><label>片長</label><div class="val">${ev.duration?escapeHtml(String(ev.duration))+' 分鐘':'—'}</div></div>
       <div class="cell"><label>狀態</label><div class="val">${ev.ticketStatus==='seen'?'已看':(ev.ticketStatus==='purchased'?'已購票':'未購票')}</div></div>
   ` : `
       <div class="cell"><label>場次</label><div class="val">${ev.date}${ev.showTime&&ev.showTime.hour?'<br>'+fmtTimeWithTz(ev.showTime,ev.timezone):''}</div></div>
@@ -1312,7 +1393,7 @@ function renderDetail(){
         <div class="stub-badge">${fmtCountdown(ev.date)}</div>
       </div>
       <div class="stub-title serif">${escapeHtml(ev.artist||ev.title||'未命名')}</div>
-      <div style="padding:0 18px;font-size:12.5px;color:var(--ink-soft);">${escapeHtml(ev.title!==ev.artist?ev.title:'')}</div>
+      <div style="padding:0 18px;font-size:12.5px;color:var(--ink-soft);">${escapeHtml(isMovie?(ev.titleEn||''):(ev.title!==ev.artist?ev.title:''))}</div>
       <div class="stub-divider"></div>
       <div class="stub-info">${stubInfoCells}</div>
     </div>
@@ -1320,11 +1401,12 @@ function renderDetail(){
 
   html+=`<div class="detail-sec"><h4>演出資訊</h4>
     <div class="detail-row"><span>類型</span><span>${isMovie?'🎬 電影':(ev.type==='other'?'📌 其他':'🎤 演唱會')}</span></div>
-    ${ev.organizer?`<div class="detail-row"><span>主辦單位</span><span>${escapeHtml(ev.organizer)}</span></div>`:''}
-    ${ev.platform?`<div class="detail-row"><span>售票平台</span><span>${escapeHtml(ev.platform)}</span></div>`:''}
+    ${!isMovie&&ev.organizer?`<div class="detail-row"><span>主辦單位</span><span>${escapeHtml(ev.organizer)}</span></div>`:''}
+    ${!isMovie&&ev.platform?`<div class="detail-row"><span>售票平台</span><span>${escapeHtml(ev.platform)}</span></div>`:''}
     ${isMovie&&ev.director?`<div class="detail-row"><span>導演</span><span>${escapeHtml(ev.director)}</span></div>`:''}
     ${isMovie&&ev.cast?`<div class="detail-row"><span>主演</span><span>${escapeHtml(ev.cast)}</span></div>`:''}
-    ${ev.entryTime&&ev.entryTime.hour?`<div class="detail-row"><span>入場時間</span><span>${fmtTimeWithTz(ev.entryTime,ev.timezone)}</span></div>`:''}
+    ${isMovie&&ev.companion?`<div class="detail-row"><span>同行</span><span>${escapeHtml(ev.companion)}</span></div>`:''}
+    ${!isMovie&&ev.entryTime&&ev.entryTime.hour?`<div class="detail-row"><span>入場時間</span><span>${fmtTimeWithTz(ev.entryTime,ev.timezone)}</span></div>`:''}
   </div>`;
 
   if(ev.price||ev.fee||ev.purchaseMethod||ev.purchaseDate){
@@ -1338,9 +1420,9 @@ function renderDetail(){
   }
 
   if(ev.notes){
-    html+=`<div class="detail-sec"><h4>心得</h4><div class="detail-note">${escapeHtml(ev.notes)}</div></div>`;
+    html+=`<div class="detail-sec"><h4>${isMovie?'備註':'心得'}</h4><div class="detail-note">${escapeHtml(ev.notes)}</div></div>`;
   }
-  if(ev.setlist&&ev.setlist.length){
+  if(!isMovie&&ev.setlist&&ev.setlist.length){
     html+=`<div class="detail-sec"><h4>曲目</h4><ol class="setlist-ol">${ev.setlist.map(s=>`<li>${escapeHtml(s)}</li>`).join('')}</ol></div>`;
   }
   if(ev.images&&ev.images.length>1){
@@ -1349,7 +1431,7 @@ function renderDetail(){
   if(ev.link){
     html+=`<div class="detail-sec"><h4>連結</h4><a class="detail-link" href="${escapeHtml(ev.link)}" target="_blank" rel="noopener">${escapeHtml(ev.link)}</a></div>`;
   }
-  if(ev.tags&&ev.tags.length){
+  if(!isMovie&&ev.tags&&ev.tags.length){
     html+=`<div class="detail-sec"><h4>標籤</h4><div class="detail-tags">${ev.tags.map(t=>`<span>${escapeHtml(t)}</span>`).join('')}</div></div>`;
   }
 
