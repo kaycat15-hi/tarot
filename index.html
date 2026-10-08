@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="zh-Hant"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>書單</title>
 <style>
 :root{--bg:#eceee9;--cd:#fafaf7;--ink:#1f2a30;--mu:#6b7780;--ln:#d5d9d3;--ac:#1f6f6b;--ac2:#e9f2f0}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 "Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif}
-header{position:sticky;top:0;z-index:5;background:var(--bg);padding:14px 16px 8px;border-bottom:1px solid var(--ln)}
+header{background:var(--bg);padding:14px 16px 8px;border-bottom:1px solid var(--ln)}
 h1{margin:0 0 8px;font:700 22px/1.2 "Noto Serif TC","Songti TC",serif;letter-spacing:.08em}
 .bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:8px}
 input,select,button,textarea{font:inherit;color:inherit;border:1px solid var(--ln);background:var(--cd);border-radius:6px;padding:6px 10px}
@@ -18,13 +18,14 @@ button.pri{background:var(--ac);color:#fff;border-color:var(--ac)}
 .tabs button.on{border-color:var(--ac);color:var(--ac);font-weight:700}
 .tabs small{color:var(--mu);margin-left:4px}
 #stat{color:var(--mu);font-size:13px;margin:0 auto 0 0}
+body{padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right)}
 main{max-width:980px;margin:0 auto;padding:12px 16px 80px}
 .row{display:grid;grid-template-columns:1fr auto auto auto auto auto;gap:10px;align-items:center;background:var(--cd);border:1px solid var(--ln);border-left:4px solid var(--ln);border-radius:6px;padding:8px 10px;margin-bottom:6px}
 .row.完讀{border-left-color:var(--ac)}.row.閱讀中{border-left-color:#d9a21b}.row.棄讀{border-left-color:#b5524a}.row.待購{border-left-style:dashed;border-left-color:var(--mu)}
 .in{margin-left:22px}
 .v{background:var(--ac2);color:var(--ac);border-radius:4px;padding:0 6px;font-size:13px}
 .s,.d{color:var(--mu);font-size:13px}
-.tag{display:inline-block;border:1px solid var(--ln);border-radius:10px;padding:0 8px;font-size:12px;margin-right:4px;color:var(--mu)}
+.tag{white-space:nowrap;display:inline-block;border:1px solid var(--ln);border-radius:10px;padding:0 8px;font-size:12px;margin-right:4px;color:var(--mu)}
 .p{min-width:50px;text-align:right}
 .gh{display:flex;gap:10px;align-items:center;background:var(--ac2);border:1px solid var(--ln);border-radius:6px;padding:8px 10px;margin:10px 0 6px;cursor:pointer}
 .gh b{font-size:16px}.gh .s{margin-right:auto}
@@ -38,7 +39,21 @@ dialog::backdrop{background:#0006}
 textarea{width:100%;height:200px}
 .empty{text-align:center;color:var(--mu);padding:60px 0}
 :focus-visible{outline:2px solid var(--ac);outline-offset:1px}
-@media(max-width:640px){.row{grid-template-columns:1fr auto}.row .t,.row .d{grid-column:1/-1}.fg{grid-template-columns:1fr}}
+@media(max-width:640px){
+header{padding:10px 12px 6px}main{padding:8px 12px 60px}
+#q,#sort,#fp,#fs{font-size:16px}
+.row{display:grid;grid-template-columns:auto auto 1fr auto;grid-template-areas:"ti ti ti ti" "tg tg tg dt" "pr st . ed";gap:4px 8px;padding:8px 10px}
+.row>div:first-child{grid-area:ti}.row .t{grid-area:tg}.row .d{grid-area:dt;font-size:12px;align-self:center}
+.row .p{grid-area:pr;min-width:0;text-align:left;font-size:14px}
+.row select{grid-area:st;font-size:14px;padding:1px 4px}
+.row button{grid-area:ed;justify-self:end;font-size:12px;padding:1px 10px}
+.row.in{margin-left:12px}
+.gh{flex-wrap:wrap;gap:4px 8px;padding:8px 10px}
+.gh b{font-size:15px}
+.gh .s{flex:1 1 100%;order:5;margin:0 0 0 20px;font-size:12px}
+.gh button{margin-left:auto;font-size:12px;padding:1px 10px;white-space:nowrap}
+.fg{grid-template-columns:1fr}
+}
 </style></head><body>
 <header>
 <h1>書單 <small style="font:12px sans-serif;color:var(--mu)">v4・空白版</small></h1>
